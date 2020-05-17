@@ -12,7 +12,14 @@ namespace wallDodger
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
-		public const int WindowHeight = 750;
+		public const int WindowHeight = 650;
+		public const int WindowWidth = 500;
+
+		Texture2D wall;
+
+		WallManager wallManager;
+
+		KeyboardState kbState;
 
 		public Game1()
 		{
@@ -29,6 +36,18 @@ namespace wallDodger
 		protected override void Initialize()
 		{
 			// TODO: Add your initialization logic here
+			graphics.PreferredBackBufferWidth = WindowWidth;
+			graphics.PreferredBackBufferHeight = WindowHeight;
+			graphics.ApplyChanges();
+
+			wallManager = new WallManager(WindowHeight, wall);
+
+			for (int i = WindowHeight; i >= -20; i -= Wall.WallHeight)
+			{
+				wallManager.SpawnWallPair(i);
+			}
+
+			this.IsMouseVisible = true;
 
 			base.Initialize();
 		}
@@ -41,6 +60,8 @@ namespace wallDodger
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
+
+			wall = Content.Load<Texture2D>("greySquare");
 
 			// TODO: use this.Content to load your game content here
 		}
@@ -64,6 +85,15 @@ namespace wallDodger
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
+			kbState = Keyboard.GetState();
+
+			if (kbState.IsKeyDown(Keys.Up))
+			{
+				wallManager.Scroll();
+				wallManager.SpawnWallPair();
+				wallManager.DespawnWallPair();
+			}
+
 			// TODO: Add your update logic here
 
 			base.Update(gameTime);
@@ -78,6 +108,11 @@ namespace wallDodger
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
 			// TODO: Add your drawing code here
+			spriteBatch.Begin();
+
+			wallManager.DrawAll(spriteBatch, wall);
+
+			spriteBatch.End();
 
 			base.Draw(gameTime);
 		}

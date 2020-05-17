@@ -11,32 +11,34 @@ namespace wallDodger
 	class Wall
 	{
 		// Fields
-		private Texture2D wallAsset;
-		private const int WallWidth = 100;
-		private const int WallHeight = 35;
-		private Vector2 Position { get; set; }
+		public const int WallWidth = 500;
+		public const int WallHeight = 35;
+		public Vector2 Position { get; set; } // do we even need this?
+
+		// Rectangle object to track player collision
+		public Rectangle RectangleTracker { get; set; }
 
 		// Parameterised constructor
-		public Wall(Texture2D wallAsset, int x, int y)
+		public Wall(float x, float y)
 		{
-			this.wallAsset = wallAsset;
 			Position = new Vector2(x, y);
+			RectangleTracker = new Rectangle(
+				(int)Position.X, 
+				(int)Position.Y, 
+				WallWidth, 
+				WallHeight);
 		}
 
 		/// <summary>
-		/// Draws Wall objects to the screen.
+		/// Updates this Wall object's Rectangle with its current position.
 		/// </summary>
-		/// <param name="spriteBatch">
-		/// The SpriteBatch object used to draw with.
-		/// </param>
-		public void Draw(SpriteBatch spriteBatch)
+		public void UpdateRectangle()
 		{
-			spriteBatch.Draw
-				(
-				wallAsset,
-				new Rectangle((int)Position.X, (int)Position.Y, WallWidth, WallHeight),
-				Color.White
-				);
+			RectangleTracker = new Rectangle(
+				(int)Position.X,
+				(int)Position.Y,
+				WallWidth,
+				WallHeight);
 		}
 	}
 }
