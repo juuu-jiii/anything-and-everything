@@ -10,7 +10,6 @@ namespace wallDodger
 {
 	class WallManager
 	{
-		Texture2D wallAsset;
 		private List<Wall> rightWalls;
 		private List<Wall> leftWalls;
 		private Random generator;
@@ -21,7 +20,25 @@ namespace wallDodger
 		const int InitialLeftWallXPosition = -400;
 		const int InitialRightWallXPosition = InitialLeftWallXPosition + Wall.WallWidth + 300;
 
-		public WallManager(int windowHeight, Texture2D wallAsset)
+		// IEnumerables for both Wall lists - will be iterated through in game1
+		//		when checking for collisions with the Player object
+		public IEnumerable<Wall> LeftWalls
+		{
+			get
+			{
+				return leftWalls.AsEnumerable<Wall>();
+			}
+		}
+
+		public IEnumerable<Wall> RightWalls
+		{
+			get
+			{
+				return rightWalls.AsEnumerable<Wall>();
+			}
+		}
+
+		public WallManager(int windowHeight)
 		{
 			rightWalls = new List<Wall>();
 			leftWalls = new List<Wall>();
@@ -31,10 +48,8 @@ namespace wallDodger
 			spawner = new Point(0, -50);
 			despawner = new Point(0, windowHeight + 50);
 
-			ScrollVelocity = new Vector2(0, 20);
-			GapSize = 300;
-
-			this.wallAsset = wallAsset;
+			ScrollVelocity = new Vector2(0, 10);
+			GapSize = 200;
 		}
 
 		/// <summary>
@@ -72,10 +87,10 @@ namespace wallDodger
 		/// <param name="y">
 		/// The y-position of the wall being created.
 		/// </param>
-		public void SpawnWallPair(int y)
+		public void SpawnWallPair(Texture2D wallAsset, int y)
 		{
-			leftWalls.Add(new Wall(InitialLeftWallXPosition, y));
-			rightWalls.Add(new Wall(InitialRightWallXPosition, y));
+			leftWalls.Add(new Wall(wallAsset, InitialLeftWallXPosition, y));
+			rightWalls.Add(new Wall(wallAsset, InitialRightWallXPosition, y));
 		}
 
 		// ***SpawnWallPair() overload***
@@ -84,10 +99,13 @@ namespace wallDodger
 		///		respective LL's. Used to generate walls past the initial ones 
 		///		created via SpawnWallPair().
 		/// </summary>
-		public void SpawnWallPair()
+		public void SpawnWallPair(Texture2D wallAsset)
 		{
 			// Regulate the frequency at which spawning occurs.
-			if (leftWalls[leftWalls.Count - 1].Position.Y >= spawner.Y + 21)
+			// The vertical distance at which walls generate apart from each other is
+			//		affected by how quickly the code is executed.
+			// Possible fix: adjust this frequency based on ScrollVelocity.
+			if (leftWalls[leftWalls.Count - 1].Position.Y >= spawner.Y + Wall.WallHeight)
 			{
 				// Generate a valid offset value.
 				float offset = GenerateOffset(
@@ -98,9 +116,11 @@ namespace wallDodger
 				// Adding rightWall like this creates a dependency on GapSize.
 				// If rightWall is added after leftWall, use leftWalls.Count - 2.
 				rightWalls.Add(new Wall(
+					wallAsset,
 					leftWalls[leftWalls.Count - 1].Position.X + Wall.WallWidth + GapSize + offset,
 					spawner.Y));
 				leftWalls.Add(new Wall(
+					wallAsset,
 					leftWalls[leftWalls.Count - 1].Position.X + offset,
 					spawner.Y));
 				
@@ -138,13 +158,13 @@ namespace wallDodger
 			foreach (Wall leftWall in leftWalls)
 			{
 				leftWall.Position += ScrollVelocity;
-				leftWall.UpdateRectangle();
+				leftWall.UpdateTracker();
 			}
 
 			foreach (Wall rightWall in rightWalls)
 			{
 				rightWall.Position += ScrollVelocity;
-				rightWall.UpdateRectangle();
+				rightWall.UpdateTracker();
 			}
 		}
 
@@ -160,7 +180,7 @@ namespace wallDodger
 			{
 				spriteBatch.Draw(
 					wallAsset,
-					leftWall.RectangleTracker,
+					leftWall.WallTracker,
 					Color.White);
 			}
 
@@ -168,7 +188,7 @@ namespace wallDodger
 			{
 				spriteBatch.Draw(
 					wallAsset,
-					rightWall.RectangleTracker,
+					rightWall.WallTracker,
 					Color.White);
 			}
 		}

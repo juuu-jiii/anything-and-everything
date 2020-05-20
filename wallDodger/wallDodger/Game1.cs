@@ -16,9 +16,11 @@ namespace wallDodger
 		public const int WindowWidth = 500;
 
 		Texture2D wall;
+		Texture2D playerArrow;
 
 		WallManager wallManager;
-
+		Player player;
+		
 		KeyboardState kbState;
 
 		public Game1()
@@ -36,15 +38,18 @@ namespace wallDodger
 		protected override void Initialize()
 		{
 			// TODO: Add your initialization logic here
+
+			// Setting window size up
 			graphics.PreferredBackBufferWidth = WindowWidth;
 			graphics.PreferredBackBufferHeight = WindowHeight;
 			graphics.ApplyChanges();
 
-			wallManager = new WallManager(WindowHeight, wall);
+			wallManager = new WallManager(WindowHeight);
 
+			// Setting up the start "stretch"
 			for (int i = WindowHeight; i >= -20; i -= Wall.WallHeight)
 			{
-				wallManager.SpawnWallPair(i);
+				wallManager.SpawnWallPair(wall, i);
 			}
 
 			this.IsMouseVisible = true;
@@ -62,6 +67,9 @@ namespace wallDodger
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			wall = Content.Load<Texture2D>("greySquare");
+			playerArrow = Content.Load<Texture2D>("greySquare");
+
+			player = new Player(playerArrow);
 
 			// TODO: use this.Content to load your game content here
 		}
@@ -87,12 +95,43 @@ namespace wallDodger
 
 			kbState = Keyboard.GetState();
 
+			if (kbState.IsKeyDown(Keys.Left))
+			{
+				player.Position -= player.StrafeVelocity;
+				player.UpdateTracker();
+			}
+			if (kbState.IsKeyDown(Keys.Right))
+			{
+				player.Position += player.StrafeVelocity;
+				player.UpdateTracker();
+			}
+
+			foreach (Wall wall in wallManager.LeftWalls)
+			{
+				if (player.Collided(wall))
+				{
+					System.Console.WriteLine("LEFT WALL COLLISION");
+				}
+			}
+
+			foreach (Wall wall in wallManager.RightWalls)
+			{
+				if (player.Collided(wall))
+				{
+					System.Console.WriteLine("RIGHT WALL COLLISION");
+				}
+			}
+
+			// Continuous scrolling
 			if (kbState.IsKeyDown(Keys.Up))
 			{
 				wallManager.Scroll();
-				wallManager.SpawnWallPair();
-				wallManager.DespawnWallPair();
 			}
+			//wallManager.Scroll();
+
+			// Manage memory by spawning and despawning walls as necessary.
+			wallManager.SpawnWallPair(wall);
+			wallManager.DespawnWallPair();
 
 			// TODO: Add your update logic here
 
@@ -109,8 +148,9 @@ namespace wallDodger
 
 			// TODO: Add your drawing code here
 			spriteBatch.Begin();
-
+			
 			wallManager.DrawAll(spriteBatch, wall);
+			player.Draw(spriteBatch, player.Position);
 
 			spriteBatch.End();
 
