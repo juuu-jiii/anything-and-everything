@@ -26,7 +26,7 @@ namespace wallDodger
 				verdanaBold20,
 				verdana12)
 		{
-			returnToStartScreen = new Button(buttonTexture, verdana12, 177, 310, 207, 323);
+			returnToStartScreen = new Button(buttonTexture, verdana12, 177, 365, 207, 377);
 
 			// Create a custom colour using only the alpha channel for 
 			//		translucency, so this screen can be used as an overlay.
@@ -56,11 +56,28 @@ namespace wallDodger
 				"Game Over",
 				textPosition,
 				Color.White);
+		}
 
-			// Draw instruction text.
+		// ***Draw() overload***
+		/// <summary>
+		/// Draws final score and level information, and instruction text.
+		/// </summary>
+		/// <param name="spriteBatch">
+		/// The SpriteBatch object used to draw with.
+		/// </param>
+		/// <param name="scoreCounter">
+		/// The ScoreCounter object.
+		/// </param>
+		/// <param name="levelCounter">
+		/// The LevelCounter object.
+		/// </param>
+		public void Draw(SpriteBatch spriteBatch, ScoreCounter scoreCounter, LevelCounter levelCounter)
+		{
 			spriteBatch.DrawString(
 				subtextFont,
-				"Press ENTER to restart.",
+				"Score: " + scoreCounter.Value + Environment.NewLine
+				+ "Level: "	+ levelCounter.Value + Environment.NewLine
+				+ Environment.NewLine + "Press ENTER to restart.",
 				subtextPosition,
 				Color.White);
 		}

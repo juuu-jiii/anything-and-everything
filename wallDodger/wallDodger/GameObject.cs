@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-// Defines a core object in the game world.
+// Defines a core object in the game world
 
 namespace wallDodger
 {
@@ -23,7 +23,6 @@ namespace wallDodger
 			this.asset = asset;
 		}
 
-		public abstract void Draw(SpriteBatch spriteBatch);
 		public abstract void UpdateTracker();
 	}
 }

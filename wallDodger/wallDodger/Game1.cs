@@ -50,6 +50,7 @@ namespace wallDodger
 		PregameScreen pregameScreen;
 		GameOverScreen gameOverScreen;
 		ScoreCounter scoreCounter;
+		LevelCounter levelCounter;
 		
 		// Variables to track mouse and keyboard input
 		KeyboardState kbState;
@@ -107,6 +108,7 @@ namespace wallDodger
 			pregameScreen = new PregameScreen(verdana12, wall);
 			gameOverScreen = new GameOverScreen(verdanaBold20, verdana12, wall, whiteSquare);
 			scoreCounter = new ScoreCounter(verdana12);
+			levelCounter = new LevelCounter(verdana12);
 		}
 
 		/// <summary>
@@ -163,6 +165,7 @@ namespace wallDodger
 						wallManager.Reset(wall);
 						player.Reset();
 						scoreCounter.Reset();
+						levelCounter.Reset();
 						
 						// Pressing any key starts the game.
 						// GetPressedKeys() returns an array of all keys that
@@ -196,6 +199,7 @@ namespace wallDodger
 							wallManager.Reset(wall);
 							player.Reset();
 							scoreCounter.Reset();
+							levelCounter.Reset();
 
 							gameState = GameStates.Playing;
 						}
@@ -242,8 +246,9 @@ namespace wallDodger
 						wallManager.SpawnWallPair(wall);
 						wallManager.DespawnWallPair();
 
-						// Update the player's score.
-						scoreCounter.Update(gameTime, 1);
+						// Update the player's score, level, and strafe speed.
+						scoreCounter.Update(gameTime, levelCounter.Value);
+						levelCounter.LevelUp(gameTime, wallManager, player);
 
 						// Touching a wall results in a game over.
 						foreach (Wall wall in wallManager.LeftWalls)
@@ -335,9 +340,10 @@ namespace wallDodger
 				case (GameStates.Pregame):
 					{
 						// Draw a static image of the game's initial state first...
-						wallManager.DrawAll(spriteBatch, wall);
+						wallManager.DrawAll(spriteBatch);
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
+						levelCounter.Draw(spriteBatch);
 
 						// ...then overlay the pregame screen on top.
 						pregameScreen.Draw(spriteBatch);
@@ -345,21 +351,24 @@ namespace wallDodger
 					}
 				case (GameStates.Playing):
 					{
-						wallManager.DrawAll(spriteBatch, wall);
+						wallManager.DrawAll(spriteBatch);
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
+						levelCounter.Draw(spriteBatch);
 
 						break;
 					}
 				case (GameStates.GameOver):
 					{
 						// Draw a static image of the game's current state first...
-						wallManager.DrawAll(spriteBatch, wall);
+						wallManager.DrawAll(spriteBatch);
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
+						levelCounter.Draw(spriteBatch);
 
 						// ...then overlay the game over screen on top.
 						gameOverScreen.Draw(spriteBatch);
+						gameOverScreen.Draw(spriteBatch, scoreCounter, levelCounter);
 						break;
 					}
 			}

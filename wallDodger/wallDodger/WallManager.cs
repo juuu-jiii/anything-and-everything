@@ -25,12 +25,20 @@ namespace wallDodger
 		private Point spawner;
 		private Point despawner;
 
+		// Variables controlling the speed at which the world scrolls
 		public Vector2 ScrollVelocity { get; set; }
+		private Vector2 initialScrollVelocity;
+		private Vector2 incrementFactorScrollVelocity;
+
 		public int GapSize { get; set; }
 
 		// Variables storing x-coordinates of Wall objects lining the start "stretch"
 		private int initialLeftWallXPosition;
 		private int initialRightWallXPosition;
+
+		public Color[] WallColourArray { get; private set; }
+
+		private Color currentWallColour;
 
 		// Public static get property for the instance variable that returns 
 		//		an instance of the class creating an instance if one does not 
@@ -80,11 +88,28 @@ namespace wallDodger
 			spawner = new Point(0, -50);
 			despawner = new Point(0, windowHeight + 50);
 
-			ScrollVelocity = new Vector2(0, 10);
+			initialScrollVelocity = new Vector2(0, 3);
+			incrementFactorScrollVelocity = new Vector2(0, 1);
+			ScrollVelocity = initialScrollVelocity;
+
 			GapSize = 200;
 
 			initialLeftWallXPosition = -400;
 			initialRightWallXPosition = initialLeftWallXPosition + Wall.WallWidth + 300;
+
+			WallColourArray = new Color[] {
+				Color.White,
+				Color.Green,
+				Color.Blue,
+				Color.Red,
+				Color.Yellow,
+				Color.Purple,
+				Color.Pink,
+				Color.Orange,
+				Color.Brown,
+				Color.Black};
+
+			currentWallColour = Color.White;
 		}
 
 		/// <summary>
@@ -209,22 +234,16 @@ namespace wallDodger
 		/// <param name="spriteBatch">
 		/// The SpriteBatch object used to draw with.
 		/// </param>
-		public void DrawAll(SpriteBatch spriteBatch, Texture2D wallAsset)
+		public void DrawAll(SpriteBatch spriteBatch)
 		{
 			foreach (Wall leftWall in leftWalls)
 			{
-				spriteBatch.Draw(
-					wallAsset,
-					leftWall.Tracker,
-					Color.White);
+				leftWall.Draw(spriteBatch, currentWallColour);
 			}
 
 			foreach (Wall rightWall in rightWalls)
 			{
-				spriteBatch.Draw(
-					wallAsset,
-					rightWall.Tracker,
-					Color.White);
+				rightWall.Draw(spriteBatch, currentWallColour);
 			}
 		}
 
@@ -237,15 +256,50 @@ namespace wallDodger
 		/// </param>
 		public void Reset(Texture2D wallAsset)
 		{
-			// Clear both lists
+			// Clear both lists.
 			leftWalls.Clear();
 			rightWalls.Clear();
 			
-			// Setting up the start "stretch"
+			// Setting up the start "stretch".
 			for (int i = Game1.WindowHeight; i >= -20; i -= Wall.WallHeight)
 			{
 				SpawnWallPair(wallAsset, i);
 			}
+
+			// Reset scroll velocity.
+			ScrollVelocity = initialScrollVelocity;
+
+			// Reset colours of Wall objects.
+			currentWallColour = Color.White;
 		}
+
+		/// <summary>
+		/// Changes the colours of Wall objects based on the current level.
+		/// </summary>
+		/// <param name="level">
+		/// The current level.
+		/// </param>
+		public void ChangeWallColour(int level)
+		{
+			currentWallColour = WallColourArray[(level - 1) % 10];
+		}
+																								
+		/// <summary>																			
+		/// Speeds the game up and changes Wall colours. Called when the player					
+		///		levels up.																		
+		/// </summary>																			
+		/// <param name="level">																
+		/// The current level.																	
+		/// </param>																			
+		public void LevelUp(int level)															
+		{																						
+			ChangeWallColour(level);
+			
+			// Only increase scroll velocity every 2 levels.
+			if (level % 2 == 0)
+			{
+				ScrollVelocity += incrementFactorScrollVelocity;
+			}				
+		}																						
 	}
 }

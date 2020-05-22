@@ -35,12 +35,12 @@ namespace wallDodger
 		/// <param name="spriteBatch">
 		/// The SpriteBatch object used to draw with.
 		/// </param>
-		public override void Draw(SpriteBatch spriteBatch)
+		public void Draw(SpriteBatch spriteBatch, Color currentWallColour)
 		{
 			spriteBatch.Draw(
 				asset,
 				Tracker,
-				Color.White);
+				currentWallColour);
 		}
 
 		/// <summary>

@@ -22,8 +22,10 @@ namespace wallDodger
 
 		private double playerDiagonal;
 
-		// Variable that controls the speed of player movement across the screen
-		public Vector2 StrafeVelocity { get; }
+		// Variables that control the speed of player movement across the screen
+		public Vector2 StrafeVelocity { get; private set; }
+		private Vector2 initialStrafeVelocity;
+		private Vector2 incrementFactorStrafeVelocity;
 
 		public Player(Texture2D asset) : base (asset)
 		{
@@ -41,7 +43,10 @@ namespace wallDodger
 				(int)initialPosition.Y,
 				playerWidth,
 				playerHeight);
-			StrafeVelocity = new Vector2(5, 0);
+
+			initialStrafeVelocity = new Vector2(3, 0);
+			incrementFactorStrafeVelocity = new Vector2(1, 0);
+			StrafeVelocity = initialStrafeVelocity;
 		}
 
 		/// <summary>
@@ -50,7 +55,7 @@ namespace wallDodger
 		/// <param name="spriteBatch">
 		/// The SpriteBatch object used to draw with.
 		/// </param>
-		public override void Draw(SpriteBatch spriteBatch)
+		public void Draw(SpriteBatch spriteBatch)
 		{
 			//spriteBatch.Draw(
 			//	playerAsset,
@@ -106,7 +111,21 @@ namespace wallDodger
 		public void Reset()
 		{
 			Position = initialPosition;
+			StrafeVelocity = initialStrafeVelocity;
 			UpdateTracker();
+		}
+
+		/// <summary>
+		/// Increments the speed at which the player can strafe across the 
+		///		screen.
+		/// </summary>
+		public void LevelUp(int level)
+		{
+			// Only increment strafe velocity every 2 levels.
+			if (level % 2 == 0)
+			{
+				StrafeVelocity += incrementFactorStrafeVelocity;
+			}
 		}
 	}
 }

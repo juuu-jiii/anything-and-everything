@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+// Defines a menu screen displayed to the user during program runtime
+
 namespace wallDodger
 {
 	abstract class MenuScreen

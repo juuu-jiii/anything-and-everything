@@ -8,24 +8,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace wallDodger
 {
-	class ScoreCounter
+	class ScoreCounter : ProgressCounter
 	{
-		public int Score { get; set; }
-
-		// Variable to store font asset
-		private SpriteFont verdana12;
-
-		private Vector2 position;
-
-		// Variables that control updates to the player's score
-		double timePerPoint;
-		double timeCounter;
-
-		public ScoreCounter(SpriteFont verdana12)
+		// Constructor
+		public ScoreCounter(SpriteFont textFont) : base (textFont, new Vector2(20, 20))
 		{
-			Score = 0;
-			this.verdana12 = verdana12;
-			position = new Vector2(20, 20);
+			Value = 0;
 		}
 
 		/// <summary>
@@ -48,16 +36,16 @@ namespace wallDodger
 			// Note 1.0 is used here to avoid int division, which results in 
 			//		undefined behaviour, since time should not be measured in
 			//		ints.
-			timePerPoint = 1.0 / level;
+			timePerUnit = 1.0 / level;
 
 			// Time passing
 			timeCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
 			// If enough time has passed to award a point...
-			if (timeCounter >= timePerPoint)
+			if (timeCounter >= timePerUnit)
 			{
 				// ...add a point to the player's current score...
-				Score += 1;
+				Value += 1;
 
 				// ...and reset timeCounter for future score incrementations.
 				timeCounter = 0;
@@ -77,21 +65,22 @@ namespace wallDodger
 		/// <param name="spriteBatch">
 		/// The SpriteBatch object used to draw with.
 		/// </param>
-		public void Draw(SpriteBatch spriteBatch)
+		public override void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.DrawString(
-				verdana12,
-				Score.ToString(),
-				position,
+				textFont,
+				Value.ToString(),
+				textPosition,
 				Color.White);
 		}
 
 		/// <summary>
-		/// Resets the score to 0. Called each time a new game is started.
+		/// Resets the score and other applicable fields to default values. 
+		///		Called each time a new game is started.
 		/// </summary>
-		public void Reset()
+		public override void Reset()
 		{
-			Score = 0;
+			Value = 0;
 
 			// Not resetting this causes a small discrepancy in time, thus
 			//		impacting score calculations.
