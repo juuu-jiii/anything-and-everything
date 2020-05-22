@@ -8,25 +8,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace wallDodger
 {
-	class Wall
+	class Wall : GameObject
 	{
 		// Fields
-		Texture2D wallAsset;
 
+		// Variables storing Wall object dimensions
 		// Public constants are globally accessible within the solution.
 		public const int WallWidth = 500;
 		public const int WallHeight = 35;
-		public Vector2 Position { get; set; }
-
-		// Rectangle object to detect Player object collision.
-		public Rectangle WallTracker { get; set; }
 
 		// Parameterised constructor
-		public Wall(Texture2D wallAsset, float x, float y)
+		public Wall(Texture2D asset, float x, float y) : base (asset)
 		{
-			this.wallAsset = wallAsset;
+			this.asset = asset;
 			Position = new Vector2(x, y);
-			WallTracker = new Rectangle(
+			Tracker = new Rectangle(
 				(int)x, 
 				(int)y, 
 				WallWidth, 
@@ -39,20 +35,20 @@ namespace wallDodger
 		/// <param name="spriteBatch">
 		/// The SpriteBatch object used to draw with.
 		/// </param>
-		public void Draw(SpriteBatch spriteBatch)
+		public override void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(
-				wallAsset,
-				WallTracker,
+				asset,
+				Tracker,
 				Color.White);
 		}
 
 		/// <summary>
 		/// Updates this Wall object's Rectangle with its current position.
 		/// </summary>
-		public void UpdateTracker()
+		public override void UpdateTracker()
 		{
-			WallTracker = new Rectangle(
+			Tracker = new Rectangle(
 				(int)Position.X,
 				(int)Position.Y,
 				WallWidth,

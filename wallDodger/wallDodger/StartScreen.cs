@@ -5,33 +5,40 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace wallDodger
 {
-	class StartScreen
+	class StartScreen : MenuScreen
 	{
-		private SpriteFont verdanaBold20;
-		private Texture2D backdrop;
-		private Vector2 titlePosition;
+		// Fields
+
+		// Variables storing Button components
 		public Button StartButton { get; }
 		public Button QuitButton { get; }
 
 		public StartScreen(
 			SpriteFont verdanaBold20, 
+			SpriteFont verdana12,
+			SpriteFont verdanaSmall,
 			Texture2D backdrop, 
-			SpriteFont verdana12, 
-			Texture2D buttonTexture,
-			MouseState MState)
+			Texture2D buttonTexture) : base (
+				backdrop,
+				new Vector2(90, 200),
+				new Vector2(90, 190),
+				verdanaBold20,
+				verdanaSmall)
 		{
-			this.verdanaBold20 = verdanaBold20;
-			this.backdrop = backdrop;
-			StartButton = new Button(buttonTexture, verdana12, 50, 50, 55, 55, MState);
-			QuitButton = new Button(buttonTexture, verdana12, 100, 100, 105, 105, MState);
-			titlePosition = new Vector2(Game1.WindowWidth / 2, Game1.WindowHeight / 2);
+			StartButton = new Button(buttonTexture, verdana12, 175, 300, 227, 313);
+			QuitButton = new Button(buttonTexture, verdana12, 175, 360, 230, 373);
 		}
 
-		public void Draw(SpriteBatch spriteBatch)
+		/// <summary>
+		/// Draws the Start screen and its elements.
+		/// </summary>
+		/// <param name="spriteBatch">
+		/// The SpriteBatch object used to draw with.
+		/// </param>
+		public override void Draw(SpriteBatch spriteBatch)
 		{
 			// Draw the backdrop.
 			spriteBatch.Draw(
@@ -43,11 +50,17 @@ namespace wallDodger
 			StartButton.Draw(spriteBatch, "Start");
 			QuitButton.Draw(spriteBatch, "Quit");
 
-			// Draw the game title text.
+			// Draw the game title text and version number
 			spriteBatch.DrawString(
-				verdanaBold20,
+				subtextFont,
+				"v1.0.0.0",
+				subtextPosition,
+				Color.Maroon);
+
+			spriteBatch.DrawString(
+				textFont,
 				"Wall Dodger",
-				titlePosition,
+				textPosition,
 				Color.Maroon);
 		}
 	}

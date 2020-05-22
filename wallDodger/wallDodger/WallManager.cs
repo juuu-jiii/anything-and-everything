@@ -10,15 +10,46 @@ namespace wallDodger
 {
 	class WallManager
 	{
+		// Fields
+		
+		// Instance variable of the class to enforce singleton design pattern
+		private static WallManager wallManagerInstance;
+		
+		// List variables to store Wall objects
 		private List<Wall> rightWalls;
 		private List<Wall> leftWalls;
+
 		private Random generator;
+
+		// Variables representing reference points for spawning and despawning
 		private Point spawner;
 		private Point despawner;
-		private Vector2 ScrollVelocity { get; set; }
-		private int GapSize { get; set; }
-		const int InitialLeftWallXPosition = -400;
-		const int InitialRightWallXPosition = InitialLeftWallXPosition + Wall.WallWidth + 300;
+
+		public Vector2 ScrollVelocity { get; set; }
+		public int GapSize { get; set; }
+
+		// Variables storing x-coordinates of Wall objects lining the start "stretch"
+		private int initialLeftWallXPosition;
+		private int initialRightWallXPosition;
+
+		// Public static get property for the instance variable that returns 
+		//		an instance of the class creating an instance if one does not 
+		//		yet exist.
+		public static WallManager WallManagerInstance
+		{
+			get
+			{
+				if (wallManagerInstance == null)
+				{
+					wallManagerInstance = new WallManager(Game1.WindowHeight);
+					return wallManagerInstance;
+				}
+				else
+				{
+					return wallManagerInstance;
+				}
+			}
+		}
 
 		// IEnumerables for both Wall lists - will be iterated through in game1
 		//		when checking for collisions with the Player object
@@ -38,7 +69,8 @@ namespace wallDodger
 			}
 		}
 
-		public WallManager(int windowHeight)
+		// PRIVATE constructor
+		private WallManager(int windowHeight)
 		{
 			rightWalls = new List<Wall>();
 			leftWalls = new List<Wall>();
@@ -50,6 +82,9 @@ namespace wallDodger
 
 			ScrollVelocity = new Vector2(0, 10);
 			GapSize = 200;
+
+			initialLeftWallXPosition = -400;
+			initialRightWallXPosition = initialLeftWallXPosition + Wall.WallWidth + 300;
 		}
 
 		/// <summary>
@@ -81,16 +116,16 @@ namespace wallDodger
 		}
 
 		/// <summary>
-		/// Creates a pair of left and right walls, appending them to their 
-		///		respective LL's. Used to initialise a game.
+		/// Helper method that creates a pair of left and right walls, 
+		///		appending them to their respective LL's.
 		/// </summary>
 		/// <param name="y">
 		/// The y-position of the wall being created.
 		/// </param>
-		public void SpawnWallPair(Texture2D wallAsset, int y)
+		private void SpawnWallPair(Texture2D wallAsset, int y)
 		{
-			leftWalls.Add(new Wall(wallAsset, InitialLeftWallXPosition, y));
-			rightWalls.Add(new Wall(wallAsset, InitialRightWallXPosition, y));
+			leftWalls.Add(new Wall(wallAsset, initialLeftWallXPosition, y));
+			rightWalls.Add(new Wall(wallAsset, initialRightWallXPosition, y));
 		}
 
 		// ***SpawnWallPair() overload***
@@ -180,7 +215,7 @@ namespace wallDodger
 			{
 				spriteBatch.Draw(
 					wallAsset,
-					leftWall.WallTracker,
+					leftWall.Tracker,
 					Color.White);
 			}
 
@@ -188,8 +223,28 @@ namespace wallDodger
 			{
 				spriteBatch.Draw(
 					wallAsset,
-					rightWall.WallTracker,
+					rightWall.Tracker,
 					Color.White);
+			}
+		}
+
+		/// <summary>
+		/// Clears both lists and initialises the start "stretch". Called 
+		///		whenever a new game is started.
+		/// </summary>
+		/// <param name="wallAsset">
+		/// The asset used for the Wall objects.
+		/// </param>
+		public void Reset(Texture2D wallAsset)
+		{
+			// Clear both lists
+			leftWalls.Clear();
+			rightWalls.Clear();
+			
+			// Setting up the start "stretch"
+			for (int i = Game1.WindowHeight; i >= -20; i -= Wall.WallHeight)
+			{
+				SpawnWallPair(wallAsset, i);
 			}
 		}
 	}

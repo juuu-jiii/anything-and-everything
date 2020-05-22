@@ -5,54 +5,63 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace wallDodger
 {
-	class GameOverScreen
+	class GameOverScreen : MenuScreen
 	{
-		private SpriteFont verdanaBold20;
-		private SpriteFont verdana12;
-		private Texture2D backdrop;
-		private Vector2 gameOverTextPosition;
-		private Vector2 instructionTextPosition;
-		public Button returnToMainButton { get; }
+		// Fields
+
+		private Color backdropColour;
+		public Button returnToStartScreen { get; }
 
 		public GameOverScreen(
 			SpriteFont verdanaBold20, 
 			SpriteFont verdana12, 
 			Texture2D backdrop, 
-			Texture2D buttonTexture,
-			MouseState MState)
+			Texture2D buttonTexture) : base (
+				backdrop,
+				new Vector2(96, 200),
+				new Vector2(155, 270),
+				verdanaBold20,
+				verdana12)
 		{
-			this.verdanaBold20 = verdanaBold20;
-			this.verdana12 = verdana12;
-			this.backdrop = backdrop;
-			gameOverTextPosition = new Vector2(100, 100);
-			instructionTextPosition = new Vector2(100, 150);
-			returnToMainButton = new Button(buttonTexture, verdana12, 200, 200, 205, 205, MState);
+			returnToStartScreen = new Button(buttonTexture, verdana12, 177, 310, 207, 323);
+
+			// Create a custom colour using only the alpha channel for 
+			//		translucency, so this screen can be used as an overlay.
+			backdropColour = Color.FromNonPremultiplied(0, 0, 0, 90);
 		}
 
-		public void Draw(SpriteBatch spriteBatch)
+		/// <summary>
+		/// Draws the Game Over screen and its elements.
+		/// </summary>
+		/// <param name="spriteBatch">
+		/// The SpriteBatch object used to draw with.
+		/// </param>
+		public override void Draw(SpriteBatch spriteBatch)
 		{
 			// Draw the backdrop.
 			spriteBatch.Draw(
 				backdrop,
 				new Rectangle(0, 0, Game1.WindowWidth, Game1.WindowHeight),
-				Color.FromNonPremultiplied(0, 0, 0, 90));
+				backdropColour);
+
+			// Draw button.
+			returnToStartScreen.Draw(spriteBatch, "Main Menu");
 
 			// Draw game over text.
 			spriteBatch.DrawString(
-				verdanaBold20,
+				textFont,
 				"Game Over",
-				gameOverTextPosition,
+				textPosition,
 				Color.White);
 
 			// Draw instruction text.
 			spriteBatch.DrawString(
-				verdanaBold20,
+				subtextFont,
 				"Press ENTER to restart.",
-				instructionTextPosition,
+				subtextPosition,
 				Color.White);
 		}
 	}

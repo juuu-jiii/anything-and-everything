@@ -8,31 +8,48 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace wallDodger
 {
-	class PregameScreen
+	class PregameScreen : MenuScreen
 	{
-		private SpriteFont verdana12;
-		private Texture2D backdrop;
-		private Vector2 textPosition;
+		// Fields
 
-		public PregameScreen(SpriteFont verdana12, Texture2D backdrop)
+		private Color backdropColour;
+
+		public PregameScreen(
+			SpriteFont verdana12, 
+			Texture2D backdrop) : base (
+				backdrop,
+				new Vector2(135, 270),
+				Vector2.Zero,	// Unused font position
+				verdana12,
+				null)			// Unused font type
 		{
-			this.verdana12 = verdana12;
-			this.backdrop = backdrop;
-			textPosition = new Vector2(100, 100);
+			// Create a custom colour using only the alpha channel for 
+			//		translucency, so this screen can be used as an overlay.
+			backdropColour = Color.FromNonPremultiplied(0, 0, 0, 90);
 		}
 
-		public void Draw(SpriteBatch spriteBatch)
+		/// <summary>
+		/// Draws the Pregame screen and its elements.
+		/// </summary>
+		/// <param name="spriteBatch">
+		/// The SpriteBatch object used to draw with.
+		/// </param>
+		public override void Draw(SpriteBatch spriteBatch)
 		{
 			// Draw the backdrop.
 			spriteBatch.Draw(
 				backdrop,
 				new Rectangle(0, 0, Game1.WindowWidth, Game1.WindowHeight),
-				Color.FromNonPremultiplied(0, 0, 0, 90));
+				backdropColour);
 
 			// Draw instruction text.
 			spriteBatch.DrawString(
-				verdana12,
-				"Dodge the walls!" + Environment.NewLine + "Use the arrow keys to move. Press any key to start.",
+				textFont,
+				"Dodge the walls!" 
+					+ Environment.NewLine 
+					+ "Use the arrow keys to move." 
+					+ Environment.NewLine 
+					+ "Press any key to start.",
 				textPosition,
 				Color.White);
 		}

@@ -8,29 +8,39 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace wallDodger
 {
-	class Player
+	class Player : GameObject
 	{
-		private Texture2D playerAsset;
-		private Vector2 initialPosition;
-		private const int PlayerWidth = 20;
-		private const int PlayerHeight = PlayerWidth;
+		// Fields
 
-		// Using Pythagorean Theorem to obtain length of the square's diagonal
-		private double playerDiagonal = Math.Sqrt(Math.Pow(PlayerWidth, 2) + Math.Pow(PlayerHeight, 2));
-		public Vector2 Position { get; set; }
-		public Rectangle PlayerTracker { get; set; }
+		// Variable to store initial player position - useful for when a new 
+		//		game is started
+		private Vector2 initialPosition;
+
+		// Dimension variables for player sprite
+		private int playerWidth;
+		private int playerHeight;
+
+		private double playerDiagonal;
+
+		// Variable that controls the speed of player movement across the screen
 		public Vector2 StrafeVelocity { get; }
 
-		public Player(Texture2D playerAsset)
+		public Player(Texture2D asset) : base (asset)
 		{
-			this.playerAsset = playerAsset;
-			initialPosition = new Vector2(Game1.WindowWidth / 2 - (float)(playerDiagonal / 2) + 15, Game1.WindowHeight - 50);
+			playerWidth = 20;
+			playerHeight = playerWidth;
+
+			// Using Pythagorean Theorem to obtain length of the square's diagonal
+			playerDiagonal = Math.Sqrt(Math.Pow(playerWidth, 2) + Math.Pow(playerHeight, 2));
+
+			this.asset = asset;
+			initialPosition = new Vector2(Game1.WindowWidth / 2 - (float)(playerWidth / 2), Game1.WindowHeight - 50);
 			Position = initialPosition;
-			PlayerTracker = new Rectangle(
+			Tracker = new Rectangle(
 				(int)initialPosition.X,
 				(int)initialPosition.Y,
-				PlayerWidth,
-				PlayerHeight);
+				playerWidth,
+				playerHeight);
 			StrafeVelocity = new Vector2(5, 0);
 		}
 
@@ -40,7 +50,7 @@ namespace wallDodger
 		/// <param name="spriteBatch">
 		/// The SpriteBatch object used to draw with.
 		/// </param>
-		public void Draw(SpriteBatch spriteBatch, Vector2 position)
+		public override void Draw(SpriteBatch spriteBatch)
 		{
 			//spriteBatch.Draw(
 			//	playerAsset,
@@ -52,7 +62,7 @@ namespace wallDodger
 			//	0.25f,
 			//	SpriteEffects.None,
 			//	0);
-			spriteBatch.Draw(playerAsset, PlayerTracker, Color.Blue);
+			spriteBatch.Draw(asset, Tracker, Color.Blue);
 		}
 
 		/// <summary>
@@ -67,7 +77,7 @@ namespace wallDodger
 		/// </returns>
 		public bool Collided(Wall wall)
 		{
-			if (PlayerTracker.Intersects(wall.WallTracker))
+			if (Tracker.Intersects(wall.Tracker))
 			{
 				return true;
 			}
@@ -80,13 +90,23 @@ namespace wallDodger
 		/// <summary>
 		/// Updates this Player object's Rectangle with its current position.
 		/// </summary>
-		public void UpdateTracker()
+		public override void UpdateTracker()
 		{
-			PlayerTracker = new Rectangle(
+			Tracker = new Rectangle(
 				(int)Position.X,
 				(int)Position.Y,
-				PlayerWidth,
-				PlayerHeight);
+				playerWidth,
+				playerHeight);
+		}
+
+		/// <summary>
+		/// Resets the player to their initial position. Called whenever a new 
+		///		game is started.
+		/// </summary>
+		public void Reset()
+		{
+			Position = initialPosition;
+			UpdateTracker();
 		}
 	}
 }
