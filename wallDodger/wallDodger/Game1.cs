@@ -4,6 +4,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace wallDodger
 {
+
+	// Delegate for methods that are called when a new game is started.
+	delegate void OnResetDelegate();
+
 	enum GameStates
 	{
 		StartScreen,
@@ -25,6 +29,9 @@ namespace wallDodger
 	{
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
+
+		// Create an event to handle methods matching the delegate's signatures.
+		event OnResetDelegate ResetAction;
 
 		// Variables for the window width and height
 		// Public constants are globally accessible within the solution.
@@ -109,6 +116,13 @@ namespace wallDodger
 			gameOverScreen = new GameOverScreen(verdanaBold20, verdana12, wall, whiteSquare);
 			scoreCounter = new ScoreCounter(verdana12);
 			levelCounter = new LevelCounter(verdana12);
+
+			// Subscribing applicable methods to both event handlers
+			levelCounter.LevelUpAction += player.LevelUp;
+			levelCounter.LevelUpAction += wallManager.LevelUp;
+			ResetAction += levelCounter.Reset;
+			ResetAction += scoreCounter.Reset;
+			ResetAction += player.Reset;
 		}
 
 		/// <summary>
@@ -162,11 +176,15 @@ namespace wallDodger
 				case (GameStates.Pregame):
 					{
 						// Perform necessary data resets.
+						if (ResetAction != null)
+						{
+							ResetAction();
+						}
+
+						// This Reset() method's signature does not match that 
+						//		of the event handler's.
 						wallManager.Reset(wall);
-						player.Reset();
-						scoreCounter.Reset();
-						levelCounter.Reset();
-						
+
 						// Pressing any key starts the game.
 						// GetPressedKeys() returns an array of all keys that
 						//		are currently being pressed. By checking the 
@@ -196,10 +214,14 @@ namespace wallDodger
 						if (kbState.IsKeyDown(Keys.Enter))
 						{
 							// Perform necessary data resets.
+							if (ResetAction != null)
+							{
+								ResetAction();
+							}
+
+							// This Reset() method's signature does not match that 
+							//		of the event handler's.
 							wallManager.Reset(wall);
-							player.Reset();
-							scoreCounter.Reset();
-							levelCounter.Reset();
 
 							gameState = GameStates.Playing;
 						}
@@ -248,7 +270,10 @@ namespace wallDodger
 
 						// Update the player's score, level, and strafe speed.
 						scoreCounter.Update(gameTime, levelCounter.Value);
-						levelCounter.LevelUp(gameTime, wallManager, player);
+
+						// This method invokes the event, calling all the other
+						//		level up methods along with it.
+						levelCounter.LevelUp(gameTime);
 
 						// Touching a wall results in a game over.
 						foreach (Wall wall in wallManager.LeftWalls)

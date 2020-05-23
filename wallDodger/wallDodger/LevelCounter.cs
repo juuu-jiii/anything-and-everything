@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+// Delegate for methods that are called when the player levels up.
+delegate void OnLevelUpDelegate(int level);
+
 namespace wallDodger
 {
 	class LevelCounter : ProgressCounter
 	{
+		// Create an event to handle methods matching the delegate's signatures.
+		public event OnLevelUpDelegate LevelUpAction;
+		
 		// Constructor
 		public LevelCounter(SpriteFont textFont) : base(textFont, new Vector2(20, 40))
 		{
@@ -28,7 +34,7 @@ namespace wallDodger
 		/// <param name="player">
 		/// The Player object.
 		/// </param>
-		public void LevelUp(GameTime gameTime, WallManager wallManager, Player player)
+		public void LevelUp(GameTime gameTime)
 		{
 			// The player must last 10s on a level to be promoted.
 			timePerUnit = 10.0;
@@ -43,9 +49,11 @@ namespace wallDodger
 				Value += 1;
 				timeCounter = 0;
 
-				// Adjusting other game components as necessary
-				wallManager.LevelUp(Value);
-				player.LevelUp(Value);
+				// Invoke the event if it is not empty.
+				if (LevelUpAction != null)
+				{
+					LevelUpAction(Value);
+				}
 			}
 		}
 
