@@ -15,7 +15,7 @@ namespace wallDodger
 		Playing,
 		GameOver
 	}
-	
+
 	enum PlayerStates
 	{
 		Idle,
