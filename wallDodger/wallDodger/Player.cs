@@ -29,7 +29,7 @@ namespace wallDodger
 
 		public Player(Texture2D asset) : base (asset)
 		{
-			playerWidth = 20;
+			playerWidth = 15;
 			playerHeight = playerWidth;
 
 			// Using Pythagorean Theorem to obtain length of the square's diagonal

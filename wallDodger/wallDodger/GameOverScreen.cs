@@ -78,7 +78,7 @@ namespace wallDodger
 				"Score: " + scoreCounter.Value + Environment.NewLine
 				+ "Level "	+ levelCounter.Value + Environment.NewLine
 				+ Environment.NewLine + "Press ENTER to restart.",
-				subtextPosition,
+				subtextPosition, 
 				Color.White);
 		}
 	}

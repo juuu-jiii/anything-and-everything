@@ -261,13 +261,25 @@ namespace wallDodger
 							player.UpdateTracker();
 						}
 
-						// Continuous scrolling
-						wallManager.Scroll();
+						//// Continuous scrolling
+						//wallManager.Scroll();
+
+						// Controlled scrolling
+						if (kbState.IsKeyDown(Keys.Up))
+						{
+							wallManager.Scroll();
+						}
+						//wallManager.Scroll();
+
+						// Why is Update() called before SpawnWallPair() and 
+						//		DespawnWallPair(), and not after?
+						// HINT: Variables initialised to 0 before Update()
+						wallManager.Update(gameTime);
 
 						// Manage memory by spawning and despawning walls as necessary.
 						wallManager.SpawnWallPair(wall);
 						wallManager.DespawnWallPair();
-
+						
 						// Update the player's score, level, and strafe speed.
 						scoreCounter.Update(gameTime, levelCounter.Value);
 
@@ -325,7 +337,7 @@ namespace wallDodger
 			//	}
 			//}
 
-			//// Continuous scrolling
+			//// Controlled scrolling
 			//if (kbState.IsKeyDown(Keys.Up))
 			//{
 			//	wallManager.Scroll();

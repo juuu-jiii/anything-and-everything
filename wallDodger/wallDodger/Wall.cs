@@ -29,6 +29,19 @@ namespace wallDodger
 				WallHeight);
 		}
 
+		// Constructor overload - chained to the previous one.
+		// Used when generating obstacle terrain types.
+		public Wall(Texture2D asset, float x, float y, int wallWidth) : base(asset)
+		{
+			this.asset = asset;
+			Position = new Vector2(x, y);
+			Tracker = new Rectangle(
+				(int)x,
+				(int)y,
+				wallWidth,
+				WallHeight);
+		}
+
 		/// <summary>
 		/// Draws the Wall object to the screen.
 		/// </summary>
@@ -51,7 +64,7 @@ namespace wallDodger
 			Tracker = new Rectangle(
 				(int)Position.X,
 				(int)Position.Y,
-				WallWidth,
+				Tracker.Width,	// Maintain current width to ensure obstacle terrain does not change size
 				WallHeight);
 		}
 	}

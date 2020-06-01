@@ -20,6 +20,9 @@ namespace wallDodger
 		public LevelCounter(SpriteFont textFont) : base(textFont, new Vector2(20, 40))
 		{
 			Value = 1;
+
+			// The player must last 10s on a level to be promoted.
+			timePerUnit = 10.0;
 		}
 
 		/// <summary>
@@ -36,9 +39,6 @@ namespace wallDodger
 		/// </param>
 		public void LevelUp(GameTime gameTime)
 		{
-			// The player must last 10s on a level to be promoted.
-			timePerUnit = 10.0;
-
 			// Time passing
 			timeCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
