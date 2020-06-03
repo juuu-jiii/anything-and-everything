@@ -26,7 +26,7 @@ int main()
 
     // ELSE BLOCKS
     // else blocks are the same:
-    if ( 1 /* this condititon is TRUE */ )
+    if ( 1 /* IF this condititon is TRUE */ )
     {
         // Execute this statement.
     }
@@ -70,11 +70,10 @@ int main()
     // 3. OR, ||; OR is evaluated last.
 
     printf("%d\n", !( 1 || 0 )); // 0; note the ! outside of the parentheses
-    printf("%d\n", 3 || 0); // 1; any number besides 0 is treated like a 1
+    printf("%d\n", 3 || 0); // 1; any number besides 0 is treated like a 1 (even .1 and -1)
     printf("%d\n", !( 1 || 1 && 0 )); // 0; && evaluated before ||
     printf("%d\n", !(( 1 || 0 ) && 0 )); // 0; note the double parentheses
 
-    printf("Hello world!\n");
     getchar();
     return 0;
 }
