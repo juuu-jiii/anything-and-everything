@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1591086472 source:c:\users\szunk\desktop\anything and everything\anything-and-everything\c\introtoc\main.c
+	<stdio.h>
+	<stdlib.h>
+
