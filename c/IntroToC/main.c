@@ -11,7 +11,7 @@ int main()
     // COMMENTS
     // Comments are the same as in C#. Both // and /**/ styles work.
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     // VARIABLES
     // In C, declare all variables before other types of statements in the given code block.
@@ -23,7 +23,7 @@ int main()
     double doubleNum;
     // int the_float; is not allowed, since a float of the same name has already been declared.
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     // BASIC SYNTAX
     // printf(); = Console.Write();!!! W/o the newline char the next print will be on the same line!
@@ -38,7 +38,7 @@ int main()
     // Otherwise: "exited with code XX"
     // return 0;
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     // READING INPUT
     int this_is_a_number; // Should be declared at the top but imagine this is the top for readability purposes.
@@ -64,7 +64,7 @@ int main()
     //printf("You entered {0}", &this_is_a_number);
     getchar();
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     // MATH
     // +, -, *, /, % (modulus) all work like expected.
@@ -85,9 +85,9 @@ int main()
     number %= 7;
     printf("%d\n", number);
 
+    //////////////////////////////////////////////////////////////////////////////////////////
 
-
-    // LOGIC
+    // COMPARISON/RELATIONAL OPERATORS
     // With bools and comparison operators, a TRUE evaluation returns an int 1, and FALSE 0.
     // Pay attention to the string formatting used below.
     printf("%d\n", number != 5);
@@ -101,7 +101,7 @@ int main()
 
     return 0;
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     // A FEW THINGS TO NOTE
     // Keyboard shortcut Ctrl + K + C/U doesn't seem to work.
