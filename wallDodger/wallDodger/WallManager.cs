@@ -68,6 +68,7 @@ namespace wallDodger
 		private NarrowPath narrowPath;
 		private Obstacle obstacle;
 		private Straightaway straightaway;
+		private AbruptTurn abruptTurn;
 
 		public TerrainTypes currentTerrain { get;  private set; }
 		private double timePerTerrain;
@@ -153,6 +154,7 @@ namespace wallDodger
 			narrowPath = new NarrowPath();
 			obstacle = new Obstacle();
 			straightaway = new Straightaway();
+			abruptTurn = new AbruptTurn();
 
 			timePerTerrain = 5.0; // New terrain generated every 5s.
 			currentWallPairInTerrain = 0;
@@ -587,6 +589,34 @@ namespace wallDodger
 						
 						break;
 					}
+
+				// Bigger offset than usual
+				case (TerrainTypes.AbruptTurn):
+					{
+						// Fix this and regulate spawning
+						if (lastLeftWallY >= spawner.Y + Wall.WallHeight)
+						{
+							// Generate an offset used to determine the x-location of the next wall pair.
+							float offset = abruptTurn.GenerateNext(lastLeftWallX, lastRightWallX);
+
+							// Create a new wall pair using the generated offset.
+							// Adding rightWall like this creates a dependency on GapSize.
+							// If rightWall is added after leftWall, use leftWalls.Count - 2.
+							rightWalls.Add(new Wall(
+								wallAsset,
+								lastLeftWallX + Wall.WallWidth + GapSize + offset,
+								spawner.Y));
+							leftWalls.Add(new Wall(
+								wallAsset,
+								lastLeftWallX + offset,
+								spawner.Y));
+
+							// Default to randomly-generated offsets.
+							currentTerrain = TerrainTypes.DefaultRandom;
+						}
+
+						break;
+					}
 				// ADD MORE TERRAIN TYPES HERE AS YOU PROGRESS
 			}
 		}
@@ -736,7 +766,7 @@ namespace wallDodger
 			// Terrain generated. Randomly select a type. (only zigzag exists for now)
 			else
 			{
-				return (TerrainTypes)(generator.Next(1, 7));
+				return (TerrainTypes)(generator.Next(1, 8));
 			}
 		}
 

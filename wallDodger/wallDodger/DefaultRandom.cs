@@ -35,14 +35,15 @@ namespace wallDodger
 		/// </returns>
 		public override float GenerateNext(float previousLeftWallX, float previousRightWallX)
 		{
-			int offset = generator.Next(lowerOffsetBound, upperOffsetBound);
+			int offset;
 
 			// Generate a random offset until a suitable value is obtained.
-			while (previousLeftWallX + Wall.WallWidth + offset < 0
-				|| previousRightWallX + offset > Game1.WindowWidth)
+			do
 			{
 				offset = generator.Next(lowerOffsetBound, upperOffsetBound);
 			}
+			while (previousLeftWallX + Wall.WallWidth + offset < 0
+				|| previousRightWallX + offset > Game1.WindowWidth);
 
 			// Return the obtained suitable value.
 			return offset;
