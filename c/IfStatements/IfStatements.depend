@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1591171961 source:c:\users\szunk\desktop\anything and everything\anything-and-everything\c\ifstatements\main.c
+	<stdio.h>
+	<stdlib.h>
+
