@@ -58,6 +58,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Roundabout.cs" />
     <Compile Include="ScoreCounter.cs" />
     <Compile Include="StartScreen.cs" />
     <Compile Include="Straightaway.cs" />

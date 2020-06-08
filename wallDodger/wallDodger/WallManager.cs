@@ -21,7 +21,7 @@ namespace wallDodger
 		Obstacle,			// Wall object in middle of path
 		Straightaway,		// A straight section
 		AbruptTurn,			// Bigger offset than usual
-		// Roundabout
+		Roundabout			// Rotary
 	}
 
 	class WallManager
@@ -69,6 +69,7 @@ namespace wallDodger
 		private Obstacle obstacle;
 		private Straightaway straightaway;
 		private AbruptTurn abruptTurn;
+		private Roundabout roundabout;
 
 		public TerrainTypes currentTerrain { get;  private set; }
 		private double timePerTerrain;
@@ -155,6 +156,7 @@ namespace wallDodger
 			obstacle = new Obstacle();
 			straightaway = new Straightaway();
 			abruptTurn = new AbruptTurn();
+			roundabout = new Roundabout();
 
 			timePerTerrain = 5.0; // New terrain generated every 5s.
 			currentWallPairInTerrain = 0;
@@ -606,6 +608,9 @@ namespace wallDodger
 								wallAsset,
 								lastLeftWallX + Wall.WallWidth + GapSize + offset,
 								spawner.Y));
+
+
+
 							leftWalls.Add(new Wall(
 								wallAsset,
 								lastLeftWallX + offset,
@@ -617,7 +622,52 @@ namespace wallDodger
 
 						break;
 					}
-				// ADD MORE TERRAIN TYPES HERE AS YOU PROGRESS
+
+				case (TerrainTypes.Roundabout):
+					{
+						// Fix this and regulate spawning
+						if (lastLeftWallY >= spawner.Y + Wall.WallHeight)
+						{
+							// Continue to generate the roundabout until it is long enough.
+							if (currentWallPairInTerrain < roundabout.TotalWallPairsInTerrain)
+							{
+
+								// Generate an offset used to determine the x-location of the next wall pair.
+								Tuple<float, int> roundaboutNext =
+								roundabout.GenerateNext(lastLeftWallX, currentWallPairInTerrain, GapSize);
+
+								GapSize = roundaboutNext.Item2;
+
+								// Create a new wall pair using the generated offset.
+								// Adding rightWall like this creates a dependency on GapSize.
+								// If rightWall is added after leftWall, use leftWalls.Count - 2.
+								leftWalls.Add(new Wall(
+									wallAsset,
+									roundaboutNext.Item1,
+									spawner.Y));
+
+								lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
+
+								rightWalls.Add(new Wall(
+									wallAsset,
+									lastLeftWallX + Wall.WallWidth + GapSize,
+									spawner.Y));
+
+								currentWallPairInTerrain++;
+							}
+							else
+							{
+								// Reset variables controlling terrain generation so they do not
+								//		interfere with future generation.
+								currentWallPairInTerrain = 0;
+
+								// Default to randomly-generated offsets.
+								currentTerrain = TerrainTypes.DefaultRandom;
+							}
+						}
+
+						break;
+					}
 			}
 		}
 
@@ -766,7 +816,7 @@ namespace wallDodger
 			// Terrain generated. Randomly select a type. (only zigzag exists for now)
 			else
 			{
-				return (TerrainTypes)(generator.Next(1, 8));
+				return (TerrainTypes)(generator.Next(8, 8));
 			}
 		}
 
