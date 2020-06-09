@@ -17,7 +17,12 @@ namespace wallDodger
 		{
 			TotalWallPairsInTerrain = 26;
 			deviationSize = new Vector2(10, 0);
-			gapSizeReductionFactor = 30;
+
+			// Deviating by 10 and setting gapSizeReductionFactor = 10 will result in the left walls 
+			//		just forming a straight line, because the deviation accounts for the gap size
+			//		change. To make the left side symmetrical, gapSizeReductionFactor must be twice
+			//		as large as deviationSize. Think about it.
+			gapSizeReductionFactor = 20;
 		}
 
 		// Unnecessary method; included because overriding is required
@@ -48,7 +53,7 @@ namespace wallDodger
 				// negative sqrt function + obstacle
 				// + OBSTACLE
 				return new Tuple<float, int>(
-					(float)-Math.Sqrt(previousLeftWallX),
+					(float)Math.Sqrt(300 * (previousLeftWallX + Wall.WallWidth)) - Wall.WallWidth - 100,
 					gapSize + (int)Math.Sqrt(previousLeftWallX) * 2);
 			}
 			else if (currentWallInTerrain <= 16)
