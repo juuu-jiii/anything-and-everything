@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1591003130 source:c:\users\kidd\desktop\anything and everything\anything-and-everything\c\anythingwillbefine\main.c
+	<stdio.h>
+	<stdlib.h>
+
