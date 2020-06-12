@@ -76,7 +76,7 @@ namespace wallDodger
 			spriteBatch.DrawString(
 				subtextFont,
 				"Score: " + scoreCounter.Value + Environment.NewLine
-				+ "Level "	+ levelCounter.Value + Environment.NewLine
+				+ "Level: "	+ levelCounter.Value + Environment.NewLine
 				+ Environment.NewLine + "Press ENTER to restart.",
 				subtextPosition, 
 				Color.White);
