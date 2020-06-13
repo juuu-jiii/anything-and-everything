@@ -5,11 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO; // FILE IO WAHOOOOO
 
 namespace wallDodger
 {
 	class ScoreCounter : ProgressCounter
 	{
+		// File IO fields
+		private FileStream writeStream;
+		private FileStream readStream;
+		private BinaryWriter writer;
+		private BinaryReader reader;
+		
 		// Constructor
 		public ScoreCounter(SpriteFont textFont) : base (textFont, new Vector2(20, 20))
 		{
@@ -85,6 +92,23 @@ namespace wallDodger
 			// Not resetting this causes a small discrepancy in time, thus
 			//		impacting score calculations.
 			timeCounter = 0;
+		}
+
+		public void SaveScore(string filename)
+		{
+			try
+			{
+				// Open the file. Store the open file in a FileStream variable.
+				writeStream = File.OpenWrite(filename);
+
+				// BinaryWriter is responsible for writing to the open file passed in (contained in writeStream).
+				writer = new BinaryWriter(writeStream);
+			}
+		}
+
+		public void LoadScores(string filename)
+		{
+
 		}
 	}
 }
