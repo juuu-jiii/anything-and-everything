@@ -9,7 +9,7 @@ namespace wallDodger
 	class Obstacle : Terrain
 	{
 		// Fields
-		public int ObstacleWidth { get; }
+		public int ObstacleWidth { get; protected set; }
 
 		public Obstacle()
 		{

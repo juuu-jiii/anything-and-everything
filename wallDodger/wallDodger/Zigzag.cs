@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-// Deviation: either of the two directions the zigzag can be offset from the starting point - left and right
+// Deviation: the offset of one wall pair from the previous
 
 namespace wallDodger
 {
@@ -100,8 +100,11 @@ namespace wallDodger
 		/// <summary>
 		/// Generates an offset for the next wall pair to be appended.
 		/// </summary>
-		/// <param name="wallManager">
-		/// The WallManager object.
+		/// <param name="previousLeftWallX">
+		/// The x-coordinate of the most recently added left wall.
+		/// </param>
+		/// <param name="previousRightWallX">
+		/// The x-coordinate of the most recently added right wall.
 		/// </param>
 		/// <returns>
 		/// Returns a float offset to be applied to the next wall pair.

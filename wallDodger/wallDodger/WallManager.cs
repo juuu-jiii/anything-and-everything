@@ -49,7 +49,7 @@ namespace wallDodger
 		public int GapSize { get; set; }
 
 		// x-coordinate of left Wall objects lining start "stretch"
-		private int initialLeftWallXPosition;
+		public const int InitialLeftWallXPosition = -350;
 
 		// Variables storing x- and y-coordinates of the most recently added wall pair.
 		private float lastLeftWallX;
@@ -132,8 +132,6 @@ namespace wallDodger
 
 			GapSize = 200;
 
-			initialLeftWallXPosition = -350;
-
 			WallColourArray = new Color[] {
 				Color.White,
 				Color.Green,
@@ -176,11 +174,11 @@ namespace wallDodger
 		{
 			leftWalls.Add(new Wall(
 				wallAsset, 
-				initialLeftWallXPosition, 
+				InitialLeftWallXPosition, 
 				y));
 			rightWalls.Add(new Wall(
 				wallAsset, 
-				initialLeftWallXPosition + Wall.WallWidth + GapSize,
+				InitialLeftWallXPosition + Wall.WallWidth + GapSize,
 				y));
 		}
 
@@ -609,8 +607,6 @@ namespace wallDodger
 								lastLeftWallX + Wall.WallWidth + GapSize + offset,
 								spawner.Y));
 
-
-
 							leftWalls.Add(new Wall(
 								wallAsset,
 								lastLeftWallX + offset,
@@ -623,6 +619,7 @@ namespace wallDodger
 						break;
 					}
 
+				// Legit a roundabout lol
 				case (TerrainTypes.Roundabout):
 					{
 						// Fix this and regulate spawning
@@ -633,26 +630,71 @@ namespace wallDodger
 							{
 
 								// Generate an offset used to determine the x-location of the next wall pair.
-								Tuple<float, int> roundaboutNext =
+								Tuple<float, int, bool> roundaboutNext =
 								roundabout.GenerateNext(lastLeftWallX, currentWallPairInTerrain, GapSize);
 
+								// Updated GapSize is represented by the second value stored in the tuple.
 								GapSize = roundaboutNext.Item2;
 
-								// Create a new wall pair using the generated offset.
-								// Adding rightWall like this creates a dependency on GapSize.
-								// If rightWall is added after leftWall, use leftWalls.Count - 2.
-								leftWalls.Add(new Wall(
-									wallAsset,
-									roundaboutNext.Item1,
-									spawner.Y));
+								// Whether an obstacle is present in the middle of the pathway is represented 
+								//		by the third value stored in the tuple.
+								// Basically if (there is no obstacle)
+								if (!roundaboutNext.Item3)
+								{
+									// Because the method returns the x-position of the next left wall to spawn,
+									//		leftWalls must be added to first.
+									leftWalls.Add(new Wall(
+										wallAsset,
+										roundaboutNext.Item1,
+										spawner.Y));
 
-								lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
+									// Update the tracker variable.
+									lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
 
-								rightWalls.Add(new Wall(
-									wallAsset,
-									lastLeftWallX + Wall.WallWidth + GapSize,
-									spawner.Y));
+									// Use the updated tracker variable and gap size above to spawn a right wall
+									//		 to complete the wall pair appropriately.
+									rightWalls.Add(new Wall(
+										wallAsset,
+										lastLeftWallX + Wall.WallWidth + GapSize,
+										spawner.Y));
+								}
+								// if (there is indeed a massive, annoying, bothersome obstacle in my path)
+								else
+								{
+									// The same ritual as above, really.
+									leftWalls.Add(new Wall(
+										wallAsset,
+										roundaboutNext.Item1,
+										spawner.Y));
 
+									lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
+
+									rightWalls.Add(new Wall(
+										wallAsset,
+										lastLeftWallX + Wall.WallWidth + GapSize,
+										spawner.Y));
+
+									// Manually update, since obstacle generation depends on these values.
+									lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
+									lastRightWallX = rightWalls[rightWalls.Count - 1].Position.X;
+
+									// Create an obstacle Wall object based on the location of the last wall pair.
+									// Use the Roundabout GenerateNext() inherited from Obstacle to generate an
+									//		x-coordinate.
+									float obstacleLocation = roundabout.GenerateNext(lastLeftWallX, lastRightWallX);
+
+									// Using the Wall constructor overload, and creating the obstacle as a 
+									//		right wall object.
+									// Use the updated ObstacleWidth to control the GapSize going through the 
+									//		roundabout.
+									rightWalls.Add(new Wall(
+										wallAsset,
+										obstacleLocation,
+										spawner.Y,
+										roundabout.ObstacleWidth));
+								}
+
+								// Don't forget to increment this!!
 								currentWallPairInTerrain++;
 							}
 							else
@@ -816,7 +858,7 @@ namespace wallDodger
 			// Terrain generated. Randomly select a type. (only zigzag exists for now)
 			else
 			{
-				return (TerrainTypes)(generator.Next(8, 8));
+				return (TerrainTypes)(generator.Next(1, 9));
 			}
 		}
 
