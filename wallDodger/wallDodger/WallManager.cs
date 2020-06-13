@@ -784,7 +784,12 @@ namespace wallDodger
 			// Clear both lists.
 			leftWalls.Clear();
 			rightWalls.Clear();
-			
+
+			// This is necessary, since now GapSize is altered by Roundabout.
+			// This must be placed here, because the subsequent private SpawnWallPair() calls
+			//		rely on GapSize being set to its default.
+			GapSize = 200;
+
 			// Setting up the start "stretch".
 			for (int i = Game1.WindowHeight; i >= -20; i -= Wall.WallHeight)
 			{
@@ -806,6 +811,7 @@ namespace wallDodger
 			narrowSpace.Reset();
 			narrowPath.Reset();
 
+			// Prevent this from interfering new games.
 			currentWallPairInTerrain = 0;
 		}
 
@@ -858,7 +864,7 @@ namespace wallDodger
 			// Terrain generated. Randomly select a type. (only zigzag exists for now)
 			else
 			{
-				return (TerrainTypes)(generator.Next(1, 9));
+				return (TerrainTypes)(generator.Next(8,8));
 			}
 		}
 
