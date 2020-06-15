@@ -15,6 +15,7 @@ namespace wallDodger
 		// Variables storing Button components
 		public Button StartButton { get; }
 		public Button QuitButton { get; }
+		public Button LeaderboardButton { get; }
 
 		public StartScreen(
 			SpriteFont verdanaBold20, 
@@ -29,7 +30,8 @@ namespace wallDodger
 				verdanaSmall)
 		{
 			StartButton = new Button(buttonTexture, verdana12, 175, 300, 227, 313);
-			QuitButton = new Button(buttonTexture, verdana12, 175, 360, 230, 373);
+			LeaderboardButton = new Button(buttonTexture, verdana12, 175, 360, 177, 373);
+			QuitButton = new Button(buttonTexture, verdana12, 175, 420, 230, 433);
 		}
 
 		/// <summary>
@@ -48,6 +50,7 @@ namespace wallDodger
 
 			// Draw the buttons.
 			StartButton.Draw(spriteBatch, "Start");
+			LeaderboardButton.Draw(spriteBatch, "Leaderboard");
 			QuitButton.Draw(spriteBatch, "Quit");
 
 			// Draw the game title text and version number

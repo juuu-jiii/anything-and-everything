@@ -11,6 +11,7 @@ namespace wallDodger
 	enum GameStates
 	{
 		StartScreen,
+		Leaderboard,
 		Pregame,
 		Playing,
 		GameOver
@@ -56,6 +57,7 @@ namespace wallDodger
 		StartScreen startScreen;
 		PregameScreen pregameScreen;
 		GameOverScreen gameOverScreen;
+		LeaderboardScreen leaderboardScreen;
 		ScoreCounter scoreCounter;
 		LevelCounter levelCounter;
 		
@@ -114,8 +116,12 @@ namespace wallDodger
 			startScreen = new StartScreen(verdanaBold20, verdana12, verdanaSmall, whiteSquare, whiteSquare);
 			pregameScreen = new PregameScreen(verdana12, wall);
 			gameOverScreen = new GameOverScreen(verdanaBold20, verdana12, wall, whiteSquare);
+			leaderboardScreen = new LeaderboardScreen(verdanaBold20, verdana12, whiteSquare, whiteSquare);
 			scoreCounter = new ScoreCounter(verdana12);
 			levelCounter = new LevelCounter(verdana12);
+
+			// Initialise leaderboard array
+			scoreCounter.LoadScores();
 
 			// Subscribing applicable methods to both event handlers
 			levelCounter.LevelUpAction += player.LevelUp;
@@ -158,6 +164,7 @@ namespace wallDodger
 						playerState = PlayerStates.Idle;
 
 						startScreen.StartButton.Update(mState, prevMState);
+						startScreen.LeaderboardButton.Update(mState, prevMState);
 						startScreen.QuitButton.Update(mState, prevMState);
 
 						// Giving the buttons on the start screen their functionality
@@ -166,9 +173,34 @@ namespace wallDodger
 							gameState = GameStates.Pregame;
 						}
 
+						if (startScreen.LeaderboardButton.IsClicked)
+						{
+							gameState = GameStates.Leaderboard;
+						}
+
 						if (startScreen.QuitButton.IsClicked)
 						{
+							// Save high scores to file before terminating.
+							scoreCounter.SaveScores();
 							Exit();
+						}
+
+						Need to find out how to access the close button too
+							and also having trouble with updateScores() and the sorting algo i guess.
+
+						break;
+					}
+				case (GameStates.Leaderboard):
+					{
+						// Should not need to do anything other than check for 
+						//		button press, since the start screen must be
+						//		accessed prior to the leaderboard.
+						leaderboardScreen.BackButton.Update(mState, prevMState);
+
+						// Giving the back button its functionality
+						if (leaderboardScreen.BackButton.IsClicked)
+						{
+							gameState = GameStates.StartScreen;
 						}
 
 						break;
@@ -207,6 +239,9 @@ namespace wallDodger
 				case (GameStates.GameOver):
 					{
 						playerState = PlayerStates.Idle;
+
+						// Update leaderboard array.
+						scoreCounter.UpdateScores(scoreCounter.Value);
 
 						gameOverScreen.returnToStartScreen.Update(mState, prevMState);
 
@@ -372,6 +407,11 @@ namespace wallDodger
 				case (GameStates.StartScreen):
 					{
 						startScreen.Draw(spriteBatch);
+						break;
+					}
+				case (GameStates.Leaderboard):
+					{
+						leaderboardScreen.Draw(spriteBatch, scoreCounter.HiScores);
 						break;
 					}
 				case (GameStates.Pregame):

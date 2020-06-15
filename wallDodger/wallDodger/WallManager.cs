@@ -844,7 +844,9 @@ namespace wallDodger
 			}				
 		}
 
+		// ********************************************************************
 		// ---TERRAIN GENERATION METHODS---
+		// ********************************************************************
 		/// <summary>
 		/// Randomly selects a terrain type from the TerrainTypes enum. Set so 
 		///		there is a 50% chance that a terrain other than DefaultRandom 
