@@ -60,11 +60,19 @@ namespace wallDodger
 		LeaderboardScreen leaderboardScreen;
 		ScoreCounter scoreCounter;
 		LevelCounter levelCounter;
+		Leaderboard leaderboard;
 		
 		// Variables to track mouse and keyboard input
 		KeyboardState kbState;
+		KeyboardState prevKBState;
 		MouseState mState;
 		MouseState prevMState;
+
+
+		// TEXT INPUT TESTER VARIABLES
+		string liveString;
+		Keys[] liveStringArray;
+
 
 		public Game1()
 		{
@@ -119,9 +127,10 @@ namespace wallDodger
 			leaderboardScreen = new LeaderboardScreen(verdanaBold20, verdana12, whiteSquare, whiteSquare);
 			scoreCounter = new ScoreCounter(verdana12);
 			levelCounter = new LevelCounter(verdana12);
+			leaderboard = new Leaderboard();
 
 			// Initialise leaderboard array
-			scoreCounter.LoadScores();
+			leaderboard.LoadScores();
 
 			// Subscribing applicable methods to both event handlers
 			levelCounter.LevelUpAction += player.LevelUp;
@@ -153,6 +162,7 @@ namespace wallDodger
 			// TODO: Add your update logic here
 
 			kbState = Keyboard.GetState();
+
 			mState = Mouse.GetState();
 
 			#region Game States FSM - Update() portion
@@ -162,6 +172,40 @@ namespace wallDodger
 					{
 						// "Deactivate" the player.
 						playerState = PlayerStates.Idle;
+
+
+
+
+
+
+
+						// TEXT INPUT TESTER CODE
+						if (kbState.GetPressedKeys().Length != 0
+							&& prevKBState.GetPressedKeys().Length == 0)
+						{
+							liveStringArray = kbState.GetPressedKeys();
+
+							if (liveStringArray[0] == Keys.Back
+								&& liveString.Length > 0)
+								// Strings are immutable, and so must be 
+								//		reassigned should they be modified - 
+								//		similar to how structs behave.
+								liveString = liveString.Remove(liveString.Length - 1);
+							else
+								liveString += liveStringArray[0];
+							//for (int i = 0; i < liveStringArray.Length; i++)
+							//{
+							//	if (liveStringArray[i])
+							//	liveString += liveStringArray[i];
+							//}
+						}
+						
+						
+
+
+
+
+
 
 						startScreen.StartButton.Update(mState, prevMState);
 						startScreen.LeaderboardButton.Update(mState, prevMState);
@@ -180,13 +224,8 @@ namespace wallDodger
 
 						if (startScreen.QuitButton.IsClicked)
 						{
-							// Save high scores to file before terminating.
-							scoreCounter.SaveScores();
 							Exit();
 						}
-
-						Need to find out how to access the close button too
-							and also having trouble with updateScores() and the sorting algo i guess.
 
 						break;
 					}
@@ -226,7 +265,7 @@ namespace wallDodger
 						{
 							gameState = GameStates.Playing;
 						}
-
+						
 						break;
 					}
 				case (GameStates.Playing):
@@ -239,9 +278,6 @@ namespace wallDodger
 				case (GameStates.GameOver):
 					{
 						playerState = PlayerStates.Idle;
-
-						// Update leaderboard array.
-						scoreCounter.UpdateScores(scoreCounter.Value);
 
 						gameOverScreen.returnToStartScreen.Update(mState, prevMState);
 
@@ -327,6 +363,17 @@ namespace wallDodger
 						{
 							if (player.Collided(wall))
 							{
+								// Update leaderboard array and save scores each time 
+								//		a game ends.
+								// If UpdateScores() is called when the game over screen 
+								//		shows up, all leaderboard scores get overwritten, 
+								//		since it is called over and over again each frame.
+								//		The code was designed to run only once, and so 
+								//		this is the most suitable place to run it, as
+								//		the state changes upon a single collision.
+								leaderboard.UpdateScores(scoreCounter.Value);
+								leaderboard.SaveScores();
+
 								gameState = GameStates.GameOver;
 							}
 						}
@@ -335,6 +382,17 @@ namespace wallDodger
 						{
 							if (player.Collided(wall))
 							{
+								// Update leaderboard array and save scores each time 
+								//		a game ends.
+								// If UpdateScores() is called when the game over screen 
+								//		shows up, all leaderboard scores get overwritten, 
+								//		since it is called over and over again each frame.
+								//		The code was designed to run only once, and so 
+								//		this is the most suitable place to run it, as
+								//		the state changes upon a single collision.
+								leaderboard.UpdateScores(scoreCounter.Value);
+								leaderboard.SaveScores();
+
 								gameState = GameStates.GameOver;
 							}
 						}
@@ -384,6 +442,7 @@ namespace wallDodger
 			//wallManager.DespawnWallPair();
 			#endregion
 
+			prevKBState = kbState;
 			prevMState = mState;
 
 			base.Update(gameTime);
@@ -407,11 +466,24 @@ namespace wallDodger
 				case (GameStates.StartScreen):
 					{
 						startScreen.Draw(spriteBatch);
+
+						// TEXT INPUT TESTER CODE
+						if (liveString != null)
+						{
+							spriteBatch.DrawString(
+							verdana12,
+							liveString,
+							new Vector2(10, 10),
+							Color.Black);
+						}
+						
+
+
 						break;
 					}
 				case (GameStates.Leaderboard):
 					{
-						leaderboardScreen.Draw(spriteBatch, scoreCounter.HiScores);
+						leaderboardScreen.Draw(spriteBatch, leaderboard.HiScores);
 						break;
 					}
 				case (GameStates.Pregame):

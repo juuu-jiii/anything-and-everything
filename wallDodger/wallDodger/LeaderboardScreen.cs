@@ -49,16 +49,16 @@ namespace wallDodger
 				backdrop,
 				new Rectangle(0, 0, Game1.WindowWidth, Game1.WindowHeight),
 				Color.White);
-
+			
 			// Draw the buttons.
 			BackButton.Draw(spriteBatch, "Back");
 
 			// Draw the screen heading.
 			spriteBatch.DrawString(
 				textFont, 
-				"LOCAL LEADERBOARD", 
+				"HIGH SCORES", 
 				textPosition, 
-				Color.White);
+				Color.Black);
 
 			// Loop through the array and draw the high scores.
 			for (int i = 0; i < hiScores.Length; i++)
