@@ -70,8 +70,9 @@ namespace wallDodger
 
 
 		// TEXT INPUT TESTER VARIABLES
-		string liveString;
+		string liveString { get; set; }
 		Keys[] liveStringArray;
+		Keys[] prevLiveStringArray = new Keys[1];
 
 
 		public Game1()
@@ -180,25 +181,123 @@ namespace wallDodger
 
 
 						// TEXT INPUT TESTER CODE
-						if (kbState.GetPressedKeys().Length != 0
-							&& prevKBState.GetPressedKeys().Length == 0)
-						{
-							liveStringArray = kbState.GetPressedKeys();
 
-							if (liveStringArray[0] == Keys.Back
-								&& liveString.Length > 0)
-								// Strings are immutable, and so must be 
-								//		reassigned should they be modified - 
-								//		similar to how structs behave.
-								liveString = liveString.Remove(liveString.Length - 1);
-							else
-								liveString += liveStringArray[0];
-							//for (int i = 0; i < liveStringArray.Length; i++)
-							//{
-							//	if (liveStringArray[i])
-							//	liveString += liveStringArray[i];
-							//}
+						// Maybe use the pipe symbol '|' as the typehead indicator next?
+						// Set it as the last character in the array and alternate between ' ' and '|' each time
+						//		a preset "buffer period has passed"
+						// Restrict the keys that may be pressed here. You only want letter keys to work.
+						// How can the character repeat property be implemented, after holding down the key past 
+						//		"artificial lag" limit?
+
+						// For all intents and purposes, the following code works sufficiently well.
+						// Mixing GetPressedKeys() with IsKeyUp/Down()
+						// Loop through GetPressedKeys()'s returned array to see if the keys are pressed
+						// If they are, do not add them to liveStringArray - only add those that are not pressed.
+
+						// Assign the returned array of pressed keys for that frame to a variable.
+						liveStringArray = kbState.GetPressedKeys();
+
+						// Loop through the above returned array.
+						for (int i = 0; i < liveStringArray.Length; i++)
+						{
+							// Detect single presses of keys in the array. Only proceed if the current key
+							//		being checked was up in the previous frame. Otherwise skip and check
+							//		the next key in the array. This effectively allows for regular typing,
+							//		save for the character repeat aspect. This is because a few keys are 
+							//		pressed simultaneously while typing normally, and this solution accommodates 
+							//		such a scenario.
+							if (kbState.IsKeyDown(liveStringArray[i])
+								&& prevKBState.IsKeyUp(liveStringArray[i]))
+							{
+								// If Backspace was pressed, delete the appropriate character from the string.
+								if (liveStringArray[i] == Keys.Back
+									&& liveString.Length > 0)
+								{
+									// Strings are immutable, and so must be reassigned should they be modified,
+									//		similarly with how structs behave.
+									liveString = liveString.Remove(liveString.Length - 1);
+								}
+								// If Backspace is pressed while the string is empty, do nothing.
+								else if (liveStringArray[i] == Keys.Back
+										&& liveString.Length == 0)
+								{
+									// This prevents an index out of range error from occurring.
+								}
+								// If Space is pressed, concatenate a space character with the string.
+								else if (liveStringArray[i] == Keys.Space)
+								{
+									liveString += " ";
+								}
+								// For all other Keys, concatenate them in the order they were pressed i.e. the
+								//		order in which they appear in liveStringArray.
+								else
+								{
+									liveString += liveStringArray[i];
+								}
+							}
 						}
+
+
+
+
+						//if (liveStringArray[0] == Keys.Back
+						//		&& liveString.Length > 0)
+						//	// Strings are immutable, and so must be 
+						//	//		reassigned should they be modified, 
+						//	//		similarly with how structs behave.
+						//	liveString = liveString.Remove(liveString.Length - 1);
+						//else if (liveStringArray[0] == Keys.Back
+						//	&& liveString.Length == 0)
+						//{
+						//	// Do nothing, since backspace is being pressed 
+						//	//		on an already empty string.
+						//}
+						//else
+						//	liveString += liveStringArray[0];
+						////for (int i = 0; i < liveStringArray.Length; i++)
+						////{
+						////	if (liveStringArray[i])
+						////	liveString += liveStringArray[i];
+						////}
+
+						//prevLiveStringArray = liveStringArray;
+
+
+
+
+
+
+						//if (kbState.GetPressedKeys().Length != 0
+						//	&& prevKBState.GetPressedKeys().Length == 0)
+						//{
+
+						//	// might want to do without the keys outside of the 26 letters of the alphabet
+						//	// how to do it so multiple keys can be pressed
+
+						//	liveStringArray.
+
+						//	if (liveStringArray[0] == Keys.Back
+						//		&& liveString.Length > 0)
+						//		// Strings are immutable, and so must be 
+						//		//		reassigned should they be modified, 
+						//		//		similarly with how structs behave.
+						//		liveString = liveString.Remove(liveString.Length - 1);
+						//	else if (liveStringArray[0] == Keys.Back
+						//		&& liveString.Length == 0)
+						//	{
+						//		// Do nothing, since backspace is being pressed 
+						//		//		on an already empty string.
+						//	}
+						//	else
+						//		liveString += liveStringArray[0];
+						//	//for (int i = 0; i < liveStringArray.Length; i++)
+						//	//{
+						//	//	if (liveStringArray[i])
+						//	//	liveString += liveStringArray[i];
+						//	//}
+
+						//	prevLiveStringArray = liveStringArray;
+						//}
 						
 						
 
@@ -466,6 +565,8 @@ namespace wallDodger
 				case (GameStates.StartScreen):
 					{
 						startScreen.Draw(spriteBatch);
+
+
 
 						// TEXT INPUT TESTER CODE
 						if (liveString != null)
