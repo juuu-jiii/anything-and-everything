@@ -14,6 +14,7 @@ namespace wallDodger
 		Leaderboard,
 		Pregame,
 		Playing,
+		HiScore,
 		GameOver
 	}
 
@@ -56,6 +57,7 @@ namespace wallDodger
 		Player player;
 		StartScreen startScreen;
 		PregameScreen pregameScreen;
+		HiScoreNameEntryScreen hiScoreNameEntryScreen;
 		GameOverScreen gameOverScreen;
 		LeaderboardScreen leaderboardScreen;
 		ScoreCounter scoreCounter;
@@ -67,13 +69,6 @@ namespace wallDodger
 		KeyboardState prevKBState;
 		MouseState mState;
 		MouseState prevMState;
-
-
-		// TEXT INPUT TESTER VARIABLES
-		string liveString { get; set; }
-		Keys[] liveStringArray;
-		Keys[] prevLiveStringArray = new Keys[1];
-
 
 		public Game1()
 		{
@@ -124,6 +119,7 @@ namespace wallDodger
 			player = new Player(playerArrow);
 			startScreen = new StartScreen(verdanaBold20, verdana12, verdanaSmall, whiteSquare, whiteSquare);
 			pregameScreen = new PregameScreen(verdana12, wall);
+			hiScoreNameEntryScreen = new HiScoreNameEntryScreen(verdana12, whiteSquare, whiteSquare, whiteSquare);
 			gameOverScreen = new GameOverScreen(verdanaBold20, verdana12, wall, whiteSquare);
 			leaderboardScreen = new LeaderboardScreen(verdanaBold20, verdana12, whiteSquare, whiteSquare);
 			scoreCounter = new ScoreCounter(verdana12);
@@ -173,138 +169,6 @@ namespace wallDodger
 					{
 						// "Deactivate" the player.
 						playerState = PlayerStates.Idle;
-
-
-
-
-
-
-
-						// TEXT INPUT TESTER CODE
-
-						// Maybe use the pipe symbol '|' as the typehead indicator next?
-						// Set it as the last character in the array and alternate between ' ' and '|' each time
-						//		a preset "buffer period has passed"
-						// Restrict the keys that may be pressed here. You only want letter keys to work.
-						// How can the character repeat property be implemented, after holding down the key past 
-						//		"artificial lag" limit?
-
-						// For all intents and purposes, the following code works sufficiently well.
-						// Mixing GetPressedKeys() with IsKeyUp/Down()
-						// Loop through GetPressedKeys()'s returned array to see if the keys are pressed
-						// If they are, do not add them to liveStringArray - only add those that are not pressed.
-
-						// Assign the returned array of pressed keys for that frame to a variable.
-						liveStringArray = kbState.GetPressedKeys();
-
-						// Loop through the above returned array.
-						for (int i = 0; i < liveStringArray.Length; i++)
-						{
-							// Detect single presses of keys in the array. Only proceed if the current key
-							//		being checked was up in the previous frame. Otherwise skip and check
-							//		the next key in the array. This effectively allows for regular typing,
-							//		save for the character repeat aspect. This is because a few keys are 
-							//		pressed simultaneously while typing normally, and this solution accommodates 
-							//		such a scenario.
-							if (kbState.IsKeyDown(liveStringArray[i])
-								&& prevKBState.IsKeyUp(liveStringArray[i]))
-							{
-								// If Backspace was pressed, delete the appropriate character from the string.
-								if (liveStringArray[i] == Keys.Back
-									&& liveString.Length > 0)
-								{
-									// Strings are immutable, and so must be reassigned should they be modified,
-									//		similarly with how structs behave.
-									liveString = liveString.Remove(liveString.Length - 1);
-								}
-								// If Backspace is pressed while the string is empty, do nothing.
-								else if (liveStringArray[i] == Keys.Back
-										&& liveString.Length == 0)
-								{
-									// This prevents an index out of range error from occurring.
-								}
-								// If Space is pressed, concatenate a space character with the string.
-								else if (liveStringArray[i] == Keys.Space)
-								{
-									liveString += " ";
-								}
-								// For all other Keys, concatenate them in the order they were pressed i.e. the
-								//		order in which they appear in liveStringArray.
-								else
-								{
-									liveString += liveStringArray[i];
-								}
-							}
-						}
-
-
-
-
-						//if (liveStringArray[0] == Keys.Back
-						//		&& liveString.Length > 0)
-						//	// Strings are immutable, and so must be 
-						//	//		reassigned should they be modified, 
-						//	//		similarly with how structs behave.
-						//	liveString = liveString.Remove(liveString.Length - 1);
-						//else if (liveStringArray[0] == Keys.Back
-						//	&& liveString.Length == 0)
-						//{
-						//	// Do nothing, since backspace is being pressed 
-						//	//		on an already empty string.
-						//}
-						//else
-						//	liveString += liveStringArray[0];
-						////for (int i = 0; i < liveStringArray.Length; i++)
-						////{
-						////	if (liveStringArray[i])
-						////	liveString += liveStringArray[i];
-						////}
-
-						//prevLiveStringArray = liveStringArray;
-
-
-
-
-
-
-						//if (kbState.GetPressedKeys().Length != 0
-						//	&& prevKBState.GetPressedKeys().Length == 0)
-						//{
-
-						//	// might want to do without the keys outside of the 26 letters of the alphabet
-						//	// how to do it so multiple keys can be pressed
-
-						//	liveStringArray.
-
-						//	if (liveStringArray[0] == Keys.Back
-						//		&& liveString.Length > 0)
-						//		// Strings are immutable, and so must be 
-						//		//		reassigned should they be modified, 
-						//		//		similarly with how structs behave.
-						//		liveString = liveString.Remove(liveString.Length - 1);
-						//	else if (liveStringArray[0] == Keys.Back
-						//		&& liveString.Length == 0)
-						//	{
-						//		// Do nothing, since backspace is being pressed 
-						//		//		on an already empty string.
-						//	}
-						//	else
-						//		liveString += liveStringArray[0];
-						//	//for (int i = 0; i < liveStringArray.Length; i++)
-						//	//{
-						//	//	if (liveStringArray[i])
-						//	//	liveString += liveStringArray[i];
-						//	//}
-
-						//	prevLiveStringArray = liveStringArray;
-						//}
-						
-						
-
-
-
-
-
 
 						startScreen.StartButton.Update(mState, prevMState);
 						startScreen.LeaderboardButton.Update(mState, prevMState);
@@ -374,11 +238,32 @@ namespace wallDodger
 
 						break;
 					}
-				case (GameStates.GameOver):
+				case (GameStates.HiScore):
 					{
+						// "Deactivate" the player.
 						playerState = PlayerStates.Idle;
 
-						gameOverScreen.returnToStartScreen.Update(mState, prevMState);
+						hiScoreNameEntryScreen.Submit.Update(mState, prevMState);
+						hiScoreNameEntryScreen.Update(kbState, prevKBState);
+
+						// Either clicking the Submit button or hitting enter saves scores 
+						//		and changes the game's state.
+						if (hiScoreNameEntryScreen.Submit.IsClicked
+							|| kbState.IsKeyDown(Keys.Enter))
+						{
+							// BUT SAVE WHAT DATA? CHANGE SAVESCORES NEXT
+							leaderboard.SaveScores();
+							gameState = GameStates.GameOver;
+						}
+
+						break;
+					}
+				case (GameStates.GameOver):
+					{
+						// Deactivate the player here too, in case no new high score was set.
+						playerState = PlayerStates.Idle;
+
+						gameOverScreen.ReturnToStartScreen.Update(mState, prevMState);
 
 						// Pressing Enter restarts the game.
 						if (kbState.IsKeyDown(Keys.Enter))
@@ -398,7 +283,7 @@ namespace wallDodger
 
 						// Giving the button on the game over screen its 
 						//		functionality
-						if (gameOverScreen.returnToStartScreen.IsClicked)
+						if (gameOverScreen.ReturnToStartScreen.IsClicked)
 						{
 							gameState = GameStates.StartScreen;
 						}
@@ -470,10 +355,16 @@ namespace wallDodger
 								//		The code was designed to run only once, and so 
 								//		this is the most suitable place to run it, as
 								//		the state changes upon a single collision.
-								leaderboard.UpdateScores(scoreCounter.Value);
-								leaderboard.SaveScores();
-
-								gameState = GameStates.GameOver;
+								if (leaderboard.UpdateScores(scoreCounter.Value))
+								{
+									// Display the high score screen if the player earns
+									//		a score that alters the leaderboard.
+									gameState = GameStates.HiScore;
+								}
+								else
+								{
+									gameState = GameStates.GameOver;
+								}
 							}
 						}
 
@@ -489,10 +380,16 @@ namespace wallDodger
 								//		The code was designed to run only once, and so 
 								//		this is the most suitable place to run it, as
 								//		the state changes upon a single collision.
-								leaderboard.UpdateScores(scoreCounter.Value);
-								leaderboard.SaveScores();
-
-								gameState = GameStates.GameOver;
+								if (leaderboard.UpdateScores(scoreCounter.Value))
+								{
+									// Display the high score screen if the player earns
+									//		a score that alters the leaderboard.
+									gameState = GameStates.HiScore;
+								}
+								else
+								{
+									gameState = GameStates.GameOver;
+								}
 							}
 						}
 
@@ -565,21 +462,6 @@ namespace wallDodger
 				case (GameStates.StartScreen):
 					{
 						startScreen.Draw(spriteBatch);
-
-
-
-						// TEXT INPUT TESTER CODE
-						if (liveString != null)
-						{
-							spriteBatch.DrawString(
-							verdana12,
-							liveString,
-							new Vector2(10, 10),
-							Color.Black);
-						}
-						
-
-
 						break;
 					}
 				case (GameStates.Leaderboard):
@@ -605,6 +487,13 @@ namespace wallDodger
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
 						levelCounter.Draw(spriteBatch);
+
+						break;
+					}
+				case (GameStates.HiScore):
+					{
+						// Overlay the high score screen on top of the current game state.
+						hiScoreNameEntryScreen.Draw(spriteBatch);
 
 						break;
 					}

@@ -128,7 +128,10 @@ namespace wallDodger
 		/// <param name="currentScore">
 		/// The score earned from the current run.
 		/// </param>
-		public void UpdateScores(int currentScore)
+		/// <returns>
+		/// Returns true if a new high score was set, and false otherwise.
+		/// </returns>
+		public bool UpdateScores(int currentScore)
 		{
 			// On its own this should be a sufficient replacement for a sorting
 			//		algorithm of any sort.
@@ -150,10 +153,13 @@ namespace wallDodger
 					// ...replace the proper position with the new score...
 					HiScores[i] = currentScore;
 
-					// ...and break out of the loop early if applicable.
-					break;
+					// ...and exit the loop, returning true.
+					return true;
 				}
 			}
+
+			// If this line of code is reached, no high score was set - return false.
+			return false;
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace wallDodger
 		// Fields
 
 		private Color backdropColour;
-		public Button returnToStartScreen { get; }
+		public Button ReturnToStartScreen { get; }
 
 		public GameOverScreen(
 			SpriteFont verdanaBold20, 
@@ -26,7 +26,7 @@ namespace wallDodger
 				verdanaBold20,
 				verdana12)
 		{
-			returnToStartScreen = new Button(buttonTexture, verdana12, 177, 365, 207, 377);
+			ReturnToStartScreen = new Button(buttonTexture, verdana12, 177, 365, 207, 378);
 
 			// Create a custom colour using only the alpha channel for 
 			//		translucency, so this screen can be used as an overlay.
@@ -48,7 +48,7 @@ namespace wallDodger
 				backdropColour);
 
 			// Draw button.
-			returnToStartScreen.Draw(spriteBatch, "Main Menu");
+			ReturnToStartScreen.Draw(spriteBatch, "Main Menu");
 
 			// Draw game over text.
 			spriteBatch.DrawString(
