@@ -15,8 +15,11 @@ namespace wallDodger
 		// Back button
 		public Button BackButton { get; }
 
-		// Spacer for drawing scores to the screen.
+		// Spacer for drawing scores to the screen
 		private Vector2 spacer;
+
+		// Vector2 for second subtext location
+		private Vector2 subtext2Position;
 
 		public LeaderboardScreen(
 			SpriteFont verdanaBold20,
@@ -31,6 +34,9 @@ namespace wallDodger
 		{
 			BackButton = new Button(buttonTexture, verdana12, 175, 360, 225, 373);
 			spacer = new Vector2(0, 20);
+
+			// Second subtext is offset 100 px to the right of first.
+			subtext2Position = subtextPosition + new Vector2(100, 0);
 		}
 
 		/// <summary>
@@ -42,7 +48,7 @@ namespace wallDodger
 		/// <param name="hiScores">
 		/// An int array containing high scores.
 		/// </param>
-		public void Draw(SpriteBatch spriteBatch, int[] hiScores)
+		public void Draw(SpriteBatch spriteBatch, Tuple<string, int>[] hiScores)
 		{
 			// Draw the backdrop.
 			spriteBatch.Draw(
@@ -69,8 +75,14 @@ namespace wallDodger
 
 				spriteBatch.DrawString(
 					subtextFont,
-					hiScores[i].ToString(),
+					hiScores[i].Item1,
 					subtextPosition + i * spacer,
+					Color.Black);
+
+				spriteBatch.DrawString(
+					subtextFont,
+					hiScores[i].Item2.ToString(),
+					subtext2Position + i * spacer,
 					Color.Black);
 			}
 		}

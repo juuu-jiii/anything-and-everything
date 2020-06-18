@@ -49,6 +49,7 @@ namespace wallDodger
 		Texture2D playerArrow;
 		Texture2D whiteSquare;
 		SpriteFont verdanaBold20;
+		SpriteFont verdanaBold16;
 		SpriteFont verdana12;
 		SpriteFont verdanaSmall;
 
@@ -69,6 +70,9 @@ namespace wallDodger
 		KeyboardState prevKBState;
 		MouseState mState;
 		MouseState prevMState;
+
+		// Variable to track a high score's location in the leaderboard array
+		int leaderboardPosition;
 
 		public Game1()
 		{
@@ -113,13 +117,14 @@ namespace wallDodger
 			playerArrow = Content.Load<Texture2D>("greySquare");
 			whiteSquare = Content.Load<Texture2D>("whiteSquare");
 			verdanaBold20 = Content.Load<SpriteFont>("verdanaBold20");
+			verdanaBold16 = Content.Load<SpriteFont>("verdanaBold16");
 			verdana12 = Content.Load<SpriteFont>("verdana12");
 			verdanaSmall = Content.Load<SpriteFont>("verdanaSmall");
 
 			player = new Player(playerArrow);
 			startScreen = new StartScreen(verdanaBold20, verdana12, verdanaSmall, whiteSquare, whiteSquare);
 			pregameScreen = new PregameScreen(verdana12, wall);
-			hiScoreNameEntryScreen = new HiScoreNameEntryScreen(verdana12, whiteSquare, whiteSquare, whiteSquare);
+			hiScoreNameEntryScreen = new HiScoreNameEntryScreen(verdanaBold16, verdana12, whiteSquare, whiteSquare, whiteSquare);
 			gameOverScreen = new GameOverScreen(verdanaBold20, verdana12, wall, whiteSquare);
 			leaderboardScreen = new LeaderboardScreen(verdanaBold20, verdana12, whiteSquare, whiteSquare);
 			scoreCounter = new ScoreCounter(verdana12);
@@ -251,7 +256,11 @@ namespace wallDodger
 						if (hiScoreNameEntryScreen.Submit.IsClicked
 							|| kbState.IsKeyDown(Keys.Enter))
 						{
-							// BUT SAVE WHAT DATA? CHANGE SAVESCORES NEXT
+							// Update and save leaderboard data.
+							leaderboard.UpdateScores(
+								leaderboardPosition,
+								hiScoreNameEntryScreen.LiveString,
+								scoreCounter.Value);
 							leaderboard.SaveScores();
 							gameState = GameStates.GameOver;
 						}
@@ -266,7 +275,10 @@ namespace wallDodger
 						gameOverScreen.ReturnToStartScreen.Update(mState, prevMState);
 
 						// Pressing Enter restarts the game.
-						if (kbState.IsKeyDown(Keys.Enter))
+						// Check for single key press so Enter input from high score screen 
+						//		does not interfere with current.
+						if (kbState.IsKeyDown(Keys.Enter)
+							&& prevKBState.IsKeyUp(Keys.Enter))
 						{
 							// Perform necessary data resets.
 							if (ResetAction != null)
@@ -347,23 +359,20 @@ namespace wallDodger
 						{
 							if (player.Collided(wall))
 							{
-								// Update leaderboard array and save scores each time 
-								//		a game ends.
-								// If UpdateScores() is called when the game over screen 
-								//		shows up, all leaderboard scores get overwritten, 
-								//		since it is called over and over again each frame.
-								//		The code was designed to run only once, and so 
-								//		this is the most suitable place to run it, as
-								//		the state changes upon a single collision.
-								if (leaderboard.UpdateScores(scoreCounter.Value))
-								{
-									// Display the high score screen if the player earns
-									//		a score that alters the leaderboard.
-									gameState = GameStates.HiScore;
-								}
-								else
+								// Generate a leaderboard position, if applicable.
+								leaderboardPosition = leaderboard.IsHighScore(scoreCounter.Value);
+								
+								// Check whether the score earned this run is a high score.
+								// If it is not, proceed directly to the game over screen.
+								if (leaderboardPosition == -1)
 								{
 									gameState = GameStates.GameOver;
+								}
+								// Display the high score screen if the player earns a
+								//		score that alters the leaderboard.
+								else
+								{
+									gameState = GameStates.HiScore;
 								}
 							}
 						}
@@ -372,23 +381,20 @@ namespace wallDodger
 						{
 							if (player.Collided(wall))
 							{
-								// Update leaderboard array and save scores each time 
-								//		a game ends.
-								// If UpdateScores() is called when the game over screen 
-								//		shows up, all leaderboard scores get overwritten, 
-								//		since it is called over and over again each frame.
-								//		The code was designed to run only once, and so 
-								//		this is the most suitable place to run it, as
-								//		the state changes upon a single collision.
-								if (leaderboard.UpdateScores(scoreCounter.Value))
-								{
-									// Display the high score screen if the player earns
-									//		a score that alters the leaderboard.
-									gameState = GameStates.HiScore;
-								}
-								else
+								// Generate a leaderboard position, if applicable.
+								leaderboardPosition = leaderboard.IsHighScore(scoreCounter.Value);
+
+								// Check whether the score earned this run is a high score.
+								// If it is not, proceed directly to the game over screen.
+								if (leaderboardPosition == -1)
 								{
 									gameState = GameStates.GameOver;
+								}
+								// Display the high score screen if the player earns a
+								//		score that alters the leaderboard.
+								else
+								{
+									gameState = GameStates.HiScore;
 								}
 							}
 						}
@@ -476,7 +482,7 @@ namespace wallDodger
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
 						levelCounter.Draw(spriteBatch);
-
+						
 						// ...then overlay the pregame screen on top.
 						pregameScreen.Draw(spriteBatch);
 						break;
@@ -492,6 +498,12 @@ namespace wallDodger
 					}
 				case (GameStates.HiScore):
 					{
+						// Draw a static image of the game's current state first...
+						wallManager.DrawAll(spriteBatch);
+						player.Draw(spriteBatch);
+						scoreCounter.Draw(spriteBatch);
+						levelCounter.Draw(spriteBatch);
+
 						// Overlay the high score screen on top of the current game state.
 						hiScoreNameEntryScreen.Draw(spriteBatch);
 

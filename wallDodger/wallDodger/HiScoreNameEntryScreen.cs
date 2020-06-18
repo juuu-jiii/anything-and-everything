@@ -13,11 +13,13 @@ namespace wallDodger
 	{
 		// TEXT INPUT TESTER VARIABLES
 
+		private Color backdropColour;
+
 		// The string that is displayed to the user.
-		public string liveString { get; set; }
+		public string LiveString { get; private set; }
 
 		// An array to hold keys pressed during the current frame.
-		private Keys[] liveStringArray;
+		private Keys[] LiveStringArray;
 
 		// List to restrict keys that may be used during name input.
 		private List<Keys> permittedKeys;
@@ -28,19 +30,24 @@ namespace wallDodger
 		private Texture2D textField;
 
 		public HiScoreNameEntryScreen(
+			SpriteFont verdanaBold16,
 			SpriteFont verdana12,
 			Texture2D backdrop,
 			Texture2D buttonTexture,
 			Texture2D textField) : base(
 				backdrop,
-				new Vector2(Game1.WindowWidth / 2, Game1.WindowHeight / 2),
-				new Vector2(Game1.WindowWidth / 2, Game1.WindowHeight / 2 + 35),
-				verdana12,
-				null)
+				new Vector2(153, 240),
+				new Vector2(158, 275),
+				verdanaBold16,
+				verdana12)
 		{
-			// Initialise liveString to an empty string to avoid a NullReferenceException 
+			// Create a custom colour using only the alpha channel for 
+			//		translucency, so this screen can be used as an overlay.
+			backdropColour = Color.FromNonPremultiplied(0, 0, 0, 90);
+
+			// Initialise LiveString to an empty string to avoid a NullReferenceException 
 			//		when it is accessed later on.
-			liveString = "";
+			LiveString = "";
 
 			permittedKeys = new List<Keys> {
 				Keys.Q,
@@ -73,7 +80,7 @@ namespace wallDodger
 				Keys.Back
 			};
 
-			Submit = new Button(buttonTexture, verdana12, 250, 250, 260, 263);
+			Submit = new Button(buttonTexture, verdana12, 175, 355, 212, 368);
 
 			this.textField = textField;
 		}
@@ -81,7 +88,7 @@ namespace wallDodger
 		public void Update(KeyboardState kbState, KeyboardState prevKBState)
 		{
 			// Assign the returned array of pressed keys for that frame to a variable.
-			liveStringArray = kbState.GetPressedKeys();
+			LiveStringArray = kbState.GetPressedKeys();
 
 
 
@@ -100,10 +107,10 @@ namespace wallDodger
 			// For all intents and purposes, the following code works sufficiently well.
 			// Mixing GetPressedKeys() with IsKeyUp/Down()
 			// Loop through GetPressedKeys()'s returned array to see if the keys are pressed
-			// If they are, do not add them to liveStringArray - only add those that are not pressed.
+			// If they are, do not add them to LiveStringArray - only add those that are not pressed.
 
 			// Loop through the above returned array.
-			for (int i = 0; i < liveStringArray.Length; i++)
+			for (int i = 0; i < LiveStringArray.Length; i++)
 			{
 				// Detect single presses of keys in the array. Only proceed if the current key
 				//		being checked is in permittedKeys AND was up in the previous frame. 
@@ -111,44 +118,44 @@ namespace wallDodger
 				//		allows for regular typing, save for the character repeat aspect. This  
 				//		is because a few keys are pressed simultaneously while typing normally,  
 				//		and this solution accommodates such a scenario.
-				if (permittedKeys.Contains(liveStringArray[i])
-					&& kbState.IsKeyDown(liveStringArray[i])
-					&& prevKBState.IsKeyUp(liveStringArray[i]))
+				if (permittedKeys.Contains(LiveStringArray[i])
+					&& kbState.IsKeyDown(LiveStringArray[i])
+					&& prevKBState.IsKeyUp(LiveStringArray[i]))
 				{
 					// If Backspace is pressed...
-					if (liveStringArray[i] == Keys.Back)
+					if (LiveStringArray[i] == Keys.Back)
 					{
 						// ...and if the string is empty, do nothing.
-						if (liveString.Length == 0)
+						if (LiveString.Length == 0)
 						{
 							// Do nothing.
 							// This prevents an index out of range error from occurring.
 						}
 						// ...otherwise, add characters up to a max length of 3.
-						else if (liveString.Length > 0
-							|| liveString.Length <= 3)
+						else if (LiveString.Length > 0
+							|| LiveString.Length <= 3)
 						{
 							// Strings are immutable, and so must be reassigned should they be modified,
 							//		similarly with how structs behave.
-							liveString = liveString.Remove(liveString.Length - 1);
+							LiveString = LiveString.Remove(LiveString.Length - 1);
 						}
 					}
 					// If Space is pressed...
-					else if (liveStringArray[i] == Keys.Space)
+					else if (LiveStringArray[i] == Keys.Space)
 					{
 						// ...add space up to a max length of 3.
-						if (liveString.Length < 3)
+						if (LiveString.Length < 3)
 						{
-							liveString += " ";
+							LiveString += " ";
 						}
 					}
 					// For all other Keys, concatenate them in the order they were pressed i.e. the
-					//		order in which they appear in liveStringArray up to a max length of 3.
+					//		order in which they appear in LiveStringArray up to a max length of 3.
 					else
 					{
-						if (liveString.Length < 3)
+						if (LiveString.Length < 3)
 						{
-							liveString += liveStringArray[i];
+							LiveString += LiveStringArray[i];
 						}
 					}
 				}
@@ -157,23 +164,43 @@ namespace wallDodger
 						
 		public override void Draw(SpriteBatch spriteBatch)
 		{
+			// Draw the backdrop.
+			spriteBatch.Draw(
+				backdrop,
+				new Rectangle(0, 0, Game1.WindowWidth, Game1.WindowHeight),
+				backdropColour);
+			
 			// Draw the pop-up window.
 			spriteBatch.Draw(
 				backdrop,
-				new Rectangle(100, 100, 200, 100),
-				Color.Gray);
+				new Rectangle(
+					Game1.WindowWidth / 2 - 125, 
+					Game1.WindowHeight / 2 - 100, 
+					250, 
+					200),
+				Color.LightGray);
+
+			spriteBatch.DrawString(
+				textFont,
+				"NEW HIGH SCORE",
+				textPosition,
+				Color.Black);
 
 			// Draw the instructional text.
 			spriteBatch.DrawString(
-				textFont,
+				subtextFont,
 				"ENTER YOUR INITIALS",
-				new Vector2(130, 115),
+				subtextPosition,
 				Color.Black);
 
 			// Draw the text field.
 			spriteBatch.Draw(
 				textField,
-				new Rectangle(Game1.WindowWidth / 2, 200, 50, 15),
+				new Rectangle(
+					Game1.WindowWidth / 2 - 25, 
+					Game1.WindowHeight / 2 - 15, 
+					50, 
+					26),
 				Color.White);
 
 			// Draw the Submit button.
@@ -183,9 +210,11 @@ namespace wallDodger
 
 			// Draw the player's typed initials.
 			spriteBatch.DrawString(
-				textFont,
-				liveString,
-				new Vector2(Game1.WindowWidth / 2 + 10, 210),
+				subtextFont,
+				LiveString,
+				new Vector2(
+					Game1.WindowWidth / 2 - 15,
+					Game1.WindowHeight / 2 - 12),
 				Color.Black);
 		}
 	}

@@ -44,6 +44,13 @@
 /processorParam:TextureFormat=Compressed
 /build:verdana12.spritefont
 
+#begin verdanaBold16.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:verdanaBold16.spritefont
+
 #begin verdanaBold20.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
