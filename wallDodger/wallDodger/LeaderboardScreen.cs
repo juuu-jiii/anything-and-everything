@@ -12,6 +12,8 @@ namespace wallDodger
 	{
 		// Fields
 
+		private Color backdropColour;
+
 		// Back button
 		public Button BackButton { get; }
 
@@ -21,22 +23,31 @@ namespace wallDodger
 		// Vector2 for second subtext location
 		private Vector2 subtext2Position;
 
+		// Additional SpriteFont
+		private SpriteFont verdana12;
+
 		public LeaderboardScreen(
 			SpriteFont verdanaBold20,
+			SpriteFont verdanaBold16,
 			SpriteFont verdana12,
 			Texture2D backdrop,
 			Texture2D buttonTexture) : base (
 				backdrop,
 				new Vector2(50, 50),
-				new Vector2(100, 100),
+				new Vector2(150, 185),
 				verdanaBold20,
-				verdana12)
+				verdanaBold16)
 		{
-			BackButton = new Button(buttonTexture, verdana12, 175, 360, 225, 373);
+			// Create a custom colour using only the alpha channel for 
+			//		translucency, so this screen can be used as an overlay.
+			backdropColour = Color.FromNonPremultiplied(0, 0, 0, 90);
+
+			this.verdana12 = verdana12;
+			BackButton = new Button(buttonTexture, verdana12, 175, 360, 230, 373);
 			spacer = new Vector2(0, 20);
 
 			// Second subtext is offset 100 px to the right of first.
-			subtext2Position = subtextPosition + new Vector2(100, 0);
+			subtext2Position = subtextPosition + new Vector2(175, 0);
 		}
 
 		/// <summary>
@@ -54,7 +65,7 @@ namespace wallDodger
 			spriteBatch.Draw(
 				backdrop,
 				new Rectangle(0, 0, Game1.WindowWidth, Game1.WindowHeight),
-				Color.White);
+				backdropColour);
 			
 			// Draw the buttons.
 			BackButton.Draw(spriteBatch, "Back");

@@ -181,6 +181,41 @@ namespace wallDodger
 				InitialLeftWallXPosition + Wall.WallWidth + GapSize,
 				y));
 		}
+		private void SpawnRandomWallPair(Texture2D wallAsset, int y)
+		{
+			if (leftWalls.Count == 0)
+			{
+				leftWalls.Add(new Wall(
+					wallAsset,
+					InitialLeftWallXPosition,
+					y));
+				rightWalls.Add(new Wall(
+					wallAsset,
+					InitialLeftWallXPosition + Wall.WallWidth + GapSize,
+					y));
+
+				// Manually update - generation depends on this value. Update()
+				//		is not called, as this code runs as part of a for loop.
+				lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
+			}
+			else
+			{
+				float offset = defaultRandom.GenerateNext(lastLeftWallX, lastRightWallX);
+
+				rightWalls.Add(new Wall(
+					wallAsset,
+					lastLeftWallX + Wall.WallWidth + GapSize + offset,
+					y));
+				leftWalls.Add(new Wall(
+					wallAsset,
+					lastLeftWallX + offset,
+					y));
+
+				// Manually update - generation depends on this value. Update()
+				//		is not called, as this code runs as part of a for loop.
+				lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
+			}
+		}
 
 		// ***public version of SpawnWallPair()***
 		/// <summary>
@@ -779,7 +814,7 @@ namespace wallDodger
 		/// <param name="wallAsset">
 		/// The asset used for the Wall objects.
 		/// </param>
-		public void Reset(Texture2D wallAsset)
+		public void ResetGame(Texture2D wallAsset)
 		{
 			// Clear both lists.
 			leftWalls.Clear();
@@ -811,8 +846,34 @@ namespace wallDodger
 			narrowSpace.Reset();
 			narrowPath.Reset();
 
-			// Prevent this from interfering new games.
+			// Prevent this from interfering with new games.
 			currentWallPairInTerrain = 0;
+		}
+
+		public void ResetMenu(Texture2D wallAsset)
+		{
+			// Clear both lists.
+			leftWalls.Clear();
+			rightWalls.Clear();
+
+			// This is necessary, since now GapSize is altered by Roundabout.
+			// This must be placed here, because the subsequent private SpawnWallPair() calls
+			//		rely on GapSize being set to its default.
+			GapSize = 200;
+
+			currentTerrain = TerrainTypes.DefaultRandom;
+
+			// Setting up the start "stretch".
+			for (int i = Game1.WindowHeight; i >= -20; i -= Wall.WallHeight)
+			{
+				SpawnRandomWallPair(wallAsset, i);
+			}
+
+			// Reset scroll velocity.
+			ScrollVelocity = initialScrollVelocity;
+
+			// Reset colours of Wall objects.
+			currentWallColour = Color.White;
 		}
 
 		/// <summary>
@@ -870,12 +931,25 @@ namespace wallDodger
 			}
 		}
 
+		public void UpdateMenu(GameTime gameTime)
+		{
+			// Update variables with the newly added wall pair above.
+			// Besides the fact that the function of these lines of code is, as
+			//		already stated above, to UPDATE, why call them here and 
+			//		not in methods after each time a Wall pair gets appended?
+			// HINT: Update() is called every frame, but Wall pairs do not get
+			//		appended every frame.
+			lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
+			lastLeftWallY = leftWalls[leftWalls.Count - 1].Position.Y;
+			lastRightWallX = rightWalls[rightWalls.Count - 1].Position.X;
+		}
+
 		/// <summary>
 		/// Updates variables with necessary data for proper terrain generation,
 		///		and controls the frequency at which new terrain is generated.
 		/// </summary>
 		/// <param name="gameTime"></param>
-		public void Update(GameTime gameTime)
+		public void UpdateGame(GameTime gameTime)
 		{
 			// Update variables with the newly added wall pair above.
 			// Besides the fact that the function of these lines of code is, as

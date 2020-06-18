@@ -12,6 +12,8 @@ namespace wallDodger
 	{
 		// Fields
 
+		private Color backdropColour;
+
 		// Variables storing Button components
 		public Button StartButton { get; }
 		public Button QuitButton { get; }
@@ -29,8 +31,12 @@ namespace wallDodger
 				verdanaBold20,
 				verdanaSmall)
 		{
+			// Create a custom colour using only the alpha channel for 
+			//		translucency, so this screen can be used as an overlay.
+			backdropColour = Color.FromNonPremultiplied(0, 0, 0, 90);
+
 			StartButton = new Button(buttonTexture, verdana12, 175, 300, 227, 313);
-			LeaderboardButton = new Button(buttonTexture, verdana12, 175, 360, 177, 373);
+			LeaderboardButton = new Button(buttonTexture, verdana12, 175, 360, 198, 373);
 			QuitButton = new Button(buttonTexture, verdana12, 175, 420, 230, 433);
 		}
 
@@ -46,7 +52,7 @@ namespace wallDodger
 			spriteBatch.Draw(
 				backdrop,
 				new Rectangle(0, 0, Game1.WindowWidth, Game1.WindowHeight),
-				Color.White);
+				backdropColour);
 
 			// Draw the buttons.
 			StartButton.Draw(spriteBatch, "Start");

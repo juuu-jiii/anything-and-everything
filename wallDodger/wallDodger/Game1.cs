@@ -23,6 +23,13 @@ namespace wallDodger
 		Idle,
 		Active
 	}
+
+	enum ScrollingStates
+	{
+		NotScrolling,
+		IdleScrolling,
+		Scrolling
+	}
 	
 	/// <summary>
 	/// This is the main type for your game.
@@ -40,9 +47,10 @@ namespace wallDodger
 		public const int WindowHeight = 650;
 		public const int WindowWidth = 500;
 
-		// Variables to keep track of player and game state
+		// Variables to keep track of player, game, and scrolling state
 		GameStates gameState = GameStates.StartScreen;
 		PlayerStates playerState = PlayerStates.Idle;
+		ScrollingStates scrollingState = ScrollingStates.IdleScrolling; // Game idly scrolls on startup screen.
 
 		// Variables to store texture and font assets
 		Texture2D wall;
@@ -126,13 +134,10 @@ namespace wallDodger
 			pregameScreen = new PregameScreen(verdana12, wall);
 			hiScoreNameEntryScreen = new HiScoreNameEntryScreen(verdanaBold16, verdana12, whiteSquare, whiteSquare, whiteSquare);
 			gameOverScreen = new GameOverScreen(verdanaBold20, verdana12, wall, whiteSquare);
-			leaderboardScreen = new LeaderboardScreen(verdanaBold20, verdana12, whiteSquare, whiteSquare);
+			leaderboardScreen = new LeaderboardScreen(verdanaBold20, verdanaBold16, verdana12, whiteSquare, whiteSquare);
 			scoreCounter = new ScoreCounter(verdana12);
 			levelCounter = new LevelCounter(verdana12);
 			leaderboard = new Leaderboard();
-
-			// Initialise leaderboard array
-			leaderboard.LoadScores();
 
 			// Subscribing applicable methods to both event handlers
 			levelCounter.LevelUpAction += player.LevelUp;
@@ -140,6 +145,12 @@ namespace wallDodger
 			ResetAction += levelCounter.Reset;
 			ResetAction += scoreCounter.Reset;
 			ResetAction += player.Reset;
+
+			// Initialise leaderboard array.
+			leaderboard.LoadScores();
+
+			// Initialise the start screen's "live" background.
+			wallManager.ResetMenu(wall);
 		}
 
 		/// <summary>
@@ -175,6 +186,9 @@ namespace wallDodger
 						// "Deactivate" the player.
 						playerState = PlayerStates.Idle;
 
+						// Use idle scrolling.
+						scrollingState = ScrollingStates.IdleScrolling;
+
 						startScreen.StartButton.Update(mState, prevMState);
 						startScreen.LeaderboardButton.Update(mState, prevMState);
 						startScreen.QuitButton.Update(mState, prevMState);
@@ -182,6 +196,17 @@ namespace wallDodger
 						// Giving the buttons on the start screen their functionality
 						if (startScreen.StartButton.IsClicked)
 						{
+							// Perform necessary data resets here, instead of on the 
+							//		pregame screen itself so the code only runs once.
+							if (ResetAction != null)
+							{
+								ResetAction();
+							}
+
+							// This Reset() method's signature does not match that 
+							//		of the event handler's.
+							wallManager.ResetGame(wall);
+
 							gameState = GameStates.Pregame;
 						}
 
@@ -214,15 +239,8 @@ namespace wallDodger
 					}
 				case (GameStates.Pregame):
 					{
-						// Perform necessary data resets.
-						if (ResetAction != null)
-						{
-							ResetAction();
-						}
-
-						// This Reset() method's signature does not match that 
-						//		of the event handler's.
-						wallManager.Reset(wall);
+						// Do not scroll.
+						scrollingState = ScrollingStates.NotScrolling;
 
 						// Pressing any key starts the game.
 						// GetPressedKeys() returns an array of all keys that
@@ -241,12 +259,18 @@ namespace wallDodger
 						// "Activate" the player.
 						playerState = PlayerStates.Active;
 
+						// Scroll normally.
+						scrollingState = ScrollingStates.Scrolling;
+
 						break;
 					}
 				case (GameStates.HiScore):
 					{
 						// "Deactivate" the player.
 						playerState = PlayerStates.Idle;
+
+						// Do not scroll.
+						scrollingState = ScrollingStates.NotScrolling;
 
 						hiScoreNameEntryScreen.Submit.Update(mState, prevMState);
 						hiScoreNameEntryScreen.Update(kbState, prevKBState);
@@ -269,8 +293,10 @@ namespace wallDodger
 					}
 				case (GameStates.GameOver):
 					{
-						// Deactivate the player here too, in case no new high score was set.
+						// Explicitly deactivate the player and stop scrolling here too, in 
+						//		case no new high score was set.
 						playerState = PlayerStates.Idle;
+						scrollingState = ScrollingStates.NotScrolling;
 
 						gameOverScreen.ReturnToStartScreen.Update(mState, prevMState);
 
@@ -288,7 +314,7 @@ namespace wallDodger
 
 							// This Reset() method's signature does not match that 
 							//		of the event handler's.
-							wallManager.Reset(wall);
+							wallManager.ResetGame(wall);
 
 							gameState = GameStates.Playing;
 						}
@@ -297,6 +323,9 @@ namespace wallDodger
 						//		functionality
 						if (gameOverScreen.ReturnToStartScreen.IsClicked)
 						{
+							// Reset the map to prepare for idle scrolling on the menu.
+							wallManager.ResetMenu(wall);
+
 							gameState = GameStates.StartScreen;
 						}
 
@@ -327,32 +356,6 @@ namespace wallDodger
 							player.Position += player.StrafeVelocity;
 							player.UpdateTracker();
 						}
-
-						//// Continuous scrolling
-						//wallManager.Scroll();
-
-						// Controlled scrolling
-						if (kbState.IsKeyDown(Keys.Up))
-						{
-							wallManager.Scroll();
-						}
-						//wallManager.Scroll();
-
-						// Why is Update() called before SpawnWallPair() and 
-						//		DespawnWallPair(), and not after?
-						// HINT: Variables initialised to 0 before Update()
-						wallManager.Update(gameTime);
-
-						// Manage memory by spawning and despawning walls as necessary.
-						wallManager.SpawnWallPair(wall);
-						wallManager.DespawnWallPair();
-						
-						// Update the player's score, level, and strafe speed.
-						scoreCounter.Update(gameTime, levelCounter.Value);
-
-						// This method invokes the event, calling all the other
-						//		level up methods along with it.
-						levelCounter.LevelUp(gameTime);
 
 						// Touching a wall results in a game over.
 						foreach (Wall wall in wallManager.LeftWalls)
@@ -398,6 +401,67 @@ namespace wallDodger
 								}
 							}
 						}
+
+						break;
+					}
+			}
+			#endregion
+
+			#region Scrolling States FSM
+			switch (scrollingState)
+			{
+				// Idle scrolling is used on the start and leaderboard screens.
+				case (ScrollingStates.IdleScrolling):
+					{
+						// Continuous scrolling
+						wallManager.Scroll();
+
+						// Why is Update() called before SpawnWallPair() and 
+						//		DespawnWallPair(), and not after?
+						// HINT: Variables initialised to 0 before Update()
+						wallManager.UpdateMenu(gameTime);
+
+						// Manage memory by spawning and despawning walls as necessary.
+						wallManager.SpawnWallPair(wall);
+						wallManager.DespawnWallPair();
+
+						break;
+					}
+				// The game does not scroll during the pregame, high score entry, and game over screens.
+				case (ScrollingStates.NotScrolling):
+					{
+						// Do nothing - no scrolling takes place.
+
+						break;
+					}
+				// Regular scrolling is used during actual gameplay.
+				case (ScrollingStates.Scrolling):
+					{
+						//// Continuous scrolling
+						//wallManager.Scroll();
+
+						// Controlled scrolling
+						if (kbState.IsKeyDown(Keys.Up))
+						{
+							wallManager.Scroll();
+						}
+						//wallManager.Scroll();
+
+						// Why is Update() called before SpawnWallPair() and 
+						//		DespawnWallPair(), and not after?
+						// HINT: Variables initialised to 0 before Update()
+						wallManager.UpdateGame(gameTime);
+
+						// Manage memory by spawning and despawning walls as necessary.
+						wallManager.SpawnWallPair(wall);
+						wallManager.DespawnWallPair();
+
+						// Update the player's score, level, and strafe speed.
+						scoreCounter.Update(gameTime, levelCounter.Value);
+
+						// This method invokes the event, calling all the other
+						//		level up methods along with it.
+						levelCounter.LevelUp(gameTime);
 
 						break;
 					}
@@ -467,23 +531,31 @@ namespace wallDodger
 			{
 				case (GameStates.StartScreen):
 					{
+						// Draw a "live" background of the game.
+						wallManager.DrawAll(spriteBatch);
+
+						// Overlay the start screen's components above the live background.
 						startScreen.Draw(spriteBatch);
 						break;
 					}
 				case (GameStates.Leaderboard):
 					{
+						// Draw a "live" background of the game.
+						wallManager.DrawAll(spriteBatch);
+
+						// Overlay the leaderboard screen's components above the live background.
 						leaderboardScreen.Draw(spriteBatch, leaderboard.HiScores);
 						break;
 					}
 				case (GameStates.Pregame):
 					{
-						// Draw a static image of the game's initial state first...
+						// Draw a static image of the game's initial state.
 						wallManager.DrawAll(spriteBatch);
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
 						levelCounter.Draw(spriteBatch);
 						
-						// ...then overlay the pregame screen on top.
+						// Overlay the pregame screen on top.
 						pregameScreen.Draw(spriteBatch);
 						break;
 					}
@@ -498,26 +570,26 @@ namespace wallDodger
 					}
 				case (GameStates.HiScore):
 					{
-						// Draw a static image of the game's current state first...
+						// Draw a static image of the game's current state.
 						wallManager.DrawAll(spriteBatch);
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
 						levelCounter.Draw(spriteBatch);
 
-						// Overlay the high score screen on top of the current game state.
+						// Overlay the high score screen above the current game state.
 						hiScoreNameEntryScreen.Draw(spriteBatch);
 
 						break;
 					}
 				case (GameStates.GameOver):
 					{
-						// Draw a static image of the game's current state first...
+						// Draw a static image of the game's current state.
 						wallManager.DrawAll(spriteBatch);
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
 						levelCounter.Draw(spriteBatch);
 
-						// ...then overlay the game over screen on top.
+						// Overlay the game over screen on top.
 						gameOverScreen.Draw(spriteBatch);
 						gameOverScreen.Draw(spriteBatch, scoreCounter, levelCounter);
 						break;
