@@ -150,6 +150,8 @@ namespace wallDodger
 			leaderboard.LoadScores();
 
 			// Initialise the start screen's "live" background.
+			// This must be done here to avoid an exception being thrown, 
+			//		because the start screen is loaded upon startup.
 			wallManager.ResetMenu(wall);
 		}
 
@@ -203,8 +205,9 @@ namespace wallDodger
 								ResetAction();
 							}
 
+							// Initialise the map for the current run.
 							// This Reset() method's signature does not match that 
-							//		of the event handler's.
+							//		of the event handler's
 							wallManager.ResetGame(wall);
 
 							gameState = GameStates.Pregame;
@@ -323,7 +326,8 @@ namespace wallDodger
 						//		functionality
 						if (gameOverScreen.ReturnToStartScreen.IsClicked)
 						{
-							// Reset the map to prepare for idle scrolling on the menu.
+							// Reset and initialise the map to prepare for idle 
+							//		scrolling on the start screen.
 							wallManager.ResetMenu(wall);
 
 							gameState = GameStates.StartScreen;
@@ -335,6 +339,8 @@ namespace wallDodger
 			#endregion
 
 			#region Player States FSM
+			// This FSM tracks all player-related functions: movement and
+			//		collision detection.
 			switch (playerState)
 			{
 				case (PlayerStates.Idle):
@@ -408,6 +414,8 @@ namespace wallDodger
 			#endregion
 
 			#region Scrolling States FSM
+			// This FSM tracks and controls all scrolling possibilities for
+			//		the map.
 			switch (scrollingState)
 			{
 				// Idle scrolling is used on the start and leaderboard screens.

@@ -181,8 +181,26 @@ namespace wallDodger
 				InitialLeftWallXPosition + Wall.WallWidth + GapSize,
 				y));
 		}
+
+		/// <summary>
+		/// Helper method that creates a pair of left and right walls at random 
+		///		offsets from the previous pair. Used for the idle scrolling 
+		///		background on the start and leaderboard screens. This method
+		///		eliminates the need to generate the "start stretch".
+		/// </summary>
+		/// <param name="wallAsset">
+		/// The asset used for the Wall objects.
+		/// </param>
+		/// <param name="y">
+		/// The y-position of the wall being created.
+		/// </param>
 		private void SpawnRandomWallPair(Texture2D wallAsset, int y)
 		{
+			// The entire time, only one side's walls need to be checked, since
+			//		walls are generated in pairs.
+			
+			// If there exist no walls yet, create a pair in the centre of the 
+			//		screen.
 			if (leftWalls.Count == 0)
 			{
 				leftWalls.Add(new Wall(
@@ -198,6 +216,9 @@ namespace wallDodger
 				//		is not called, as this code runs as part of a for loop.
 				lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
 			}
+			// If walls already exist, use DefaultRandom's GenerateNext() to 
+			//		randomly offset the next pair being generated based on the
+			//		previous pair's location.
 			else
 			{
 				float offset = defaultRandom.GenerateNext(lastLeftWallX, lastRightWallX);
@@ -850,6 +871,13 @@ namespace wallDodger
 			currentWallPairInTerrain = 0;
 		}
 
+		/// <summary>
+		/// Clears both lists and initialises the idle scrolling background. 
+		///			Called whenever the start screen is loaded.
+		/// </summary>
+		/// <param name="wallAsset">
+		/// The asset used for the Wall objects. 
+		/// </param>
 		public void ResetMenu(Texture2D wallAsset)
 		{
 			// Clear both lists.
@@ -857,22 +885,27 @@ namespace wallDodger
 			rightWalls.Clear();
 
 			// This is necessary, since now GapSize is altered by Roundabout.
-			// This must be placed here, because the subsequent private SpawnWallPair() calls
-			//		rely on GapSize being set to its default.
+			// This must be placed here, because the subsequent private 
+			//		SpawnRandomWallPair() calls rely on GapSize being set to 
+			//		its default.
 			GapSize = 200;
 
+			// The idle scrolling background uses only random offset terrain.
 			currentTerrain = TerrainTypes.DefaultRandom;
 
-			// Setting up the start "stretch".
+			// Initialising the background. This produces a random pathway, and
+			//		not a stretch, like in ResetGame().
 			for (int i = Game1.WindowHeight; i >= -20; i -= Wall.WallHeight)
 			{
 				SpawnRandomWallPair(wallAsset, i);
 			}
 
-			// Reset scroll velocity.
+			// Reset scroll velocity, so only the minimum is used for idle
+			//		scrolling.
 			ScrollVelocity = initialScrollVelocity;
 
-			// Reset colours of Wall objects.
+			// Reset colours of Wall objects, so only the initial colour is
+			//		used for idle scrolling.
 			currentWallColour = Color.White;
 		}
 
@@ -908,6 +941,7 @@ namespace wallDodger
 		// ********************************************************************
 		// ---TERRAIN GENERATION METHODS---
 		// ********************************************************************
+
 		/// <summary>
 		/// Randomly selects a terrain type from the TerrainTypes enum. Set so 
 		///		there is a 50% chance that a terrain other than DefaultRandom 
@@ -931,6 +965,12 @@ namespace wallDodger
 			}
 		}
 
+		/// <summary>
+		/// Updates variables with necessary data for proper idle scrolling 
+		///		terrain generation. Used to update the start and leaderboard 
+		///		screen backgrounds.
+		/// </summary>
+		/// <param name="gameTime"></param>
 		public void UpdateMenu(GameTime gameTime)
 		{
 			// Update variables with the newly added wall pair above.
@@ -942,11 +982,15 @@ namespace wallDodger
 			lastLeftWallX = leftWalls[leftWalls.Count - 1].Position.X;
 			lastLeftWallY = leftWalls[leftWalls.Count - 1].Position.Y;
 			lastRightWallX = rightWalls[rightWalls.Count - 1].Position.X;
+
+			// Altering currentTerrain is not required, since the menu screens'
+			//		backgrounds only utilise random offsets.
 		}
 
 		/// <summary>
 		/// Updates variables with necessary data for proper terrain generation,
-		///		and controls the frequency at which new terrain is generated.
+		///		and controls the frequency at which new terrain is generated. 
+		///		Used to update the map during gameplay.
 		/// </summary>
 		/// <param name="gameTime"></param>
 		public void UpdateGame(GameTime gameTime)
