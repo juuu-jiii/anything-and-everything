@@ -56,6 +56,7 @@ namespace wallDodger
 		private float lastLeftWallY;
 		private float lastRightWallX;
 
+		
 		public Color[] WallColourArray { get; private set; }
 
 		private Color currentWallColour;
@@ -139,7 +140,7 @@ namespace wallDodger
 				Color.Red,
 				Color.Yellow,
 				Color.Purple,
-				Color.Pink,
+				Color.Fuchsia,
 				Color.Orange,
 				Color.Brown,
 				Color.Black};

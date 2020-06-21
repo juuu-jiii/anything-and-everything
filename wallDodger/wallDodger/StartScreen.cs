@@ -64,13 +64,13 @@ namespace wallDodger
 				subtextFont,
 				"v1.1.0.0",
 				subtextPosition,
-				Color.Maroon);
+				Color.MediumAquamarine);
 
 			spriteBatch.DrawString(
 				textFont,
 				"Wall Dodger",
 				textPosition,
-				Color.Maroon);
+				Color.Aquamarine);
 		}
 	}
 }

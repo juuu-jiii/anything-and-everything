@@ -37,7 +37,10 @@ namespace wallDodger
 		/// <param name="player">
 		/// The Player object.
 		/// </param>
-		public void LevelUp(GameTime gameTime)
+		/// <returns>
+		/// Returns true if the player levels up, and false otherwise.
+		/// </returns>
+		public bool LevelUp(GameTime gameTime)
 		{
 			// Time passing
 			timeCounter += gameTime.ElapsedGameTime.TotalSeconds;
@@ -54,7 +57,13 @@ namespace wallDodger
 				{
 					LevelUpAction(Value);
 				}
+
+				// This if block is entered if the player has leveled up.
+				return true;
 			}
+
+			// If this line of code is reached, the player has not leveled up.
+			return false;
 		}
 
 		/// <summary>
