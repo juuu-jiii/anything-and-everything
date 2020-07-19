@@ -962,7 +962,7 @@ namespace wallDodger
 			// Terrain generated. Randomly select a type.
 			else
 			{
-				return (TerrainTypes)(generator.Next(1,8));
+				return (TerrainTypes)(generator.Next(1, 9));
 			}
 		}
 
