@@ -473,15 +473,14 @@ namespace wallDodger
 				// Regular scrolling is used during actual gameplay.
 				case (ScrollingStates.Scrolling):
 					{
-						//// Continuous scrolling
-						//wallManager.Scroll();
+						// Continuous scrolling
+						wallManager.Scroll();
 
-						// Controlled scrolling
-						if (kbState.IsKeyDown(Keys.Up))
-						{
-							wallManager.Scroll();
-						}
-						//wallManager.Scroll();
+						//// Controlled scrolling
+						//if (kbState.IsKeyDown(Keys.Up))
+						//{
+						//	wallManager.Scroll();
+						//}
 
 						// Why is Update() called before SpawnWallPair() and 
 						//		DespawnWallPair(), and not after?

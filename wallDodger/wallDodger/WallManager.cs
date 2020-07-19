@@ -793,7 +793,7 @@ namespace wallDodger
 
 		/// <summary>
 		/// Moves all walls downward by looping through leftWalls and rightWalls,
-		///		and adjusting each entry's y-position by ScrollSpeed.
+		///		and adjusting each entry's y-position by ScrollVelocity.
 		/// </summary>
 		public void Scroll()
 		{
@@ -955,14 +955,14 @@ namespace wallDodger
 		public TerrainTypes ChooseTerrainType()
 		{
 			// No terrain generated
-			if (generator.Next(1,2) == 0)
+			if (generator.Next(0, 2) == 0)
 			{
 				return TerrainTypes.DefaultRandom;
 			}
-			// Terrain generated. Randomly select a type. (only zigzag exists for now)
+			// Terrain generated. Randomly select a type.
 			else
 			{
-				return (TerrainTypes)(generator.Next(8,8));
+				return (TerrainTypes)(generator.Next(1,8));
 			}
 		}
 
