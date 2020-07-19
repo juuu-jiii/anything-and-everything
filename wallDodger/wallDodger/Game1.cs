@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace wallDodger
 {
@@ -72,6 +73,7 @@ namespace wallDodger
 		ScoreCounter scoreCounter;
 		LevelCounter levelCounter;
 		Leaderboard leaderboard;
+		LevelUpAnimation levelUpAnimation;
 		
 		// Variables to track mouse and keyboard input
 		KeyboardState kbState;
@@ -81,6 +83,29 @@ namespace wallDodger
 
 		// Variable to track a high score's location in the leaderboard array
 		int leaderboardPosition;
+
+		// Random variable to help with background colour generation
+		Random generator;
+
+		// Array of background colours
+		Color[] bgColourArray = new Color[]
+		{
+			Color.CornflowerBlue,
+			Color.BlanchedAlmond,
+			Color.Cornsilk,
+			Color.Lavender,
+			Color.LightPink,
+			Color.PaleTurquoise,
+			Color.Plum,
+			Color.Thistle,
+			Color.PaleGreen,
+			Color.PaleGoldenrod,
+			Color.DarkSeaGreen,
+			Color.Azure,
+		};
+
+		// Variable to track the current colour of the background
+		Color currentColour;
 
 		public Game1()
 		{
@@ -104,6 +129,8 @@ namespace wallDodger
 			graphics.ApplyChanges();
 
 			wallManager = WallManager.WallManagerInstance;
+			generator = new Random();
+			currentColour = bgColourArray[generator.Next(bgColourArray.Length)];
 
 			this.IsMouseVisible = true;
 
@@ -138,6 +165,7 @@ namespace wallDodger
 			scoreCounter = new ScoreCounter(verdana12);
 			levelCounter = new LevelCounter(verdana12);
 			leaderboard = new Leaderboard();
+			levelUpAnimation = new LevelUpAnimation(verdana12);
 
 			// Subscribing applicable methods to both event handlers
 			levelCounter.LevelUpAction += player.LevelUp;
@@ -150,6 +178,8 @@ namespace wallDodger
 			leaderboard.LoadScores();
 
 			// Initialise the start screen's "live" background.
+			// This must be done here to avoid an exception being thrown, 
+			//		because the start screen is loaded upon startup.
 			wallManager.ResetMenu(wall);
 		}
 
@@ -203,8 +233,9 @@ namespace wallDodger
 								ResetAction();
 							}
 
+							// Initialise the map for the current run.
 							// This Reset() method's signature does not match that 
-							//		of the event handler's.
+							//		of the event handler's
 							wallManager.ResetGame(wall);
 
 							gameState = GameStates.Pregame;
@@ -323,7 +354,8 @@ namespace wallDodger
 						//		functionality
 						if (gameOverScreen.ReturnToStartScreen.IsClicked)
 						{
-							// Reset the map to prepare for idle scrolling on the menu.
+							// Reset and initialise the map to prepare for idle 
+							//		scrolling on the start screen.
 							wallManager.ResetMenu(wall);
 
 							gameState = GameStates.StartScreen;
@@ -335,6 +367,8 @@ namespace wallDodger
 			#endregion
 
 			#region Player States FSM
+			// This FSM tracks all player-related functions: movement and
+			//		collision detection.
 			switch (playerState)
 			{
 				case (PlayerStates.Idle):
@@ -408,6 +442,8 @@ namespace wallDodger
 			#endregion
 
 			#region Scrolling States FSM
+			// This FSM tracks and controls all scrolling possibilities for
+			//		the map.
 			switch (scrollingState)
 			{
 				// Idle scrolling is used on the start and leaderboard screens.
@@ -437,15 +473,14 @@ namespace wallDodger
 				// Regular scrolling is used during actual gameplay.
 				case (ScrollingStates.Scrolling):
 					{
-						//// Continuous scrolling
-						//wallManager.Scroll();
+						// Continuous scrolling
+						wallManager.Scroll();
 
-						// Controlled scrolling
-						if (kbState.IsKeyDown(Keys.Up))
-						{
-							wallManager.Scroll();
-						}
-						//wallManager.Scroll();
+						//// Controlled scrolling
+						//if (kbState.IsKeyDown(Keys.Up))
+						//{
+						//	wallManager.Scroll();
+						//}
 
 						// Why is Update() called before SpawnWallPair() and 
 						//		DespawnWallPair(), and not after?
@@ -461,7 +496,24 @@ namespace wallDodger
 
 						// This method invokes the event, calling all the other
 						//		level up methods along with it.
-						levelCounter.LevelUp(gameTime);
+						if (levelCounter.LevelUp(gameTime))
+						{
+							// When the above method is executed, alter the bool flag.
+							levelUpAnimation.HasLeveledUp = true;
+
+							currentColour = bgColourArray[generator.Next(bgColourArray.Length)];
+						}
+
+						// The bool flag is used here to scroll the text.
+						// levelUpAnimation.LevelUp() cannot be grouped together with 
+						//		levelUpAction because the code only runs once per level 
+						//		up. Text scrolling needs to be performed each frame
+						//		after a level up, as long as the text has not cleared
+						//		the screen. Hence, this if statement is necessary.
+						if (levelUpAnimation.HasLeveledUp)
+						{
+							levelUpAnimation.LevelUp();
+						}
 
 						break;
 					}
@@ -520,9 +572,44 @@ namespace wallDodger
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
-
 			// TODO: Add your drawing code here
+			#region Scrolling States FSM - Controlling Background Colour
+			switch (scrollingState)
+			{
+				// Start and leaderboard screens
+				case (ScrollingStates.IdleScrolling):
+					{
+						// Only use one colour, just like the walls.
+						GraphicsDevice.Clear(Color.CornflowerBlue);
+						break;
+					}
+				// Pregame, high score, and game over screens
+				case (ScrollingStates.NotScrolling):
+					{
+						// Freeze-frame with the current colour.
+						GraphicsDevice.Clear(currentColour);
+						break;
+					}
+				// Actual gameplay
+				case (ScrollingStates.Scrolling):
+					{
+						// Cycle through the colours in levelUpAnimation.bgColourArray, as 
+						//		long as the text is still scrolling on-screen.
+						if (levelUpAnimation.HasLeveledUp)
+						{
+							levelUpAnimation.ChangeBgColour(GraphicsDevice);
+						}
+						// Otherwise, do not cycle, and instead display a random colour 
+						//		from bgColourArray.
+						else
+						{
+							GraphicsDevice.Clear(currentColour);
+						}
+
+						break;
+					}
+			}
+			#endregion
 
 			spriteBatch.Begin();
 
@@ -565,7 +652,7 @@ namespace wallDodger
 						player.Draw(spriteBatch);
 						scoreCounter.Draw(spriteBatch);
 						levelCounter.Draw(spriteBatch);
-
+						levelUpAnimation.Draw(spriteBatch);
 						break;
 					}
 				case (GameStates.HiScore):

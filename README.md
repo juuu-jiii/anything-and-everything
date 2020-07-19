@@ -1,3 +1,6 @@
 # anything-and-everything
-My current programming adventure. Will I make it to the end of the ride? Where is the end? How would I know? I don't know! I'm dumb!
-But for real though irdk what to put here, so have this in the meantime kbye
+Ehh just a mixup of everything I get up to this summer. That means you can expect to find simple games and solution files I create from learning new languages. 
+
+Contents:
+- Wall Dodger (a game :"D)
+- C solutions I created from learning the language

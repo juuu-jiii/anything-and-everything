@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1592901532 source:c:\users\szunk\desktop\anything and everything\anything-and-everything\c\datatypes\main.c
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	<float.h>
+

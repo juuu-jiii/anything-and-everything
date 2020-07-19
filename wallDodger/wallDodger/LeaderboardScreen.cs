@@ -33,8 +33,8 @@ namespace wallDodger
 			Texture2D backdrop,
 			Texture2D buttonTexture) : base (
 				backdrop,
-				new Vector2(50, 50),
-				new Vector2(150, 185),
+				new Vector2(60, 50),
+				new Vector2(150, 140),
 				verdanaBold20,
 				verdanaBold16)
 		{
@@ -75,7 +75,7 @@ namespace wallDodger
 				textFont, 
 				"HIGH SCORES", 
 				textPosition, 
-				Color.Black);
+				Color.Aquamarine);
 
 			// Loop through the array and draw the high scores.
 			for (int i = 0; i < hiScores.Length; i++)
@@ -83,18 +83,19 @@ namespace wallDodger
 				// spacer works like Environment.NewLine here, to prevent the
 				//		game from drawing all scores in the same location 
 				//		on-screen.
+				// 2 * spacer to "skip a line" between scores
 
 				spriteBatch.DrawString(
 					subtextFont,
 					hiScores[i].Item1,
-					subtextPosition + i * spacer,
-					Color.Black);
+					subtextPosition + i * 2 * spacer,
+					Color.MediumAquamarine);
 
 				spriteBatch.DrawString(
 					subtextFont,
 					hiScores[i].Item2.ToString(),
-					subtext2Position + i * spacer,
-					Color.Black);
+					subtext2Position + i * 2 * spacer,
+					Color.MediumAquamarine);
 			}
 		}
 

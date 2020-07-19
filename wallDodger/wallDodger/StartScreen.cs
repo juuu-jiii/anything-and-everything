@@ -59,18 +59,18 @@ namespace wallDodger
 			LeaderboardButton.Draw(spriteBatch, "Leaderboard");
 			QuitButton.Draw(spriteBatch, "Quit");
 
-			// Draw the game title text and version number
+			// Draw the game title text and version number.
 			spriteBatch.DrawString(
 				subtextFont,
-				"v1.0.0.0",
+				"v1.1.0.0",
 				subtextPosition,
-				Color.Maroon);
+				Color.MediumAquamarine);
 
 			spriteBatch.DrawString(
 				textFont,
 				"Wall Dodger",
 				textPosition,
-				Color.Maroon);
+				Color.Aquamarine);
 		}
 	}
 }

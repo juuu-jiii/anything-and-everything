@@ -82,6 +82,7 @@
     <Compile Include="HiScoreNameEntryScreen.cs" />
     <Compile Include="Leaderboard.cs" />
     <Compile Include="LeaderboardScreen.cs" />
+    <Compile Include="LevelUpAnimation.cs" />
     <Compile Include="NarrowPath.cs" />
     <Compile Include="NarrowSpace.cs" />
     <Compile Include="LevelCounter.cs" />
