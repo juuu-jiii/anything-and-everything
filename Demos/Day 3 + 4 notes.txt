@@ -1,0 +1,38 @@
+return new EmptyResult(); causes the browser to display a blank white screen. It represents
+simply "no result". Note that a void action method return type is equivalent to EmptyResult()
+
+(within controller - Model Binder is invoked, assuming param names match names of class fields)
+public string SaveEmployee(Employee e, string firstName)
+{
+	return e.FirstName + "|" + e.LastName + "|" + e.Salary;
+}
+
+If model binder cannot be invoked i.e. param names do not match names of class fields, manually 
+construct the Model object within the action method using Request.Form["componentName"]; 
+public ActionResult SaveEmployee()
+{
+        Employee e = new Employee();
+        e.FirstName = Request.Form["FName"];
+        e.LastName = Request.Form["LName"];
+        e.Salary = int.Parse(Request.Form["Salary"])
+...
+...
+}
+
+or by passing the names of the components (MUST match) as strings into the action method and using 
+them to create the Model object
+public ActionResult SaveEmployee(string FName, string LName, int Salary)
+{
+    Employee e = new Employee();
+    e.FirstName = FName;
+    e.LastName = LName;
+    e.Salary = Salary;
+...
+...
+}
+
+[this is called a DataAnnotation/Attribute and is used for validation. Multiple can be used together,
+like Authorize and HttpPost]
+public string Name;
+
+Topics covered in each Day of training:

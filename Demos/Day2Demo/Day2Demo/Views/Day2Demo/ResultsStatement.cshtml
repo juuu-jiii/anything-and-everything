@@ -1,0 +1,86 @@
+﻿<!-- ResultsStatement View using the StudentGradesViewModel class -->
+
+<!-- This line tells the program to use StudentGradesViewModel.cs declared within ViewModels as the Model to use for this View. -->
+<!-- Think of it like a Using statement. -->
+@model Day2Demo.ViewModel.StudentGradesViewModel
+@{
+    ViewBag.Title = "Results Statement";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<!-- /at/model is used for declaring the model to be used at the top of the View. -->
+<!-- /at/Model is used to reference the already-declared model being used in the current View via /at/model. -->
+<!-- Here, /at/Model essentially replaces the StudentGradesViewModel object studentGradesViewModel. -->
+<h3><br />Greetings, @Model.Student.Name.</h3>
+<h4>Attached please find your academic report.</h4>
+
+<h5><br />STUDENT PARTICULARS</h5>
+<!-- Fieldset groups related elements in a form, drawing a box around them. -->
+<fieldset disabled>
+    <div class="form-group">
+        <!-- The for keyword specifies the ID of the form element the label is to be bound to. -->
+        <label for="disabledName">Name</label>
+        <!-- Choose the correct type of input to take advantage of newer input controls like email verification, number selection, etc.
+            ID is a unique identifier for the form element.
+            The class name is used by CSS and JS to perform uniform tasks for all elements under the same class. 
+            Value specifies any value the control should display bu default.-->
+        <input type="text" id="disabledName" class="form-control" value="@Model.Student.Name">
+    </div>
+    <div class="form-group">
+        <label for="disabledYear">Year</label>
+        <input type="text" id="disabledYear" class="form-control" value="@Model.Student.Year">
+    </div>
+    <div class="form-group">
+        <label for="disabledCollege">College</label>
+        <input type="text" id="disabledCollege" class="form-control" value="@Model.Student.College">
+    </div>
+</fieldset>
+
+<h5><br />GRADE REPORT</h5>
+<div class="table-responsive">
+    <!-- table tells the program to render a table, and table-striped specifies the attributes of the table being rendered. -->
+    <table class="table table-striped">
+        <!-- tr = table row, th = table header, td = table data -->
+        <!-- Create a table row -->
+        <tr>
+            <!-- Split the table row into two columns with the following headers. -->
+            <th>Course Code/Title</th>
+            <th>Result</th>
+        </tr>
+
+        <!-- Iterate through the collection of courses and grades, printing to the table -->
+        @for (int i = 0; i < Model.GradeBook.Count; i++)
+        {
+            // Each iteration, create a new table row and initialise both columns with the appropriate data
+            <tr>
+                <td>@Model.GradeBook[i].CourseTitle</td>
+
+                <!-- Using the string stored in the view model's ResultColor field to change table text colour -->
+                <!-- Also using the string stored in the view model's ResultText field to change table text as appropriate -->
+
+                <!-- Notice that /at/ can be used as many times as required on a single line. -->
+                <!-- Also, observe the use of variable values in HTML code. -->
+
+                <!-- Several things to note here. First is the usage of the /at/() syntax to enclose an entire statement. -->
+                <!-- The second thing to note is the use of the ternary operator '?' to replace a conditional block.  -->
+                <!-- Third, the compiler assumes the result of anything enclosed within /at/ is to be pronted to the screen. 
+                    Computing the resulting value, storing it in a variable, and using said variable in another code statement
+                    causes the result to be printed twice. This is resolved by simply placing the alias evaluation statement
+                    where the variable would otherwise be inserted. -->
+                <td style=@Model.GradeBook[i].ResultColor>
+                    @Model.GradeBook[i].Passed
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<div class="btn">
+    <!-- This code styles a link in the form of a button. <a> tag, but within it, class="btn" is the command that does the trick. -->
+    <!-- Url.Action(string controllerActionMethodName): .Action() generates a valid URL for the specified CONTROLLER action method.
+        Url gets or sets (in this case, sets) the URL of the page currently being displayed. -->
+    <a href="@Url.Action("AddCourse")" class="btn btn-primary" input type="submit" value="Add" name="btnAdd" style="width:50px; height:30px;" onclick="AddCourse();">
+        Add
+    </a>
+</div>

@@ -1,0 +1,21 @@
+﻿<!-- This is a partial view. -->
+<!-- It draws a div using the following specifications each time it is called. -->
+    <div style="
+        background-color: gray;
+        width: 200px;
+        height: 250px;
+        position: absolute;
+        left: 450px;
+        top: 179px;
+        font-family: Calibri;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        font-size: large;">
+
+        <!-- Partial views can be called within partial views! Think of it like going deeper and deeper into a file directory. -->
+        @Html.Partial("GreenPartialView")
+
+        <!-- This division displays the already centre-aligned text at the bottom of the div it is nested within. -->
+        <div style="padding-top:150px">I'm View 2</div>
+    </div>

@@ -1,0 +1,37 @@
+﻿<!-- Notice how this file DOES NOT CONTAIN any of the basic HTML formatting! No <html>, <body>, etc. 
+    Apart from selecting "use a layout page" when creating the View, this also allows the program to read from the shared folder.
+    No basic HTML formatting allows it to simply take the template and apply it to the content included here. -->
+<!-- Using /at/ tells the program to run MVC/server code - in other words, code that is not HTML -->
+<!-- Can be used for comments... -->
+@* ...but this works too, as a form of MVC comment *@
+
+@{
+    // This alters the tab heading.
+    ViewBag.Title = "Day 1 Demo";
+}
+
+<!-- This effectively copies and pastes ViewBag.Title into the header. -->
+<h2>@ViewBag.Title</h2>
+<h3>This is a parent view</h3>
+
+<!-- Recall that div represents a division, or rectangular container within the webpage. -->
+<!-- Also recall that div style allows you to declare a division and set its attributes. Every other division declared within
+    a parent will inherit the parents' properties, unless overridden explicitly. Declaring another division without style 
+    descriptions will cause the division to inherit directly from the parent, therefore. -->
+<div style="
+    background-color:burlywood;
+    width:475px;
+    height:300px;
+    font-family:Calibri;
+    font-weight:bold;
+    color:white;
+    text-align:center;
+    font-size:large">
+    <!-- Call /at/Html.Partial(string partialViewName) to draw a partial view to the screen.
+        Call /at/Html.RenderPartial(string partialViewName) to draw a partial view to the screen 
+        AND have it communicate with the server. -->
+    <!-- Partial views are essentially reusable code files that can be called repeatedly wherever required. -->
+    <!-- These lines call partial views View1 and View2 -->
+    @Html.Partial("View1")
+    @Html.Partial("View2")
+</div>
