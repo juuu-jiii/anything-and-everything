@@ -169,6 +169,10 @@
     <Compile Include="Migrations\202008071006163_MyNinthMigration.designer.cs">
       <DependentUpon>202008071006163_MyNinthMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008110540410_MyTenthMigration.cs" />
+    <Compile Include="Migrations\202008110540410_MyTenthMigration.designer.cs">
+      <DependentUpon>202008110540410_MyTenthMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Grade.cs" />
     <Compile Include="Models\Student.cs" />
@@ -257,6 +261,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008071006163_MyNinthMigration.resx">
       <DependentUpon>202008071006163_MyNinthMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008110540410_MyTenthMigration.resx">
+      <DependentUpon>202008110540410_MyTenthMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,0 +1,115 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharePoint", "SharePoint", "{BDB7B16D-ED6C-4FB2-B2C1-FBD6B270C5C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{39B4DE30-003E-44A0-B102-F37D17F82129}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGTIV.SPApp.TemplateWeb", "Presentation\AGTIV.SPApp.TemplateWeb\AGTIV.SPApp.TemplateWeb.csproj", "{F7C3F5F6-3267-4110-8CD4-DD488E845CAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGTIV.SPApp.Template", "SharePoint\AGTIV.SPApp.Template\AGTIV.SPApp.Template.csproj", "{2773AEBF-6D74-4540-9501-9FC73BB386F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{0E88BBF2-F51E-4009-A863-DAC07FFAE7D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{FA4A23A6-D8DA-4479-9307-B82BE1F0A83D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{0D31B6C2-5922-4393-8B64-25874108D059}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{59B8D48A-63EB-4030-A61B-74B42140E69D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGTIV.SPApp.TemplateProcess", "Presentation\AGTIV.SPApp.TemplateProcess\AGTIV.SPApp.TemplateProcess.csproj", "{7BB56AB1-1AB7-4006-9D5D-08F07E5FA08F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGTIV.SPApp.TemplateWebAPI", "Services\AGTIV.SPApp.TemplateWebAPI\AGTIV.SPApp.TemplateWebAPI.csproj", "{466189D0-7022-40DE-9E15-8F92845D8823}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGTIV.SPApp.Template.Entities", "Shared\AGTIV.SPApp.Template.Entities\AGTIV.SPApp.Template.Entities.csproj", "{6F4CB0EB-5F4B-4DDE-A42C-D73843959924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGTIV.SPApp.Template.Framework", "Shared\AGTIV.SPApp.Template.Framework\AGTIV.SPApp.Template.Framework.csproj", "{486DD6F7-673B-4BC9-9213-B72B87BA9AEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGTIV.SPApp.Template.BusinessComponent", "Business\AGTIV.SPApp.Template.BusinessComponent\AGTIV.SPApp.Template.BusinessComponent.csproj", "{8238B7E4-C7B9-41D2-835E-0C08D259831A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7C3F5F6-3267-4110-8CD4-DD488E845CAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C3F5F6-3267-4110-8CD4-DD488E845CAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C3F5F6-3267-4110-8CD4-DD488E845CAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C3F5F6-3267-4110-8CD4-DD488E845CAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2773AEBF-6D74-4540-9501-9FC73BB386F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2773AEBF-6D74-4540-9501-9FC73BB386F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2773AEBF-6D74-4540-9501-9FC73BB386F3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2773AEBF-6D74-4540-9501-9FC73BB386F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2773AEBF-6D74-4540-9501-9FC73BB386F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2773AEBF-6D74-4540-9501-9FC73BB386F3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7BB56AB1-1AB7-4006-9D5D-08F07E5FA08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BB56AB1-1AB7-4006-9D5D-08F07E5FA08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BB56AB1-1AB7-4006-9D5D-08F07E5FA08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BB56AB1-1AB7-4006-9D5D-08F07E5FA08F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{466189D0-7022-40DE-9E15-8F92845D8823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466189D0-7022-40DE-9E15-8F92845D8823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466189D0-7022-40DE-9E15-8F92845D8823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466189D0-7022-40DE-9E15-8F92845D8823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4CB0EB-5F4B-4DDE-A42C-D73843959924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4CB0EB-5F4B-4DDE-A42C-D73843959924}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4CB0EB-5F4B-4DDE-A42C-D73843959924}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4CB0EB-5F4B-4DDE-A42C-D73843959924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{486DD6F7-673B-4BC9-9213-B72B87BA9AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486DD6F7-673B-4BC9-9213-B72B87BA9AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486DD6F7-673B-4BC9-9213-B72B87BA9AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486DD6F7-673B-4BC9-9213-B72B87BA9AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8238B7E4-C7B9-41D2-835E-0C08D259831A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8238B7E4-C7B9-41D2-835E-0C08D259831A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8238B7E4-C7B9-41D2-835E-0C08D259831A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8238B7E4-C7B9-41D2-835E-0C08D259831A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F7C3F5F6-3267-4110-8CD4-DD488E845CAA} = {39B4DE30-003E-44A0-B102-F37D17F82129}
+		{2773AEBF-6D74-4540-9501-9FC73BB386F3} = {BDB7B16D-ED6C-4FB2-B2C1-FBD6B270C5C2}
+		{7BB56AB1-1AB7-4006-9D5D-08F07E5FA08F} = {39B4DE30-003E-44A0-B102-F37D17F82129}
+		{466189D0-7022-40DE-9E15-8F92845D8823} = {0D31B6C2-5922-4393-8B64-25874108D059}
+		{6F4CB0EB-5F4B-4DDE-A42C-D73843959924} = {59B8D48A-63EB-4030-A61B-74B42140E69D}
+		{486DD6F7-673B-4BC9-9213-B72B87BA9AEE} = {59B8D48A-63EB-4030-A61B-74B42140E69D}
+		{8238B7E4-C7B9-41D2-835E-0C08D259831A} = {0E88BBF2-F51E-4009-A863-DAC07FFAE7D4}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://tfs.agtiv.com/tfs/agtiv%20projects
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Presentation\\AGTIV.SPApp.TemplateProcess\\AGTIV.SPApp.TemplateProcess.csproj
+		SccProjectTopLevelParentUniqueName1 = AGTIV.SPApp.Template.sln
+		SccProjectName1 = Presentation/AGTIV.SPApp.TemplateProcess
+		SccLocalPath1 = Presentation\\AGTIV.SPApp.TemplateProcess
+		SccProjectUniqueName2 = Presentation\\AGTIV.SPApp.TemplateWeb\\AGTIV.SPApp.TemplateWeb.csproj
+		SccProjectTopLevelParentUniqueName2 = AGTIV.SPApp.Template.sln
+		SccProjectName2 = Presentation/AGTIV.SPApp.TemplateWeb
+		SccLocalPath2 = Presentation\\AGTIV.SPApp.TemplateWeb
+		SccProjectUniqueName3 = Services\\AGTIV.SPApp.TemplateWebAPI\\AGTIV.SPApp.TemplateWebAPI.csproj
+		SccProjectTopLevelParentUniqueName3 = AGTIV.SPApp.Template.sln
+		SccProjectName3 = Services/AGTIV.SPApp.TemplateWebAPI
+		SccLocalPath3 = Services\\AGTIV.SPApp.TemplateWebAPI
+		SccProjectUniqueName4 = Shared\\AGTIV.SPApp.Template.Entities\\AGTIV.SPApp.Template.Entities.csproj
+		SccProjectTopLevelParentUniqueName4 = AGTIV.SPApp.Template.sln
+		SccProjectName4 = Shared/AGTIV.SPApp.Template.Entities
+		SccLocalPath4 = Shared\\AGTIV.SPApp.Template.Entities
+		SccProjectUniqueName5 = SharePoint\\AGTIV.SPApp.Template\\AGTIV.SPApp.Template.csproj
+		SccProjectTopLevelParentUniqueName5 = AGTIV.SPApp.Template.sln
+		SccProjectName5 = SharePoint/AGTIV.SPApp.Template
+		SccLocalPath5 = SharePoint\\AGTIV.SPApp.Template
+		SccProjectUniqueName6 = Shared\\AGTIV.SPApp.Template.Framework\\AGTIV.SPApp.Template.Framework.csproj
+		SccProjectTopLevelParentUniqueName6 = AGTIV.SPApp.Template.sln
+		SccProjectName6 = Shared/AGTIV.SPApp.Template.Framework
+		SccLocalPath6 = Shared\\AGTIV.SPApp.Template.Framework
+		SccProjectUniqueName7 = Business\\AGTIV.SPApp.Template.BusinessComponent\\AGTIV.SPApp.Template.BusinessComponent.csproj
+		SccProjectTopLevelParentUniqueName7 = AGTIV.SPApp.Template.sln
+		SccProjectName7 = Business/AGTIV.SPApp.Template.BusinessComponent
+		SccLocalPath7 = Business\\AGTIV.SPApp.Template.BusinessComponent
+	EndGlobalSection
+EndGlobal

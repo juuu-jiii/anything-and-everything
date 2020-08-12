@@ -37,7 +37,6 @@ namespace Day2Demo.Models
             // Basics!! If you do not specify a constructor, C# will create a default one for you.
             // HOWEVER, if you specify a parameterised constructor, C# will NOT create a default one for you if
             //      parameters are not passed in. Thus, you must create the default constructor manually.
-            ResultColor = Passed.ToLower() == "pass" ? "color:Green" : "color:Red";
         }
 
         // Parameterised constructor
@@ -46,7 +45,6 @@ namespace Day2Demo.Models
         {
             this.CourseTitle = courseTitle;
             this.Passed = passed;
-            ResultColor = Passed.ToLower() == "pass" ? "color:Green" : "color:Red";
         }
     }
 }

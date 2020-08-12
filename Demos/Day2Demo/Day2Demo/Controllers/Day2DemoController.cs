@@ -41,6 +41,13 @@ namespace Day2Demo.Controllers
             //      DAL to this list.
             studentGradesViewModel.GradeBook = studentGradeDAL.GradeBook.ToList();
 
+            // Changing display ResultColour of Grade Passed string
+            // This is done in the controller because it has direct access to the GradeBook List of Grade objects.
+            foreach (Grade grade in studentGradesViewModel.GradeBook)
+            {
+                grade.ResultColor = grade.Passed.ToLower() == "pass" ? "color:Green" : "color:Red";
+            }
+
             // Pass the View Model object into the View upon returning it, so all its class fields can be utilised.
             // As always, not specifying string viewName will cause VS to look for a View whose name matches that
             //      of the method name - in this case ResultsStatement.

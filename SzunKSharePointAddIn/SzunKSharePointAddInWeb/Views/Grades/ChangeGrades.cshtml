@@ -1,0 +1,152 @@
+﻿@model SzunKSharePointAddInWeb.ViewModels.GradesViewModel
+@{
+    ViewBag.Title = "ChangeGrades";
+}
+
+<h2>Grade Editor</h2>
+<h4>Enter course code/title and result (Pass/Fail)<br /></h4>
+
+<!-- This is Razor code for the HTML <form> tag. This is applied to all code enclosed in the subsequent braces. -->
+<!-- When dealing with an online host, the following must be provided to Html.BeginForm:
+    Name of action method, controller name, SPHoestUrl to redirect to (NOTE CASE!)
+    Notice this is the same overload as could be provided to RedirectToAction within the controller. -->
+@using (Html.BeginForm("ChangeGrades", "Grades", new { SPHostUrl = "https://agtivconsulting1.sharepoint.com/sites/trainingsite/SzunK/TrainingDay4/" }))
+{
+    <div class="form-group">
+        <label for="courseInput">Course Code/Title: </label>
+        <!-- The following Razor code creates a text field like the HTML code below it, with a couple changes. -->
+        <!-- model => model.Grade.CourseTitle is a lambda expression; the compiler recognises model (or whatever variable
+            inserted) as the model referenced at the View header. It is the equivalent of the html attribute
+            name="Grade.Passed". If included, the HTML code will function like the Razor code, but with the exception that
+            the complete path to Grade.Passed must be entered. Razor code allows direct references to the fields. -->
+        <!-- new {} describes an object that is to be used to mark up the text box's attributes. -->
+        <!-- Because class is a reserved keyword in C#, /alias/Class serves as an escape sequence. The rest of the attributes
+            are marked with the /alias/ symbol for uniformity, though it is not required. -->
+        <!-- aria-describedby attribute indicates IDs of elements that describe the object.
+            Here, the following line has the <small> just below bound to it, since its ID matches the aria-describedby. -->
+        <!-- Placeholder describes ghosted placeholder text while text field is empty and out of focus. -->
+        <!-- This line of code also returns the data collected in the text box, stored in the specified field within the
+            lambda function. -->
+        @Html.TextBoxFor(model => model.Grade.CourseTitle, new { @Class = "form-control", @Id = "courseInput", @Placeholder = "e.g. ABCD123/Intro to Alphabet", @Aria_DecribedBy = "courseInputDescr" })
+
+        @*<input type="text" class="form-control" id="courseInput" placeholder="e.g. ABCD123/Intro to Alphabet" aria-describedby="courseInputDescr" />*@
+        <small id="courseInputDescr" class="form-text text-muted" style="color:darkred">*Required.</small>
+
+        <!-- You can specify a validation message here, or with the [Required(ErrorMessage = )] attribute within the respective model class. -->
+        @Html.ValidationMessageFor(y => y.Grade.CourseTitle)
+    </div>
+    <div class="form-group">
+        <label for="resultInput">Result: </label>
+
+        @Html.TextBoxFor(x => x.Grade.Passed, new { @Class = "form-control", @Id = "resultInput", @Placeholder = "Pass/Fail", @Aria_Describedby = "resultInputDescr" })
+        @*<input type="text" class="form-control" id="resultInput" placeholder="Pass/Fail" aria-describedby="resultInputDescr" />*@
+
+        <small id="resultInputDescr" class="form-text text-muted">Only Pass and Fail accepted as valid inputs.</small>
+
+        @Html.ValidationMessageFor(z => z.Grade.Passed)
+    </div>
+
+    <!-- btn-primary renders a blue button, and btn-secondary renders a grey button. More colour options are available,
+        based on the bootstrap tag. -->
+    <!-- Do not use id here. Request.Form checks for form control name, and so the name polled for must match the name
+        attribute used here. -->
+    <!-- id represents a UNIQUE identifier for every form control. Names, however, may be duplicated -->
+    <!-- Another way to deal with handling button presses is to give all buttons the same name, but different values.
+        When checking for button presses, assign a parameter that is assigned a value based on the button that is
+        pressed. Since all buttons have the same name, switch on the value of the aforesaid parameter.
+        -->
+    <!-- The onclick event attribute triggers the specified JS function. -->
+    <!-- Here, return CheckForm() calls on the corresponding JS function (below). Because the function has a bool return type,
+        specify return before calling the function so the program knows to expect a value from the Function. Otherwise, the
+        function will be treated as though it has a null return type, and any value returned is ignored by the program. In this
+        case, if CheckForm() returns true, the program will proceed with the rest of the code in the Controller. Otherwise, an
+        error message is displayed and the program will remain on the same View. -->
+    <div class="btn">
+        <button class="btn btn-primary" type="submit" value="Save" name="btnSave" style="width:60px; height:35px;" onclick="return CheckForm();">
+            Save
+        </button>
+    </div>
+}
+
+<h3><br />SAMPLE OUTPUT</h3>
+<h5>GRADE REPORT</h5>
+<div class="table-responsive">
+    <!-- table tells the program to render a table, and table-striped specifies the attributes of the table being rendered. -->
+    <table class="table table-striped">
+        <!-- tr = table row, th = table header, td = table data -->
+        <!-- Create a table row -->
+        <tr>
+            <!-- Split the table row into two columns with the following headers. -->
+            <th>Course Code/Title</th>
+            <th>Result</th>
+        </tr>
+
+        <!-- Iterate through the collection of courses and grades, printing to the table -->
+        @if (Model.GradeBook != null)
+        {
+            for (int i = 0; i < Model.GradeBook.Count; i++)
+            {
+                // Each iteration, create a new table row and initialise both columns with the appropriate data
+                <tr>
+                    <td>@Model.GradeBook[i].CourseTitle</td>
+
+                    <!-- Using the string stored in the view model's ResultColor field to change table text colour -->
+                    <!-- Also using the string stored in the view model's ResultText field to change table text as appropriate -->
+                    <!-- Notice that /at/ can be used as many times as required on a single line. -->
+                    <!-- Also, observe the use of variable values in HTML code. -->
+                    <!-- Several things to note here. First is the usage of the /at/() syntax to enclose an entire statement. -->
+                    <!-- The second thing to note is the use of the ternary operator '?' to replace a conditional block.  -->
+                    <!-- Third, the compiler assumes the result of anything enclosed within /at/ is to be pronted to the screen.
+                    Computing the resulting value, storing it in a variable, and using said variable in another code statement
+                    causes the result to be printed twice. This is resolved by simply placing the alias evaluation statement
+                    where the variable would otherwise be inserted. -->
+                    <td style=@Model.GradeBook[i].ResultColor>
+                        @Model.GradeBook[i].Passed
+                    </td>
+                </tr>
+            }
+        }
+
+    </table>
+</div>
+
+<!-- The <script> tag specifies a JS script. -->
+<script>
+    function CheckForm() {
+        // $ here denotes jQuery.
+        // # selects a single element with the specified id attribute.
+        var courseInputValue = $('#courseInput').val();
+        var resultInputValue = $('#resultInput').val();
+
+        // Initialise error message.
+        var errorMessage = "Missing fields:\n"
+
+        // If Course Code/Title is empty...
+        if (courseInputValue == "") {
+            // ...append to the error message string.
+            errorMessage += "Course Code/Title\n";
+        }
+
+        // Same thing here.
+        if (resultInputValue == "") {
+            errorMessage += "Course Result\n";
+        }
+        // Restrict data entry to allow only "pass" and "fail" as valid inputs.
+        else if (resultInputValue.toLowerCase() != "pass" && resultInputValue.toLowerCase() != "fail") {
+            errorMessage += "Only pass and fail accepted for Course Result\n";
+        }
+
+        // Cool beans! If error message has nothing appended to it, there were no errors detected.
+        // Return true, and input has passed client-side validation.
+        if (errorMessage == "Missing fields:\n") {
+            return true;
+        }
+        // However, if the error message is not the same as it was initially, then errors were detected.
+        // Input has failed client-side validation.
+        else {
+            // Alert creates a pop-up on the top with an optional specified message.
+            alert(errorMessage);
+            return false;
+        }
+    }
+</script>
