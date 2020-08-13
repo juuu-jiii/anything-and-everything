@@ -12,8 +12,9 @@ using System.Data.SqlClient;
 
 namespace AGTIV.SPApp.TemplateWebAPI.Controllers
 {
-    public class SampleController : ApiController
+    public class MyApiController : ApiController
     {
+
         [Route("api/Sample/DemoGet")]
         [HttpGet]
         public IHttpActionResult DemoGet(string param1)
@@ -24,7 +25,7 @@ namespace AGTIV.SPApp.TemplateWebAPI.Controllers
 
         [Route("api/Sample/DemoPost")]
         [HttpPost]
-        public IHttpActionResult DemoPost(SampleViewModel vm)
+        public IHttpActionResult DemoPost(GradesViewModel vm)
         {
             SampleBL sampleBL = new SampleBL();
             vm = sampleBL.DemoPost(vm);
@@ -33,7 +34,7 @@ namespace AGTIV.SPApp.TemplateWebAPI.Controllers
 
         [Route("api/Sample/GetMyLogin")]
         [HttpPost]
-        public SampleTokenModel SampleGetMyLogin(SampleTokenModel vm)
+        public TokenModel SampleGetMyLogin(TokenModel vm)
         {
            
             SampleBL sampleBL = new SampleBL();

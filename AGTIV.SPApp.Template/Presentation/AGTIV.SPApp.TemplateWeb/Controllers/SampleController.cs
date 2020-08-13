@@ -12,12 +12,12 @@ namespace AGTIV.SPApp.TemplateWeb.Controllers
     {
         // GET: Sample
         [SharePointContextFilter]
-        public ActionResult Index(SampleViewModel vm)
+        public ActionResult Index(GradesViewModel vm)
         {
             var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
             SampleProcess sampleProcess = new SampleProcess();
-            vm.Title = "New Title";
-            vm.Description = "New Description";
+            vm.Grade.CourseTitle = "GGG6666 Good Games Galore";
+            vm.Grade.Passed = "Fail";
             vm.spHostURL = spContext.SPHostUrl.AbsoluteUri;
             vm.accessToken = spContext.UserAccessTokenForSPHost;
             vm = sampleProcess.SamplePost(vm);
@@ -30,7 +30,7 @@ namespace AGTIV.SPApp.TemplateWeb.Controllers
         public ActionResult GetMyLogin()
         {
             var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
-            SampleTokenModel vm = new SampleTokenModel();            
+            TokenModel vm = new TokenModel();            
             vm.spHostURL = spContext.SPHostUrl.AbsoluteUri;
             vm.accessToken = spContext.UserAccessTokenForSPHost;
 

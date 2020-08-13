@@ -1,0 +1,56 @@
+only have web layer/ui
+use process layer to call api, api handle all logic
+don't use mac first. for training purposes use android
+poptoroot removes all stacks, leaving first one only
+bootstrap has a grid system
+dependency service. because shared does not have access to your device. like compiler tranlating 
+into bative code, but this time you want to saccess device speicific info, so depemdency service is reqwuired.
+Therefore, they do not share the same methods. Normally, this is used for file access. The ways you access files
+in Android vs iOS are vastly diff. androids have SD cards (ext sto) but this is not the case for iOS. Also killing
+apps are different in both cases. Android requires you to handle the back button, but iOS does not
+Data binding - cannot bind view model to the view
+xaml = UI
+<datatemplate> = <tr>, <textccell> = <td>
+Xamarin uses ObservableCollection, not List
+Xamarin uses HttpClient to call the client, not RestClient, like in SharePoint
+
+
+VS - Mobile App (Xamarin Forms)
+
+
+master-detail template: have navi column on left side. hamburger
+tabbed: have tabs like chrome
+shell: like master-detail
+
+choose master-detail
+
+cls lib icon in sol exp: shared
+mobile icons: individual components for diff OSes
+
+mainactivity --> mainlauncher(press f12 to view def) --> app.xaml --> finished launching
+
+add MainPage = new NavigationPage(new MainPage()); to allow navigation. without it cannot move around. used for login. only
+after login is successful do you change mainPage() to navigationpage()
+
+no more controller, xaml will use push and pop to move around 
+Uses forms - code is not reusable
+
+create new page - ocntent page NOT class
+
+tools - xamarin - hot reload - enable - run (f5)
+live  chnages with each code save
+
+run emulator, vs auto-detects. Must run emu first though (Nox)
+
+open android sdk manager - camera icon - check android 10 (or wtv version u want)
+
+platforms
+- android 10, sdk platforms 29, 4, 6
+other tab ah forget liao
+
+HomePage.xaml
+create event. clicked="autofill event"
+event created in code behind file. f12 to go to file - homepage.xaml uses homepage.xaml.cs
+
+
+mainpage must be set to navigationpage to use push and pop if not exception is thrown

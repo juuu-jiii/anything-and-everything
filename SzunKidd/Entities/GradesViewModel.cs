@@ -14,16 +14,28 @@ namespace Entities
     [DataContract]
     public class GradesViewModel : Entity
     {
+        // These fields must match those in the API
+        [DataMember]
         public Grade Grade { get; set; }
+
+        [DataMember]
         // Required. Because you are dealing with multiple collections
         // Maybe create a list of grades called gradebook again
         public List<Grade> GradeBook { get; set; }
 
-        // Constructor
-        public GradesViewModel()
+        //// Constructor
+        //public GradesViewModel()
+        //{
+        //    Grade = new Grade();
+        //    GradeBook = new List<Grade>();
+        //}
+
+        [Serializable]
+        [DataContract]
+        public class TokenModel : Entity
         {
-            Grade = new Grade();
-            GradeBook = new List<Grade>();
+            [DataMember]
+            public string Name { get; set; }
         }
     }
 }

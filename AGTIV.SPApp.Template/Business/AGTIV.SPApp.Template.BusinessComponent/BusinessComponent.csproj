@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8238B7E4-C7B9-41D2-835E-0C08D259831A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AGTIV.SPApp.Template.BusinessComponent</RootNamespace>
+    <AssemblyName>AGTIV.SPApp.Template.BusinessComponent</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AGTIV.Framework.Workflow.BL">
+      <HintPath>..\..\packages\AGTIV\AGTIV.Framework.Workflow.2.0.0.0\AGTIV.Framework.Workflow.BL.dll</HintPath>
+    </Reference>
+    <Reference Include="AGTIV.Framework.Workflow.BO">
+      <HintPath>..\..\packages\AGTIV\AGTIV.Framework.Workflow.2.0.0.0\AGTIV.Framework.Workflow.BO.dll</HintPath>
+    </Reference>
+    <Reference Include="AGTIV.Framework.Workflow.DL">
+      <HintPath>..\..\packages\AGTIV\AGTIV.Framework.Workflow.2.0.0.0\AGTIV.Framework.Workflow.DL.dll</HintPath>
+    </Reference>
+    <Reference Include="AGTIV.General.Helper.Client">
+      <HintPath>..\..\packages\AGTIV\AGTIV.Framework.General\AGTIV.General.Helper.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client">
+      <HintPath>..\..\..\SP DLL\Microsoft.SharePoint.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Runtime">
+      <HintPath>..\..\..\SP DLL\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SampleBL.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\AGTIV.SPApp.Template.Entities\AGTIV.SPApp.Template.Entities.csproj">
+      <Project>{6f4cb0eb-5f4b-4dde-a42c-d73843959924}</Project>
+      <Name>AGTIV.SPApp.Template.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\AGTIV.SPApp.Template.Framework\AGTIV.SPApp.Template.Framework.csproj">
+      <Project>{486dd6f7-673b-4bc9-9213-b72b87ba9aee}</Project>
+      <Name>AGTIV.SPApp.Template.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

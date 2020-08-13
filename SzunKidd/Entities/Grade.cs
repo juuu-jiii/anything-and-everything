@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema; // This is for the line telling the database how to generate values for new entries 
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web;
 
 namespace Entities
