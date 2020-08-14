@@ -32,13 +32,22 @@ namespace AGTIV.SPApp.TemplateWebAPI.Controllers
             return Ok(vm);
         }
 
+        //[Route("api/Sample/GetMyLogin")]
+        //[HttpPost]
+        //public TokenModel SampleGetMyLogin(TokenModel vm)
+        //{
+           
+        //    SampleBL sampleBL = new SampleBL();
+        //    vm = sampleBL.GetMyLogin(vm);           
+        //    return vm;
+        //}
+
         [Route("api/Sample/GetMyLogin")]
         [HttpPost]
-        public TokenModel SampleGetMyLogin(TokenModel vm)
+        public GradesViewModel SampleGetMyLogin(GradesViewModel vm)
         {
-           
             SampleBL sampleBL = new SampleBL();
-            vm = sampleBL.GetMyLogin(vm);           
+            vm = sampleBL.GetMyLogin(vm);
             return vm;
         }
 

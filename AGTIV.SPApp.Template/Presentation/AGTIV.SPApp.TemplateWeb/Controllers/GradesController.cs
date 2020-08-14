@@ -24,7 +24,7 @@ namespace AGTIV.SPApp.TemplateWeb.Controllers
                 vm.accessToken = spContext.UserAccessTokenForSPHost;
                 sampleProcess.SamplePost(vm);
 
-                return View(vm);
+                return View(sampleProcess.GetSampleGetMyLogin(vm));
             }
             else
             {
@@ -34,10 +34,11 @@ namespace AGTIV.SPApp.TemplateWeb.Controllers
                 vm.accessToken = spContext.UserAccessTokenForSPHost;
 
                 SampleProcess sampleProcess = new SampleProcess();
-                string name = sampleProcess.GetSampleGetMyLogin(tokenModel);
-                ViewBag.Name = name;
+                /*string name = */ //sampleProcess.GetSampleGetMyLogin(vm);
+                //iewBag.Name = name;
 
-                return View(vm);
+                //return View(vm);
+                return View(sampleProcess.GetSampleGetMyLogin(vm));
             }
         }
 

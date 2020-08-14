@@ -45,6 +45,20 @@ namespace AGTIV.SPApp.TemplateProcess
             return name.Name;
         }
 
+        public GradesViewModel GetSampleGetMyLogin(GradesViewModel vm)
+        {
+            var client = new RestClient(ConstantHelper.AppSetting.APIUrl);
+
+            RestRequest request = new RestRequest(ConstantHelper.APIRoute.Sample_GetMyLogin, Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddBody(vm);
+
+            IRestResponse<GradesViewModel> response = client.Execute<GradesViewModel>(request);
+            vm = response.Data;
+
+            return vm;
+        }
+
         private void InsertError(string msg)
         {
             SqlConnection conn = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=error;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"); ;
