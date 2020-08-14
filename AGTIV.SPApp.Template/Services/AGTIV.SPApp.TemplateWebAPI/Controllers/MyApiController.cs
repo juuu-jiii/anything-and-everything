@@ -43,7 +43,7 @@ namespace AGTIV.SPApp.TemplateWebAPI.Controllers
         //}
 
         [Route("api/Sample/GetMyLogin")]
-        [HttpPost]
+        [HttpPost] // ... and change this to [HttpGet]
         public GradesViewModel SampleGetMyLogin(GradesViewModel vm)
         {
             SampleBL sampleBL = new SampleBL();

@@ -49,6 +49,10 @@ namespace AGTIV.SPApp.TemplateProcess
         {
             var client = new RestClient(ConstantHelper.AppSetting.APIUrl);
 
+            // Here a large amount of data is obtained i.e. list, so Method.POST is used.
+            // With a smaller amount of data being fetched, use Method.GET, and remove request.AddBody(vm)
+            //      as it is not permitted.
+            // Next, move to the API corresponding method in the ApiController...
             RestRequest request = new RestRequest(ConstantHelper.APIRoute.Sample_GetMyLogin, Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.AddBody(vm);
