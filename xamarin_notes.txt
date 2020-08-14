@@ -15,7 +15,7 @@ Xamarin uses ObservableCollection, not List
 Xamarin uses HttpClient to call the client, not RestClient, like in SharePoint
 
 
-VS - Mobile App (Xamarin Forms)
+VS - Mobile App (Xamarin.Forms)
 
 
 master-detail template: have navi column on left side. hamburger
