@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartDeck", "SmartDeck\SmartDeck.csproj", "{E1377DE6-94DB-4AFE-9ACF-3C5CE46DC77D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1377DE6-94DB-4AFE-9ACF-3C5CE46DC77D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1377DE6-94DB-4AFE-9ACF-3C5CE46DC77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1377DE6-94DB-4AFE-9ACF-3C5CE46DC77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1377DE6-94DB-4AFE-9ACF-3C5CE46DC77D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE2B8774-B9C2-4FB6-B2FC-B7DF282FB780}
+	EndGlobalSection
+EndGlobal
