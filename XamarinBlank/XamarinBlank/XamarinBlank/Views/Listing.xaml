@@ -8,6 +8,24 @@
             <Label Text="You have been redirected &#10;Welcome to Listing.xaml"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
+            <!-- x:Name matches the ListView in the code-behind, and ItemsSource matches with the ObservableCollection. -->
+            <!-- The following line accomplishes multiple things:
+                x:Name creates a ListView EmployeeListDisplay that is accessible from the code-behind. Alter the name in 
+                either the .xaml or .xaml.cs to see what happens. 
+                ItemsSource sets the source from which the ListView will obtain its data. The keyword Binding here performs
+                data binding between the ListView and the target source - in this case, the Employees ObservableCollection
+                defined within the code-behind. -->
+            <!-- It is good practice to create the form control here, and set BindingContext in the code-behind. -->
+            <!-- In the code-behind, BindingContext = vm. Thus, ItemsSource="{Binding Employees}" really means 
+                ItemsSource="{Binding vm.Employees}" -->
+            <ListView x:Name="EmployeeListDisplay" ItemsSource="{Binding Employees}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding FullName}" 
+                                  Detail="{Binding Email}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

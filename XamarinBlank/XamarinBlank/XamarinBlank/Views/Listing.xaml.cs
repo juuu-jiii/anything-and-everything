@@ -9,50 +9,49 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Acr.UserDialogs;
+using XamarinBlank.ViewModels;
 
 namespace XamarinBlank
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Listing : ContentPage
     {
-        // This must be set to static to be used within the Uri constructor.
-        static string webApiUrl = "https://sebdevoffshoreapi.azurewebsites.net/api/Employee/List";
-        Uri uri;
-        HttpClient httpClient;
-        
+        public ObservableCollection<Employee> Employees { get; private set; }
+        private ListingViewModel vm;
+
+        // ListView displays a collection as a vertical list. Why was there no need to declare this variable here?
+
         public Listing()
         {
             InitializeComponent();
-            uri = new Uri(webApiUrl);
-            httpClient = new HttpClient();
+            vm = new ListingViewModel();
         }
 
         // This method runs just before the page appears - overriding allows for calling of
         //      methods upon page display, for example.
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing(); // Inherit from base method to avoid missing essential code
-            CallApi();
-        }
 
-        // Store values in local list??
-
-        // Task represents an async operation that returns a value.
-        // ObservableCollection: essentially a list that notifies the program when updated/refreshed.
-        public async /*Task<ObservableCollection<Employee>>*/ void CallApi()
-        {
-            try
+            // The object created within a using statement will last until the block within the using finishes executing,
+            //      after which it will be disposed of. Thus, the object must implement the interface IDisposable.
+            using (UserDialogs.Instance.Loading("Loading", null, "Cancel", true, MaskType.Clear))
             {
-                // Use await here because GetAsync is defined as an awaitable/async method.
-                HttpResponseMessage response = await httpClient.GetAsync(uri);
-                string content = await response.Content.ReadAsStringAsync();
-                var items = JsonConvert.DeserializeObject<ObservableCollection<Employee>>(content);
+                // The following must be awaited, else the line after it will execute before it finishes running.
+                await vm.CallApi();
             }
-            catch
-            {
 
-            }
+            //// This is an alternative to the above block. ShowLoading() cannot be used within a using statement, because
+            ////      it does not implement IDisposable.
+            //UserDialogs.Instance.ShowLoading("Loading employee listing...", MaskType.Black);
+            //await vm.CallApi();
+            //UserDialogs.Instance.HideLoading();
+
+            // This line of code gives context for the binding that will happen in the xaml file.
+            // The source is bound to the target.
+            // Here, the vm is bound to the view, so the vm is the source, and the view is the target.
+            this.BindingContext = vm;
         }
-
     }
 }
