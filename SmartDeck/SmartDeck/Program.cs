@@ -10,6 +10,7 @@ namespace SmartDeck
     {
         static void Main(string[] args)
         {
+
         }
     }
 }
