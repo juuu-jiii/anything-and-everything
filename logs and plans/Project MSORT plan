@@ -1,0 +1,26 @@
+PROJECT MSORT
+
+A program that accepts a 14 tile mj hand, and returns relevant stats.
+
+For now, a half-set w/o bonus tiles will be used. Tiles will be represented using the following notation:
+- 1 - 9 = 1p - 9p
+- E, S, W, N
+- R, WH, G
+
+How to use:
+- When prompted, use the keyboard to input an mj hand that is at least 13 tiles long
+- Press ENTER to submit the hand for checking.
+
+Visuals:
+- For now, just a regular console app will do. Graphics can come when the entire project is up and running
+
+Goals, in order of priority:
+1. Return all possible winning hands from the current input. If none can be formed, print "INVALID HAND"
+2. Add the other two suits into the mix, and refactor the sort algorithm to allow for their usage
+3. Add scoring, by including bonus tiles, flagging the final tile that completes the hand, and analysing
+		each of the possible compbinations returned in goal 1.
+		
+Goal ONE - Return all possible winning hands from the current input. If none can be formed, print "INVALID HAND"
+*	Begin with a sort algorithm.
+
+

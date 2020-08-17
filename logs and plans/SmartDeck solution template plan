@@ -1,0 +1,119 @@
+SMARTDECK solution template
+
+A solution template that simulates and supports all the standard actions that can be performed with however many decks of cards required. Jokers are 
+currently unsupported; thus, a single deck will have a size of 52 cards.
+
+Actions supported:
+-	Shuffle (the current deck, with however many cards are within)
+-	Deal (to a user-provided number of players, provided the number does not exceed the size of the deck)
+-	Collect (from all players)
+-	Add (to current deck)
+-	Clear (deck and players' hands)
+-	Sort (player hands)
+
+DATA STRUCTURES TO BE USED
+-	C#'s built-in LL for the main deck
+-	C#'s built-in LL for player hands; An insertion sort algorithm will be implemented for suit-based sort, and rank-based sort
+
+OO PROGRAM DESIGN
+The following classes will be used:
+1. Card.cs
+	-	represents a single card object
+	-	enums:
+		-	enum Suit
+		-	enum Rank
+	-	fields: 
+		-	string Suit { get; }
+		-	string Rank { get; } (char cannot support '10')
+		-	int Value { get; }
+		-	Card Next { get; set; }
+		-	Card Previous { get; set; }
+	-	methods:
+		-*	ConvertRank(int aceValue, int twoValue, ..., int kingValue)
+			Converts char Rank into a numerical value, based on the parameters passed in.
+			WHERE WOULD THIS BE PLACED?? IN WHAT METHOD
+			NOT NECESSARY FOR NOW- ASSUME REGULAR VALUES FOR CARDS FIRST
+		-	public override string ToString()
+			returns the suit and rank of the card e.g. 4C 4S 4D AS JC
+		
+2.	Deck.cs
+	-	represents the deck(s) in use; an LL of Card objects
+	-	enums:
+		(none yet)
+	-	fields:
+		-	LinkedList Contents { get; private set; }
+		-	// Card top (basically head)
+		-	// Card bottom (basically tail)
+		-	// int totalDeckSize (basically count)
+		-	// int currentDeckSize (for when there is a draw pile)
+	-	constructor:
+		-	public Deck(int numberOfDecks)
+	-	methods:
+		-	Shuffle()
+			-	Parameters:
+				-	(none)
+			-	Splits the current main deck into two minidecks of random sizes, and swaps both minidecks's positions.
+			-	The head, tail, nexts's and previous's will need to be tracked throughout the swaps.
+			-	The entire process will be repeated a random number of times not less than 50. 
+			-	Refer to notebook for visualisation.
+		-	Deal(Player[] players, int numberOfCards)
+			-	Parameters:
+				-	array of Player objects to deal cards to
+				-	(int) the number of cards to deal to each player
+			-	Checks to see if the number of cards can be evenly divided amongst all players; if not, a warning message is displayed, and the user
+				can decide whether they would like to proceed. The pseudocode for this is as follows:
+				
+				/* BEGIN CODE */
+				
+				// More cards required than the deck can accommodate
+				if (numberOfCards * players.Length > deckSize)
+					// display warning
+					// options: add cards to deck, reduce number of cards per player, proceed anyway, cancel
+				// Leftover cards after dealing
+				else if (numberOfCards * players.Length < deckSize)
+					// deal cards
+					// notify user that dealing was successful, and that a draw pile has been created with the leftover cards
+				// No leftovers; all cards dealt equally to all players
+				else
+					// deal cards
+					// notify user that dealing was successful, and that no draw pile exists
+				
+				/* END CODE */					
+			-	When dealing, the topmost (head) card in the deck is removed, and added to the Player object's Hand LL. The card's .Next becomes the 
+				new head. Remember to deal with the case where the penultimate card gets dealt, in which case its .Next becomes both the head and the
+				tail. Remember also to address the case where the last card gets dealt. In any case, ensure all connections are preserved.
+			-	Update currentDeckSize appropriately.
+		-	Collect()
+			-	Removes all cards from all players' hands, and returns them to the deck.
+			-	Ensure that all edge cases (as above in Deal()) are addressed, and that all connections are preserved.
+			-	Update currentDeckSize appropriately.
+		-	Add(int numberOfDecks)
+			-	Parameters:
+				-	(int) the number of 52-card decks to be added to the main deck
+			-	Loop through the enums in Card.cs, and use them to create one of each of the 52 cards, adding each to the main deck. Repeat as many 
+				times as required by the numberOfDecks specified.
+			-	If neccesary, make sure head, tail, as well as any connections are preserved.
+			-	Update currentDeckSize appropriately.
+		-	Clear()
+			-	Wipes all cards from both the deck and player hands. Resets the simulation.
+			-	It is easier and less expensive to reset the simulation and re-add decks than removing decks after the main deck has been shuffled.
+		-	Status()
+			-	Provides information on the number of card decks currently in use, and the number of cards remaining in the deck.
+		
+3.	Player.cs
+	-	represents a player
+	-	enums:
+		(none yet)
+	-	fields:
+		-	string Name { get; set; }
+		-	LinkedList Hand { get; set; }
+	-	methods:
+		-	SortSuit()
+			Performs a suit-first, rank-second, bucket sort operation on the hand
+		-	SortRank()
+			Performs a rank-first, suit-second, bucket sort operation on the hand
+		-	ManualSort()
+			User input loop that allows the player to manually sort their hand however they wish
+			
+4.	Program.cs
+	

@@ -1,0 +1,445 @@
+(placeholder title) Wall Dodger
+
+Control an arrow-shaped sprite in this endless runner.
+
+How to play:
+- Mouse controls
+- Click on the screen in the direction you want the arrow to move
+- The game gets faster and faster
+- Eventually obstacles appear in the way and the path gets narrower
+
+Visuals:
+- Arrow sprite
+	How to create an appropriate collision detection shape?
+		Could reshape it to match the rectangle angle
+- Coloured walls flanking both sides of the screen. 
+	What could be used as an appropriate asset for this? 
+		Pairs of rectangles, with the space in between being the space you must travel thru. 
+		Kinda like flappy bird, except the rectangle pairs are all directly next to each other.
+- Score/distance counters
+	What unit could be used? How would it be calculated?
+- Powerups and pickups
+
+Goals:
+1. Get the levels to generate correctly. (spawn and despawn to save memory)
+2. Get the camera movement right.
+3. Sort out controls
+4. Get collision working.
+
+Goal ONE - Get the levels to generate correctly. (spawn and despawn to save memory)
+* 	Find a suitable asset (or just create one) for the walls. Preferably a grey rectangle (for now, can
+	change to white when everything is done for colour change according to levels).
+*	All walls will be the same length, and only their "protrusion" from the screen's edges will be 
+	altered. So you will just be drawing multiple walls to the screen. 
+*	Fix an area off-screen where the objects will spawn, and a despawn collider also off-screen, 
+	which removes obstacles once they leave the screen. This optimises the use of memory. 
+*	To obtain a "track", you must regulate how much the next pair of walls deviates in position from the 
+	current. This can be at random, but within a certain range. When draw is called, the code written 
+	should result in a static "track" of walls. Check any data structure used to store the objects being 
+	drawn to the screen to ensure that only the required number of rectangles are being drawn. No more. 
+	You will want to have one or two rectangles additional spawned off screen at the spawn point to 
+	allow for realistic scrolling. You can't test despawning until the camera movement is finished.
+*	You will want to ensure that the rectangles do not spawn off screen, or spawn in such a way that 
+	the other end is visible.
+	
+Goal TWO - Get the camera movement right.
+* 	Start by trying to get the camera to move when the up arrow is pressed. 
+*	When up is pressed, the map should "scroll" downwards, as if you are travelling along the track.
+	Check your data structures. If your despawn is written correctly, there shouldn't be tiles past 
+	the edge of the screen where the bottom-most boundary pair is. This might be the "first" entry 
+	within your data structure. Thus, when spawn is called, a new object is appended, and when despawn is
+	called, the last entry gets removed. Remember that the despawner should have a position relative to 
+	the screen itself, and not the world. 
+*	Once the previous steps are working, get the game to scroll automatically without the need to press
+	the up key.
+	
+Goal THREE - Sort out controls
+*	Find a suitable asset (probs just create one) for the player. You know what you have in mind anyway
+	<<<now a stretch goal>>>
+*	Player will "strafe" left and right when the left and right arrows on the keyboard are pressed.
+*	Decide what values you will need to keep track of (speed of strafe, what else?)
+
+Goal FOUR - Get collision working
+*	Clearly collision shouldn't be a problem IF you default to the Rectangle class. Merely calling 
+	Intersects() should do the trick. But if you use a custom shape for the player arrow (recommended), you
+	will need to do research on the best way to handle collisions for said shape. Good research material.
+*	When the game ends allow the player to choose whether to restart or quit. If they choose to restart, 
+	reset the difficulty appropriately. (speed, gap width, etc(?))
+*	Where will collision be checked for? In the wall or player class? Does it even matter? (player, and yes)
+
+OO DESIGN TEMPLATE
+	Game1.cs
+	*	this.IsMouseVisible == true;
+	*	Data structure usage: lists (LL's not appropriate because need to loop through
+			the data structure multiple times each frame - although there is a lot of removal and appending,
+			these happen twice each per frame. Removal is O(1) in lists too because it goes by index. Only
+			appending will need to loop. Hmm)
+	*	TEST:	to scroll downwards, you do not necessarily have to create a whole camera class. Try to 
+				alter the positions of the walls themselves so that they move downwards to create the 
+				illusion of movement. Program Game1 so that this happens when the up key is pressed. While
+				scrolling is taking place, check to see if SpawnDespawnWallPair() works correctly
+	*	TEST COMPLETE:	If all is working (and trust me, it probably won't), get the game to scroll 
+						automatically and remove the functionality of the up key. Check again to ensure 
+						SpawnDespawnWallPair() works correctly.
+	*	Fields:
+		-	public const int WindowHeight = 650;
+		-	public const int WindowWidth = 500;
+		-	Texture2D wall;
+		-	WallManager wallManager;
+		-	KeyboardState kbState;
+	
+	WallManager.cs
+	*	Class to manage the spawning and despawning of all walls created on the screen
+	*	Implements manager and singleton design patterns
+	*	Fields:
+		-	2 List<Wall>'s: rightWalls, leftWalls 
+		-	int variable to store the gap between the two rectangles being drawn (tie to levels later on)
+		- 	Random generator
+		-	point Spawner and point Despawner (i.e. specific coordinates)
+		-	int scrollSpeed
+		-	const int InitialLeftWallXPosition, InitialRightWallXPosition
+	*	Properties:
+		-	(public get and set for the gap size (set for later when difficulty increases))
+		-	same applies to scrollSpeed
+	* 	Will have a private constructor and a public get for the instance of the class. Refer to HW3
+	*	PRIVATE constructor:
+		-	initialise the lists, gap size (to level 1 difficulty), generator, Spawner + Despawner location,
+			and scrollSpeed
+	*	Methods:
+		-	public void SpawnWallPair(int y)
+				Each time this method is called, a pair of left and right walls gets created and appended to
+				their lists. In Game1 this will be called a set number of times to create the start "stretch"
+				Pseudocode:
+					leftWalls.Append(new Wall(InitialLeftWallXPosition, y)); 
+					rightWalls.Append(new Wall(InitialRightWallXPosition, y));
+		-	public void SpawnDespawnWallPair() (probably need to do the if (notebook distance check) in Game1)
+				Each time this method is called, a pair of left and right walls gets created and appended to
+				their lists, and the oldest in those lists is removed.
+				Pseudocode:
+					Call GenerateOffset to initialise the position variables. Assign result to a variable
+					leftWalls.Append(new Wall(Prev.X + offset, spawner.Y));
+					rightWalls.Append(new Wall(Prev.X + offset + GapSize, spawner.Y));
+					leftWalls.RemoveFirst();
+					rightWalls.RemoveFirst();
+				*NOTE: 	this can be split up into two methods (see next method). I just thought that doing 
+						both in one method saves computation time by only checking for one condition. For  
+						this to work, the Spawner and Despawner points will need to be in appropriate 
+						positions. Experiment with this to find a good working combination
+		-	public void DespawnWallPair() (again, do the check in Game1)
+				Each time this method is called, a pair of left and right walls is removed.
+				Pseudocode:
+					leftWalls.RemoveFirst();
+					rightWalls.RemoveFirst();
+		-	public void Scroll()
+				This moves all walls downward by looping through both lists and adjusting each Wall entry's
+				Y position by a fixed value. This value is up to you. Play around with it in the 
+				constructor to see what numbers work.
+		-	public void DrawAll()
+				This will be called once per frame. Loop through both lists and call Draw on each Wall
+				(not sure how this will work with scrolling though)
+		-	public void Reset()
+				Resets all level- and position-related data back to the game's initial state.
+				Used when the player restarts the game.
+		-	(helper) private int GenerateOffset(int previousLeftWallX, int previousRightWallX)
+				Generate a random offset based on previousXLoc (remember to ensure the wall isn't drawn out
+				of bounds in either case as described above) until a suitable one is obtained
+				The return value will be used to "offset" the location of the next wall to be drawn 
+				relative to the current
+	
+	Wall.cs
+	*	Create a new class to hold wall objects
+	* 	Fields:
+		- 	int constants to store the sizes of the walls (since they are fixed)
+		- 	Vector2 position (relative to screen)
+		-	Rectangle RectangleTracker (track player collision)
+	*	Properties
+		-	get and set for position
+	*	Constructor (parameterised):
+		- 	Pass X and Y into the constructor of the class.
+		- 	Within the constructor, initialise the constants to their decided sizes, and perform the 
+			necessary initialisations for the others
+	*	Methods:
+		-	public void UpdateTracker()
+				Update the current Wall object's Rectangle with its current position. Called in WallManager
+				within Scroll().
+	
+	Player.cs
+	*	Create a new class to keep track of the player object
+	*	Fields:
+		-	Texture2D variable to hold player asset.
+		-	int constants to store the size of the sprite (fixed, like walls)
+		-	Vector2 Position (relative to screen)
+		-	Rectangle playerTracker
+		-	Vector2 StrafeVelocity
+	*	Properties
+		-	get and set for Position
+		-	get and set for playerTracker
+		-	get for strafeSpeed
+	*	Constructor (parameterised):
+		- 	Pass the Texture2D asset, X, and Y into the constructor of the class.
+		- 	Within the constructor, perform the necessary initialisations.
+	*	Methods:
+		-	public void Draw(SpriteBatch spriteBatch)
+				Create a Draw() method that will draw the player sprite to the screen
+				Move 
+		-	public bool Collided(Wall wall)
+				This method will be called every frame in Game1.
+				Checks to see if the Wall parameter passed in intersects with playerTracker
+		-	public void UpdateTracker()
+				Update the current Player object's Rectangle with its current position. Called in Game1 
+				upon player keyboard input (i.e. when strafing)
+		-	public void Reset()
+				Resets player back to their initial position i.e. the centre.
+				Used when the player restarts the game.
+	*	In Game1:
+		-	Give movement to the player sprite (strafing L to R). You can play with Vectors here. Try using
+			a position and velocity vector here. Accel vector probably not required
+		-	No need to set bounds - the player will never go off screen because there will be walls on the
+			edges, which, if they touch, cause them to lose instantly.
+		-	Make playerTracker follow the player sprite around like in class! Now it's in the player class,
+			so hopefully it works.
+		-	Loop through both lists and run Collided() - not sure if this will cause the game to lag though
+		-	Depending on how easy it is to strafe, adjust the field in Player
+	
+	StartScreen.cs
+	*	Create a new class that handles drawing the start screen, and its associated buttons
+	*	Fields:
+		-	SpriteFont fontNameFontSize
+		-	Texture2D backdrop
+		-	Rectangle startButton
+		-	Rectangle quitButton
+		-	const int buttonWidth
+		-	const int buttonHeight
+		-	Color defaultButtonColour
+		-	Color hoverButtonColour
+		-	Color clickButtonColour
+	*	Properties:
+		-	get-only for startButton, quitButton, and colours
+	*	Constructor (parameterised)
+		-	pass in the texture to be used for the backdrop
+		-	initialise all variables appropriately
+	*	Methods:
+		-	public void Draw()
+				Draws buttons and start menu to the screen
+	*	In Game1:
+		-	create an FSM to track interactions with the buttons
+	
+	PreGameScreen.cs
+	*	Shown after the player clicks start on the start screen
+	*	Translucent grey backdrop colour
+	*	Instructions and how to play
+	*	Press any key to start
+	
+	GameOverScreen.cs
+	*	Shown after the player touches a wall
+	*	Translucent grey backdrop colour
+	*	Game over text and instructions with what to do next
+	*	Press Enter to play again. Goes right into playing and not the pregame screen
+	*	Click the button to go back to the main menu
+	
+	Button.cs
+	*	Made this because there will be buttons in various screens. So code won't have to be duplicated.
+	
+	ControlGuide.cs
+	*	(stretch goal class)
+
+FSM Models
+-	check notebook
+
+-------------------- STRETCH GOALS --------------------
+Stretch goals:
+6. Have a semi-circle "ring" on the outer edge of the screen. An arrow on the ring corresponds to the 
+   direction the player arrow is going to travel in the next time the mouse button is clicked. The game 
+   will only track the movement of the mouse along the X axis, and adjust the arrow on the ring accordingly
+7. Need to figure out how to model movement in advanced version. Read notebook for details.
+8. Use the arrow sprite, and implement a custom Rectangle class that accepts transformations (rotation etc)
+	Or might need to figure out collision detection with triangles, then overlay an image using a rectangle
+	at the exact triangle's location.
+
+X 9. Fix wall drawing at different scroll speeds. 
+
+10. Buffs and debuffs. 
+		Some buffs: slowmo, decreased size, 2X score, +500, wider path. 
+		Some debuffs: speedup, increased size, 1/2X score, -500, narrower path.
+13. Story mode. Some areas feature certain terrain more. Still random, but higher chance of encountering.
+	Probably might want to come up with a way to manage the probability dist for each terrain structure.
+	Stages in each chapter. So maybe first chapter has more zigzags than anything else. Has X number of 
+	stages. Increasing difficulty/speed. Like Toon Blast and the map honestly. Duet's style.
+14. In endless mode, as the player progresses, make levels longer. Possibly have a point where speed hits a
+	max. Too quick also unrealistic la.
+15. Colourblind friendly. Make Walls distinctly darker than the background. 
+17. LEVEL EDITOR JDJSJDJSDHS -  place where you want your walls to go into a GUI, set speed, then use the 
+	wall spawning duration counting algo to determine spawn time, and read one line through the save file at a time.
+	the GUI will convert the wall locations to coordinates.
+18. Progress bar through levels. Can be visual or percentage. Visual would be better, since it is more challenging.
+19. Audio
+
+Completed:
+4. Figure out how to calculate score.
+1. Have the scrolling get faster the further the player progresses (level up - difficulty).
+3. Change wall colours to reflect game level.
+2. Speed up the further the player progresses.
+5. Random enum of "terrain seeds" that controls the types of paths generated
+	Possible terrain types:
+	-	zigzag
+	-	big zigzag
+	-	gap irregularities (narrow "passes")
+	-	obstacles in path
+	-	roundabouts lol
+	-	straights
+	-	abrupt turns
+	-	regular randomly-generated pathways
+11. Save high scores to a file, and do the arcade game style where there's a local leaderboard - binary I/O
+16. Scrolling "live wallpaper" background on menu screen
+12. Level up animation! Text scrolls across the screen. Background flashes rainbiotic
+
+SCORING
+-	Create a class ScoreCounter. Initialise whatnot. Figure out what you need.
+-	Update method that adds to the score based on a certain factor. Write an equation in the method.
+-	Use the animation code, since it makes use of timing and fps, which is related to what you want to 
+	achieve here
+	
+LEVELS
+-	The game just speeds up with increasing level. Track width is dependent on buffs/debuffs now.
+-	Should not need to make a levelManager class. Scroll speed is managed in WallManager anyway, and score 
+	is just calculated by passing the level parameter into the method. So just make a public auto get/set 
+	for level in WallManager, and write a method LevelUp() where you increment the level by 1 and update 
+	ScrollVelocity. To decide when to level up, you can use a similar mechanism to ScoreCounter's Update().
+	ScrollVelocity += ScrollVelocityIncrease. Just need to figure out where to place it.
+-	Should print level information though. Maybe should make a class after all?
+-	How to make Wall objects change colour after leveling up? LevelUp event? Or just write a ChangeColour()
+	method in WallManager. After all, when collecting 2X the colours are supposed to cycle psychedelically
+	anyway.
+	
+TERRAIN GENERATION
+-	What are some things to keep in mind when generating terrain?
+	-	The location of the gap (or rather the current location of the wall pair)
+	-	The location of the window edges (recall the boundary limits)
+-	Possible terrain types:
+	-	zigzag
+	-	big zigzag
+	-	gap irregularities (narrow "passes")
+	-	obstacles in path
+	-	roundabouts lol
+	-	straights
+	-	abrupt turns
+	-	regular randomly-generated pathways
+-	For architecture see notebook
+-	Create a new class TerrainGeneration.cs, that contains a Random generator
+-	The class will have an enum of all possible terrain types
+-	public TerrainType ChooseTerrainType. Spin the wheel here. 50/50 chance
+	If N, return TerrainType.None. if Y, Spin another wheel to figure out which landform to generate.
+	Return the appropriate enumerated value. Perhaps randomly generate a # and then get the corresponding
+	enum value.
+-	public void GenerateTerrain
+-	Third SpawnWallPair overload. Generate terrain delegate I think. Pass it into the method. Then tell the
+	wallManager object how to generate.
+-	The GenerateTerrain could read the current wall pair's location information, and then recursively 
+	return values into the wallManager object that tells it what to draw. Coupling. Let's try it with the 
+	zigzag terrain type first.
+-	The class needs to have an Update method of its own too so it knows how often to generate landforms
+-	Will need to refactor code in WallManager based on what is given by TerrainGeneration.cs. If no 
+	landform is created, just call regular random. Otherwise, follow instructions.
+-	Use the delegate to create diff landforms?
+-	(continued from notebook) SpawnWallPair cannot accept x and y loc as params. Why? because it is called 
+	in Game1. Rather I think it should switch on currentTerrain and then based on that in each case have 
+	different instructions on how to generate the next wall pair. So call other methods within it? 
+	Keep Zigzag and other terrain classes, move all TerrainGeneration fields, props and methods into 
+	WallManager and delete it (later- leave it for now)
+	Maybe eg for the Zigzag case you can do:
+	if (zigzagInstance.CurrentWall < zigzagInstance.TotalLength)
+	GenerateNextWallPair(params etc); <<KEEP IN MIND GENERATENEXTWALLPAIR METHOD - other terrain classes
+	will very likely need it- consider making a parent abstract class. Think about what all terrain classes 
+	need. methods, props, methods (like GenerateNextWallPair()) etc.
+	INSIDE GenerateNextWallPair in Zigzag that's where you put all your checks for direction changes and 
+	whatnot. You just put the termination condition in wallManager so it knows when to stop.
+	Must generate each wall pair one step at a time because in Game1 they're also added one at a time.
+	So say we exit the if statement (ie terrain fully generated dy for whichever terrain type)
+	The timer will then start. between the start and the end use defaultRandom generation.
+	In that sense, then WallManager will have a use for the Update() method and the other methods too.
+	2 checks for generation progress: the timer, and the currentwall#
+	
+SCORE COUNTING
+-	Need to initialise save file to have a set number of zeroes.
+-	Store values in an array.	 and then read from them then print it out
+-	use MSDN sort (more efficient than writing own)
+-	And then update the array with values when a new high score is recorded
+-	Shift the values appropriately and "knock out" the lowest value.
+-	Must use array, because size is fixed - works for the fact that a leaderboard has a fixed size.
+-	Need to notify user if a high score has been recorded. Maybe have UpdateScores() return a bool
+-	Enter name for high score. How to restrict to 3 chars only?
+-	You MIGHT want to split scorecounter up into another class, leaderboard
+
+LIVE WALLPAPER
+-	If possible, try not to show the "start stretch" in the live wallpaper.
+-	Overlay the translucent background on top of the scrolling map.
+-	Need to find two different ways to scroll. One without any speed increment (menu), and one with (gameplay)
+-	Reset every time the menu is accessed. Leaderboard no need to do anything except for having the translucent
+		bg and continue to draw, because it is only accessible from the start screen. In effect, onmly start 
+		screen and leaderboard will have this effect.
+-	Another Reset() but this time for the menu only. Need only be called when menu screen is accessed.
+-	Within that Reset() a random offset layout will need to be used to generate the "start stretch"
+-	Try creating another FSM entirely for scrolling states. Previously scrolling was bunched in with player
+		activity, but now it is clear that it should be in an FSM of its own.
+
+LEVEL UP ANIMATION
+-	Another class, with its own draw method. Study the levelUp event handler and see what you can do to hook it
+		it up.
+-	Because the only thing that is passed into the event is the level, the scrolling text should not be an issue
+-	Getting the background colour to change can be challenging. Probably the GraphicsDevice will need to be 
+		passed in as a param. EITHER hook it up to the other methods and don't use it unless changing bgcolor, 
+		or call the bgcolor changing method on its own. Probably the latter, to avoid including additional USING
+		statements where they aren't needed. Actually the former could work. No additional using statements are 
+		required, it seems.
+		
+WALL SCROLLING AT DIFFERENT SCROLL VELOCITIES
+-	Playing around with scrollVelocity and the time between each wall generation did not work
+-	Fix by generating actual walls on the sides of the track, instead of using wall pairs
+-	Rotate very thin (or maybe not so thin so the wall colour can be seen) rectangle sprite joining two 
+		separate points
+-	Start with just generating points and placing rectangles between each - need to figure out how that affects 
+		the whole wall pairing system, as well as terrain generation later on. Also need to worry about how to 
+		measure gap width, and control its size throughout.
+	-	Instead of SpawnWallPair(), do a SpawnCoordinatePair()
+	-	DrawWall(), connects most recently spawned coordinate pair with that spawned just before using a Rectangle
+	-	Can hard-code start stretch (like last time) so there will always be a "prev coordinate" to connect with
+	-	Vertical (y) dist between each coordinate pair should be kept constant for now
+	- 	Converting wall pairs to coordinate pairs: coordinates' locations = edges of wall pairs visible on screen.
+			Probably just make it top corners to simplify things a little.
+-	When the above can be figured out, look toward cosine interpolation to generate smoother curves in turns.
+
+-------------------- OOP REFACTORING --------------------
+GameObject.cs
+-	Player.cs, Wall.cs
+-	public abstract void Draw(SpriteBatch spriteBatch);
+-	public abstract void UpdateTracker();
+-	PROTECTED Texture2D asset
+-	PROTECTED Vector2 Position { get; set; }
+-	PROTECTED Rectangle Tracker { get; private set; }
+
+MenuScreen.cs
+-	StartScreen.cs, PregameScreen.cs, GameOverScreen.cs
+-	PROTECTED Texture2D backdrop;
+-	PROTECTED Vector2 textPosition;
+-	PROTECTED Vector2 subtextPosition;
+-	PROTECTED SpriteFont textFont;
+-	PROTECTED SpriteFont subtextFont;
+-	public void Draw(SpriteBatch spriteBatch)
+
+-------------------- DEV STRATEGIES LEARNED --------------------
+-	You need to constantly remind yourself of the way programming languages work.
+-	Good work planning initially. You would have benefited more if you thought OOP design through. To do 
+	this, next time, after planning all classes out, create an abstract/parent GameObject class for 
+	starters. Look through your plans so far and figure out what should go in there. Then, create other 
+	abstract/parent classes as you see fit.
+-	If you have stretch goals, it would help to roughly plan how those aspects will work out. That way if 
+	any OO/data structures need to be created beforehand, you can do so to allow for easier expansion.
+-	To break the program whenever a variable's value changes, create a property for that variable, and 
+	place a breakpoint on the get or set properties
+
+TO-DO ASAP:
+think about terrain spawning concurrently. Like obstacle in the middle of zigzag. Or really just an obstacle + 
+	terrain-that-isn't-an-obstacle combo. How to keep track? How about generating a terrain every time the current
+	one finishes spawning? How would that work out?
+think about a way to fit the WallManager Reset() method into the event. Pass asset into Draw method maybe?
+Reset gapSize everytime the game is restarted, now that GapSize alters it.

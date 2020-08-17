@@ -1,0 +1,107 @@
+PROJECT RSORT
+
+Penang Rummy - AI Bot
+
+CURRENTLY NO JOKERS
+
+GAME RULES
+-	Deal 20 cards to each of the 4 players. The remainders are not used.
+-	Begin with a license/passport, which consists of a >= 3 card run, or a >= 5 card book. If no license can be made, the hand is considered dead
+-	Each subsequent turn, you must play >= 1 card, either by laying off or opening sets/books of >= 3 cards from within the hand. 
+	If laying off, only one book OR one side of an existing run may be added to per turn
+-	If no cards may be played during a turn, the hand is considered dead.
+-	Low ace and high ace - need to figureo ut how to compartmentalise
+
+PLAY STRATEGY
+OPENING TURN
+-	Arrange hand to look for runs. Arrange based on suit, in ascending order.
+-	Look for runs with "nearby" cards. A "nearby" card is one that is 2-3 away in value from the highest valued card in the run
+	When looking for nearby cards, look for nearby cards to those nearby cards as well, and count the total value of "nearby" cards to the current run
+-*	Pick the run with the most "nearby" cards in the hand ***if starting. Otherwise, if not starting, look to see if any "nearby" cards satisfy runs 
+	that have already been laid down.***
+-**	If the selected run > 3 cards long, choose whether to play any cards past the initial 3 based on what cards are in the hand, and on what cards are exposed
+	For example, with 3H 4H 5H 6H 6H you would withhold the 6H because it can be used as insurance
+	Also, if you have 3H 4H 5H 6H but there is an AH 2H 3H exposure on the table you would only open 4H 5H 6H because 3H can then be added as insurance
+	Also, if you have AC AH AS 2S 3S 4S you might choose to only play 2S 3S 4S as the aces can be split up into a book. See BREAKING RUNS DOWN
+-* 	Play the selected run, ***up to whatever card limit***
+-*	If there is no run available, check for 5-of-a-kinds. 
+	***
+	If more than one exists, you might pick the more isolated one, or the one with more copies used up.
+	For example, with 2S 2C 2H 2D 2D 3D 4D vs AS AC AH AD AS you might go for the ace book, since there is no possibility of splitting it up later on
+	Also, with 2S 2C 2H 2D 2D vs AS AC AH AD AS and seeing a 2S 3S 4S exposure on the table you might choose the 2 book, because one 2 is already used
+	Or, if you have a 6-book or more, you might want to use that because you can continue to add to it during later turns, and be safer knowing there are
+	less copies available to be added.
+	***
+-**	If more than 5 copies of a card are in the hand, play only 5 - the rest can be used later on.
+-**	Play the selected book, up to a card limit of 5
+-	If neither a run nor book can be played, the opening turn was unsuccessful, and the hand is declared dead.
+
+SUBSEQUENT TURNS (ASSUMING THE OPENING TURN WAS SUCCESSFUL)
+ON EACH TURN
+-	Rearrange hand into runs and books, and look out for deadwood/isolated cards. Prioritise an arrangement that results in less deadwood value
+-	Form runs, and use remainder cards to form books
+-	Remainders are deadwood. Look at exposures on table to see if deadwood can be laid off anywhere
+-		If no lay offs are possible from deadwood, see if lay offs are possible from runs and books
+-			If laying off from books invalidates the book i.e. taking from a 3-of-a-kind, move to lower priority
+-				Higher priority for breaking up a book and still not invalidating it
+-					If breaking a book to lay off, see if there are any nearby cards to the card to be played. If there are none, playing that card is moved 
+					to a lower priority
+-						Open a run from the hand
+-							Open a book from the hand
+- Order of priority - ***currently does not take into acc number of cards available***
+1.	Laying off deadwood
+		PRIORITISE LAYING OFF ON RUNS
+		A.	If multiple layoffs are possible, determine which are "insurance". Insurance is where the location of the other exact copy of the card to be
+			laid off is known. The other way a card can be considered insurance in the event no jokers are used, is if there are >= 2 possible places to
+			lay the card off on the table. This is the case because there are only two copies of each card. Thus, search the table as well as the hand. 
+			Prioritise laying off non-insurance cards first.
+		B.	After singling out the insurance cards, look at non-insurance deadwood. Pick the lay-off or lay-off combination worth the most points.
+			In the event the combination is worth the same score:
+				- If it is early in the game, pick the lay-off combination terminating with the card closest to the end of the run.
+				- If it is late in the game, pick the lay-off combination terminating with the card furthest from the end of the run.
+			When looking for cards to lay off on a run, if a valid card is found, search the deadwood again for adjacent ones. If the hand is already
+			correctly sorted there won't be a need to search for a third deadwood to lay off. BUT with jokers this will change.
+		C.	If laying off insurance, check to see if there are any nearby cards in the direction of the layoff. If none exist, do not lay off the insurance
+			Otherwise, proceed. However, check to see if the "route" to the card lay-off is blocked. EG. laying off a 4H at AH 2H 3H because the hand 
+			contains 10H. Must check when placing the 4H whether 5H 6H 7H 8H 9H have not all been used up, else the route is "blocked".
+			If multiple insurances exist, pick the one for which nearby cards in the direction of the lay off exist.
+			If the adjacent deadwood to the insurance is also an insurance, only lay off the first insurance and keep the second. Play insurances with insurances
+			before playing insurances with no insurances. 
+		THEN ONLY LAY OFF ON BOOKS
+		D.	If laying off deadwood on a book, and multiple copies of said deadwood exist, lay off only one at a time. Book layoffs are immediately considered
+			insurance.
+			Also take into account whether there is adjacent deadwood to the card being laid off. Prioritise laying off on a book a card that does not
+			have adjacent/has further away deadwood
+		E.	If a book is opened which matches a book in the hand that book will be compartmentalised and used only as insurance as book layoffs
+		F.	If multiple book layoffs exist, choose the highest-valued card to layoff.
+2a.	Breaking a book to lay off, existing book is still valid, adjacent or nearby deadwood to card being played in direction of layoff
+		A.	If there exist multiple locations to lay off on a run, pick the location in the direction of nearby deadwood. Priority for direction in
+			which there exists deadwood nearer by. e.g. 2 spots vs 6. But if closest is 6 then that's the way to go regardless
+2b. Breaking a run to lay off, existing run is still valid, insurance play
+	EG laying off AS on 2S 3S 4S 5S if you have AS KS QS JS in your hand
+	OR SPLIT JC QC KC and lay off QC KC where there is a run and keep the JC to be added to a book
+	OR SPLIT JS QS KS AS lay off AS to a run or book (book or run depending on adjacency) and keep the rest.
+3.	Opening a run from the hand. If multiple runs exist, make a decision based on how late it is into the game
+	If it is early in the game, follow the same procedure as earlier, and open a run with nearby deadwood
+	If it is later in the game, open a run for which more of the locations of possible layoffs are known (safer)
+4.	Opening a book from the hand. If multiple books exist, choose the one for which more locations of valid playable cards are known
+	If both are tied, open the smaller value book
+	Open only 3 cards. Again, only select those that do not have adjacent/have further away deadwood
+5.	Breaking a book to lay off, existing book is not valid, adjacent or nearby deadwood to card being played in direction of layoff
+
+ALGORITHM NEEDS TO KNOW WHEN GAME IS POSSIBLE
+Flag cards as playable based on what is exposed on table. If all cards are flagged, and all are insurances, a game is possible.
+However, if some are non-insurances, get rid of those first.
+
+BREAKING RUNS DOWN*
+First check to see whether the run's length is >= 6.
+If the length is >= 6, then the run can be split into smaller runs. Divide into as many runs of length 3, and tag the remainder on to the last set
+Maybe split runs into "essential" components, and "optional" components.
+With AH 2H 3H essential components are all three cards, since without any one of them the run cannot be formed. 
+With AH 2H 3H 4H the essential components would be 2H 3H, since no run can be formed without them. The optional would be A/4H
+With AH 2H 3H 4H 5H the essential component would be 3H ONLY.
+With AH 2H 3H 4H 5H 6H there will be no essential component, because the run can be broken down into two smaller runs
+currently have down into essentials and optionals
+Run a check on how many copies of each optional card are available, basically checking to see if they can be used in books. No need to check on 
+essentials, because they must be used anyway. Essentials are only max 3 cards at a time, depending on the length of the sequence
+If the location of the other copy of the optional is not known, the card becomes an essential, and should be exposed.
