@@ -52,7 +52,8 @@ The following classes will be used:
 		-	Shuffle()
 			-	Parameters:
 				-	(none)
-			-	Splits the current main deck into two minidecks of random sizes, and swaps both minidecks's positions.
+			-	Splits the current main deck into two minidecks of random sizes (ratio of at least 30/70,
+				and at most 70/30), and swaps both minidecks's positions.
 			-	The head, tail, nexts's and previous's will need to be tracked throughout the swaps.
 			-	The entire process will be repeated a random number of times not less than 50. 
 			-	Refer to notebook for visualisation.
@@ -100,6 +101,10 @@ The following classes will be used:
 		-	Status()
 			-	Provides information on the number of card decks currently in use, and the number of cards remaining in the deck.
 		
+
+2.5.	Create a custom LL for Deck. C#'s LL does not contain an indexer property, which will be required for shuffling.
+	"Splitting" the deck for shuffling will not be possible therefore, since .Next of specific nodes cannot be accessed.
+
 3.	Player.cs
 	-	represents a player
 	-	enums:
