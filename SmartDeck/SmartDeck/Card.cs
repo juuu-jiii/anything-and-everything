@@ -51,16 +51,12 @@ namespace SmartDeck
         public string Suit { get; }
         public Ranks Rank { get; }
         public int Value { get; }
-        public Card Next { get; set; }
-        public Card Previous { get; set; }
 
         public Card(Suits suit, Ranks rank)
         {
             Suit = suit.ToString();
             Rank = rank;
             Value = (int)rank;
-            Next = null;
-            Previous = null;
         }
 
         /// <summary>

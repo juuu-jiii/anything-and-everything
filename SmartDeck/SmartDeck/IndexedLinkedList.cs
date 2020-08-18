@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IndexedLinkedList
+namespace SmartDeck
 {
-    // Classes implementing the indexed linked list should inherit from this class.
+    // This class represents the collection of Node objects within the Indexed Linked List.
     
     class IndexedLinkedList<T>
     {
         public Node<T> Head { get; private set; }
-        public Node<T> Tail { get; private set; }
-        public int Count { get; private set; }
+        public Node<T> Tail { get; set; }
+        public int Count { get; set; }
 
         /// <summary>
         /// Adds a specified Node to the end of the IndexedLinkedList.

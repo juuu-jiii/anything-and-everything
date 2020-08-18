@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IndexedLinkedList
+namespace SmartDeck
 {
     // Node objects should inherit from this class.
+    // Modify fields as necessary.
     
     class Node<T>
     {
