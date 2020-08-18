@@ -14,7 +14,6 @@ enum Suits
 
 enum Ranks
 {
-    Ace = 1,
     Two = 2,
     Three = 3,
     Four = 4,
@@ -26,7 +25,8 @@ enum Ranks
     Ten = 10,
     Jack = 11,
     Queen = 12,
-    King = 13
+    King = 13,
+    Ace = 14
 }
 
 enum CountingValues
@@ -49,7 +49,7 @@ namespace SmartDeck
     class Card
     {
         public string Suit { get; }
-        public string Rank { get; }
+        public Ranks Rank { get; }
         public int Value { get; }
         public Card Next { get; set; }
         public Card Previous { get; set; }
@@ -57,7 +57,7 @@ namespace SmartDeck
         public Card(Suits suit, Ranks rank)
         {
             Suit = suit.ToString();
-            Rank = rank.ToString();
+            Rank = rank;
             Value = (int)rank;
             Next = null;
             Previous = null;
@@ -71,7 +71,52 @@ namespace SmartDeck
         /// </returns>
         public override string ToString()
         {
-            return Enum.TryParse<Ranks>(Rank, out) + Suit[0];
+            string rankAsString;
+
+            switch((int)Rank)
+            {
+                case (2):
+                case (3):
+                case (4):
+                case (5):
+                case (6):
+                case (7):
+                case (8):
+                case (9):
+                case (10):
+                    {
+                        rankAsString = Value.ToString();
+                        break;
+                    }
+                case (11):
+                    {
+                        rankAsString = "J";
+                        break;
+                    }
+                case (12):
+                    {
+                        rankAsString = "Q";
+                        break;
+                    }
+                case (13):
+                    {
+                        rankAsString = "K";
+                        break;
+                    }
+                case (14):
+                    {
+                        rankAsString = "A";
+                        break;
+                    }
+                default:
+                    {
+                        rankAsString = "ZZZ";
+                        Console.WriteLine("This shouldn't happen");
+                        break;
+                    }
+            }
+            
+            return (rankAsString + Suit[0]);
         }
     }
 }
