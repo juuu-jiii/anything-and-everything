@@ -29,7 +29,9 @@ mobile icons: individual components for diff OSes
 
 mainactivity --> mainlauncher(press f12 to view def) --> app.xaml --> finished launching
 
+DO THIS IN APP.XAML.CS
 add MainPage = new NavigationPage(new MainPage()); to allow navigation. without it cannot move around. used for login. only
+The above line also allows for the use of the NavigationBar
 after login is successful do you change mainPage() to navigationpage()
 
 no more controller, xaml will use push and pop to move around 

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace IndexedLinkedList
 {
-    // Classes implementing the indexed linked list should inherit from this class.
-    
+    // This class represents the collection of Node objects within the Indexed Linked List.
+
     class IndexedLinkedList<T>
     {
         public Node<T> Head { get; private set; }

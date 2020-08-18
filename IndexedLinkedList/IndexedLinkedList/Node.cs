@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace IndexedLinkedList
 {
     // Node objects should inherit from this class.
-    
+    // Modify fields as necessary.
+
     class Node<T>
     {
         public T Data { get; set; }
