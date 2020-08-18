@@ -9,10 +9,10 @@ namespace IndexedLinkedList
 {
     // Classes implementing the indexed linked list should inherit from this class.
     
-    class IndexedLinkedList
+    class IndexedLinkedList<T>
     {
-        public Node Head { get; private set; }
-        public Node Tail { get; private set; }
+        public Node<T> Head { get; private set; }
+        public Node<T> Tail { get; private set; }
         public int Count { get; private set; }
 
         /// <summary>
@@ -21,8 +21,10 @@ namespace IndexedLinkedList
         /// <param name="newNode">
         /// The Node object to be appended.
         /// </param>
-        public void AddLast(Node newNode)
+        public void AddLast(T data)
         {
+            Node<T> newNode = new Node<T>(data);
+            
             // LL is empty. Make newNode the new Head and Tail.
             if (Count == 0)
             {
@@ -43,8 +45,10 @@ namespace IndexedLinkedList
         /// Adds a new Node object to the 
         /// </summary>
         /// <param name="newNode"></param>
-        public void AddFirst(Node newNode)
+        public void AddFirst(T data)
         {
+            Node<T> newNode = new Node<T>(data);
+
             newNode.Next = Head;
             Head.Previous = newNode;
             Head = newNode;
@@ -83,7 +87,7 @@ namespace IndexedLinkedList
         /// <param name="index">
         /// The index to retrieve or alter.
         /// </param>
-        public Node this[int index]
+        public Node<T> this[int index]
         {
             get
             {
@@ -93,7 +97,7 @@ namespace IndexedLinkedList
                 }
                 else
                 {
-                    Node currentNode = Head;
+                    Node<T> currentNode = Head;
 
                     for (int i = 0; i < index; i++)
                     {
@@ -111,7 +115,7 @@ namespace IndexedLinkedList
                 }
                 else
                 {
-                    Node currentNode = Head;
+                    Node<T> currentNode = Head;
 
                     for (int i = 0; i < index; i++)
                     {
@@ -132,21 +136,23 @@ namespace IndexedLinkedList
         /// <param name="index">
         /// The index to insert the Node object at.
         /// </param>
-        public void Insert(Node newNode, int index)
+        public void Insert(T data, int index)
         {
             // Allow use of other methods for ease of access.
             if (index == Count - 1)
             {
-                AddLast(newNode);
+                AddLast(data);
             }
             else if (index == 0)
             {
-                AddFirst(newNode);
+                AddFirst(data);
             }
             else
             {
                 // Leverage the indexer property.
-                Node currentNode = this[index];
+                Node<T> currentNode = this[index];
+
+                Node<T> newNode = new Node<T>(data);
 
                 newNode.Next = currentNode;
                 newNode.Previous = currentNode.Previous;
@@ -181,7 +187,7 @@ namespace IndexedLinkedList
             else
             {
                 // Leverage the indexer property.
-                Node currentNode = this[index];
+                Node<T> currentNode = this[index];
 
                 currentNode.Previous.Next = currentNode.Next;
                 currentNode.Next.Previous = currentNode.Previous;
@@ -198,9 +204,9 @@ namespace IndexedLinkedList
         /// <returns>
         /// Returns the Head as a Node object.
         /// </returns>
-        private Node Pop()
+        private Node<T> Pop()
         {
-            Node returnedHead = Head;
+            Node<T> returnedHead = Head;
             RemoveAt(0);
             return returnedHead;
         }
