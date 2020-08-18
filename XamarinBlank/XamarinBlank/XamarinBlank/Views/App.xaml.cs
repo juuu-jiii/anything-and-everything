@@ -10,7 +10,8 @@ namespace XamarinBlank
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            // Sets the main page to allow for navigation.
+            MainPage = new NavigationPage(new MainPage());
         }
 
         protected override void OnStart()

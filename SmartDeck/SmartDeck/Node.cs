@@ -4,17 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartDeck
+namespace IndexedLinkedList
 {
     // Node objects should inherit from this class.
     
-    class Node
+    class Node<T>
     {
-        public Node Next { get; set; }
-        public Node Previous { get; set; }
+        public T Data { get; set; }
+        public Node<T> Next { get; set; }
+        public Node<T> Previous { get; set; }
 
-        public Node()
+        public Node(T data)
         {
+            Data = data;
             Next = null;
             Previous = null;
         }

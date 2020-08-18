@@ -14,6 +14,9 @@ namespace XamarinBlank
         public MainPage()
         {
             InitializeComponent();
+
+            // The bool parameter determines whether the navigation bar is visible.
+            NavigationPage.SetHasNavigationBar(this, true);
         }
 
         /// <summary>
@@ -31,8 +34,12 @@ namespace XamarinBlank
         // Navigation.PopModalAsync pops the most recently pushed page off the navigation stack.
         private async void RedirectToListing(object sender, EventArgs e)
         {
+            // This pushes a Page object onto the navigation stack.
+            await Navigation.PushAsync(new Listing(), true);
+            
+            // This pushes a modal onto the navigation stack.
             // The added page is a NavigationPage to allow for push/pop functionality.
-            await Navigation.PushModalAsync(new NavigationPage(new Listing()));
+            //await Navigation.PushModalAsync(new NavigationPage(new Listing()));
         }
     }
 }
