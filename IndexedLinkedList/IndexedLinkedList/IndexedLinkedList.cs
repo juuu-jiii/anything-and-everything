@@ -210,5 +210,28 @@ namespace IndexedLinkedList
             RemoveAt(0);
             return returnedHead;
         }
+
+        /// <summary>
+        /// Resets the IndexedLinkedList to its original state.
+        /// </summary>
+        public void Clear()
+        {
+            Head.Next = null;
+            Tail = Head;
+            Count = 0;
+        }
+
+        /// <summary>
+        /// Loops through and prints the current contents of the Indexed Linked List.
+        /// </summary>
+        public void PrintContents()
+        {
+            Node<T> currentNode = Head;
+
+            for (int i = 0; i < Count; i++)
+            {
+                currentNode.Data.ToString();
+            }
+        }
     }
 }
