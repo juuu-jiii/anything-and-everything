@@ -12,8 +12,8 @@ Actions supported:
 -	Sort (player hands)
 
 DATA STRUCTURES TO BE USED
--	C#'s built-in LL for the main deck
--	C#'s built-in LL for player hands; An insertion sort algorithm will be implemented for suit-based sort, and rank-based sort
+-	Custom IndexedLL for the main deck
+-	Custom IndexedLL for player hands; An insertion sort algorithm will be implemented for suit-based sort, and rank-based sort
 
 OO PROGRAM DESIGN
 The following classes will be used:
@@ -55,7 +55,7 @@ The following classes will be used:
 			-	Splits the current main deck into two minidecks of random sizes (ratio of at least 30/70,
 				and at most 70/30), and swaps both minidecks's positions.
 			-	The head, tail, nexts's and previous's will need to be tracked throughout the swaps.
-			-	The entire process will be repeated a random number of times not less than 50. 
+			-	The entire process will be repeated a random number of times between 50 and 100, inclusive.
 			-	Refer to notebook for visualisation.
 		-	Deal(Player[] players, int numberOfCards)
 			-	Parameters:
@@ -100,7 +100,9 @@ The following classes will be used:
 			-	It is easier and less expensive to reset the simulation and re-add decks than removing decks after the main deck has been shuffled.
 		-	Status()
 			-	Provides information on the number of card decks currently in use, and the number of cards remaining in the deck.
-		
+		-	PrintDeck()
+			-	Loops through and prints the current contents of the deck.
+
 
 2.5.	Create a custom LL for Deck. C#'s LL does not contain an indexer property, which will be required for shuffling.
 	"Splitting" the deck for shuffling will not be possible therefore, since .Next of specific nodes cannot be accessed.

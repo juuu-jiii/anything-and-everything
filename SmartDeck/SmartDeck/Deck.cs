@@ -11,7 +11,7 @@ namespace SmartDeck
 {
     class Deck
     {
-        // Create Card, store in Node<T>, store in IndexedLinkedList<T>
+        // IndexedLL<T> holds T-type objects, stored in Node<T> objects.
 
         public IndexedLinkedList<Card> Contents { get; private set; }
         public int TotalDeckSize { get; private set; }
@@ -104,17 +104,6 @@ namespace SmartDeck
 
                 splitPoint.Next = null;
                 Contents.Tail = splitPoint;
-            }
-        }
-
-        /// <summary>
-        /// Loops through and prints the current contents of the deck.
-        /// </summary>
-        public void PrintDeck()
-        {
-            for (int i = 0; i < Contents.Count; i++)
-            {
-                Contents[i].Data.ToString();
             }
         }
     }

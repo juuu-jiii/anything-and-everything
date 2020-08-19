@@ -8,12 +8,19 @@ using System.Threading.Tasks;
 namespace SmartDeck
 {
     // This class represents the collection of Node objects within the Indexed Linked List.
-    
+
     class IndexedLinkedList<T>
     {
         public Node<T> Head { get; set; }
         public Node<T> Tail { get; set; }
         public int Count { get; set; }
+
+        public IndexedLinkedList()
+        {
+            Head = null;
+            Tail = null;
+            Count = 0;
+        }
 
         /// <summary>
         /// Adds a specified Node to the end of the IndexedLinkedList.
@@ -24,7 +31,7 @@ namespace SmartDeck
         public void AddLast(T data)
         {
             Node<T> newNode = new Node<T>(data);
-            
+
             // LL is empty. Make newNode the new Head and Tail.
             if (Count == 0)
             {
@@ -214,6 +221,27 @@ namespace SmartDeck
             return returnedHead;
         }
 
-        // Clear, ToString()
+        /// <summary>
+        /// Resets the IndexedLinkedList to its original state.
+        /// </summary>
+        public void Clear()
+        {
+            Head.Next = null;
+            Tail = Head;
+            Count = 0;
+        }
+
+        /// <summary>
+        /// Loops through and prints the current contents of the Indexed Linked List.
+        /// </summary>
+        public void PrintContents()
+        {
+            Node<T> currentNode = Head;
+
+            for (int i = 0; i < Count; i++)
+            {
+                currentNode.Data.ToString();
+            }
+        }
     }
 }
