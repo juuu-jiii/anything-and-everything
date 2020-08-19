@@ -35,12 +35,24 @@ namespace SmartDeck
         /// </param>
         private void JoinDeck(IndexedLinkedList<Card> subDeck)
         {
-            Contents.Tail.Next = subDeck.Head;
-            subDeck.Head.Previous = Contents.Tail;
-            Contents.Tail = subDeck.Tail;
+            // Check to prevent exceptions.
+            if (TotalDeckSize == 0)
+            {
+                Contents.Head = subDeck.Head;
+                Contents.Tail = subDeck.Tail;
 
-            Contents.Count += subDeck.Count;
-            TotalDeckSize += subDeck.Count;
+                Contents.Count += subDeck.Count;
+                TotalDeckSize += subDeck.Count;
+            }
+            else
+            {
+                Contents.Tail.Next = subDeck.Head;
+                subDeck.Head.Previous = Contents.Tail;
+                Contents.Tail = subDeck.Tail;
+
+                Contents.Count += subDeck.Count;
+                TotalDeckSize += subDeck.Count;
+            }
         }
 
         /// <summary>
@@ -53,7 +65,7 @@ namespace SmartDeck
         {
             IndexedLinkedList<Card> singleDeck = new IndexedLinkedList<Card>();
 
-            for (int i = 0; i < (int)Ranks.Ace - 1; i++)
+            for (int i = 2; i < (int)Ranks.Ace + 1; i++)
             {
                 for (int j = 0; j < (int)Suits.Spades + 1; j++)
                 {
@@ -81,7 +93,7 @@ namespace SmartDeck
         /// <summary>
         /// Shuffles the deck's current contents.
         /// </summary>
-        public void Shuffle()
+        public int Shuffle()
         {
             int numberOfShuffles = rng.Next(50, 101);
             
@@ -105,6 +117,27 @@ namespace SmartDeck
                 splitPoint.Next = null;
                 Contents.Tail = splitPoint;
             }
+
+            return numberOfShuffles;
+        }
+
+        /// <summary>
+        /// Loops through and prints the current contents of the Indexed Linked List.
+        /// </summary>
+        public void PrintDeck()
+        {
+            for (int i = 0; i < Contents.Count; i++)
+            {
+                Console.WriteLine(Contents[i].Data.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Clears the deck.
+        /// </summary>
+        public void ClearDeck()
+        {
+            Contents.Clear();
         }
     }
 }
