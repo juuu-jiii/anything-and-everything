@@ -11,7 +11,7 @@ namespace SmartDeck
     
     class IndexedLinkedList<T>
     {
-        public Node<T> Head { get; private set; }
+        public Node<T> Head { get; set; }
         public Node<T> Tail { get; set; }
         public int Count { get; set; }
 
@@ -122,7 +122,10 @@ namespace SmartDeck
                         currentNode = currentNode.Next;
                     }
 
-                    currentNode = value;
+                    // Merely alter the data of currentNode.
+                    // A Node object will need to be created and passed in regardless, 
+                    //      because of the property return type.
+                    currentNode.Data = value.Data;
                 }
             }
         }
@@ -210,5 +213,7 @@ namespace SmartDeck
             RemoveAt(0);
             return returnedHead;
         }
+
+        // Clear, ToString()
     }
 }
