@@ -101,21 +101,33 @@ namespace SmartDeck
             for (int i = 0; i < numberOfShuffles; i++)
             {
                 // Need to ensure index is a whole number
-                // Try using the formula: splitting index = decksize * rng.Next(3, 8) / 10 
+                // Try using the formula: splitting index = decksize * rng.Next(3, 6) / 10 
                 // Note the use of integer division to ensure that invalid indices are not accessed.
-                int splitAt = Contents.Count * rng.Next(3, 8) / 10;
+                int splitAtIndex = Contents.Count * rng.Next(3, 6) / 10;
 
-                Node<Card> splitPoint = Contents[splitAt];
+                Node<Card> splitAt = Contents[splitAtIndex];
+
+                // Insertion point is between first and last card of the remaining deck.
+                Node<Card> joinAt = Contents[rng.Next(1, splitAtIndex - 2)];
 
                 // Rearrange the nodes' pointers here.
-                Contents.Tail.Next = Contents.Head;
-                Contents.Head.Previous = Contents.Tail;
+                splitAt.Previous.Next = null;
+                Contents.Tail.Next = joinAt.Next;
+                Contents.Tail.Next.Previous = Contents.Tail;
 
-                splitPoint.Next.Previous = null;
-                Contents.Head = splitPoint.Next;
+                joinAt.Next = splitAt;
+                Contents.Tail = splitAt.Previous;
 
-                splitPoint.Next = null;
-                Contents.Tail = splitPoint;
+                splitAt.Previous = joinAt;
+
+                //Contents.Tail.Next = Contents.Head;
+                //Contents.Head.Previous = Contents.Tail;
+
+                //splitPoint.Next.Previous = null;
+                //Contents.Head = splitPoint.Next;
+
+                //splitPoint.Next = null;
+                //Contents.Tail = splitPoint;
             }
 
             return numberOfShuffles;

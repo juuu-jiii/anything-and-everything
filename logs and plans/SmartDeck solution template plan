@@ -57,6 +57,16 @@ The following classes will be used:
 			-	The head, tail, nexts's and previous's will need to be tracked throughout the swaps.
 			-	The entire process will be repeated a random number of times between 50 and 100, inclusive.
 			-	Refer to notebook for visualisation.
+			************************************************************************************************
+			NOTE: THIS IS NOT SHUFFLING THE DECK - TRY VISUALISING IT AND SEE
+			-	Resort to the original method of shuffling, as outlined in HW4
+			-	Grab a random index between 0.3 and 0.7 of the way through the deck. The cards in the deck
+				past this point are to be moved.
+			-	Move that chunk of cards to a random index in between the remaining deck. For this to work the 
+				insertion point must be after the first, and before the last, cards in the remaining deck.
+			-	Adjust connections appropriately. Remember to update the Tail, though the Head should be unaffected.
+			-	Rinse and repeat for the original set number of times.
+			!!!!!! problem! now head is never changed!!!!!!!!!
 		-	Deal(Player[] players, int numberOfCards)
 			-	Parameters:
 				-	array of Player objects to deal cards to
