@@ -91,26 +91,27 @@ namespace SmartDeck
         }
 
         /// <summary>
-        /// Shuffles the deck's current contents.
+        /// Grabs a portion of the deck spanning a point somewhere in between to 
+        ///     the end, reinserting it randomly. This will be called repeatedly to
+        ///     shuffle the deck's contents.
         /// </summary>
-        public int Shuffle()
+        public void Move()
         {
-            int numberOfShuffles = rng.Next(50, 101);
-            
-            // for loop, random # times
-            for (int i = 0; i < numberOfShuffles; i++)
+            // Need to ensure index is a whole number
+            // Try using the formula: splitting index = decksize * rng.Next(3, 6) / 10 
+            // Note the use of integer division to ensure that invalid indices are not accessed.
+            int splitAtIndex = Contents.Count * rng.Next(3, 6) / 10;
+
+            Node<Card> splitAt = Contents[splitAtIndex];
+
+            // Insertion point is between first and last card of the remaining deck.
+            Node<Card> joinAt = Contents[rng.Next(0, splitAtIndex - 2)];
+
+            // Rearrange the nodes' pointers here.
+
+            // Check to see if insertion point is at the head.
+            if (joinAt.Previous == null)
             {
-                // Need to ensure index is a whole number
-                // Try using the formula: splitting index = decksize * rng.Next(3, 6) / 10 
-                // Note the use of integer division to ensure that invalid indices are not accessed.
-                int splitAtIndex = Contents.Count * rng.Next(3, 6) / 10;
-
-                Node<Card> splitAt = Contents[splitAtIndex];
-
-                // Insertion point is between first and last card of the remaining deck.
-                Node<Card> joinAt = Contents[rng.Next(1, splitAtIndex - 2)];
-
-                // Rearrange the nodes' pointers here.
                 splitAt.Previous.Next = null;
                 Contents.Tail.Next = joinAt.Next;
                 Contents.Tail.Next.Previous = Contents.Tail;
@@ -120,14 +121,29 @@ namespace SmartDeck
 
                 splitAt.Previous = joinAt;
 
-                //Contents.Tail.Next = Contents.Head;
-                //Contents.Head.Previous = Contents.Tail;
+                Contents.Head = splitAt;
+            }
+            else
+            {
+                splitAt.Previous.Next = null;
+                Contents.Tail.Next = joinAt.Next;
+                Contents.Tail.Next.Previous = Contents.Tail;
 
-                //splitPoint.Next.Previous = null;
-                //Contents.Head = splitPoint.Next;
+                joinAt.Next = splitAt;
+                Contents.Tail = splitAt.Previous;
 
-                //splitPoint.Next = null;
-                //Contents.Tail = splitPoint;
+                splitAt.Previous = joinAt;
+            }
+        }
+
+        public int Shuffle()
+        {
+            int numberOfShuffles = rng.Next(50, 101);
+
+            // for loop, random # times
+            for (int i = 0; i < numberOfShuffles; i++)
+            {
+                Move();
             }
 
             return numberOfShuffles;

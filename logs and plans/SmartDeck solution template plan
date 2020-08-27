@@ -62,11 +62,11 @@ The following classes will be used:
 			-	Resort to the original method of shuffling, as outlined in HW4
 			-	Grab a random index between 0.3 and 0.7 of the way through the deck. The cards in the deck
 				past this point are to be moved.
-			-	Move that chunk of cards to a random index in between the remaining deck. For this to work the 
-				insertion point must be after the first, and before the last, cards in the remaining deck.
-			-	Adjust connections appropriately. Remember to update the Tail, though the Head should be unaffected.
+			-	Move that chunk of cards to a random index within the remaining deck. For this to work the 
+				insertion point must be always before the last, card in the remaining deck.
+			-	Adjust connections appropriately. Remember to update the Tail, and handle the case where the
+				head gets changed. How can this be checked for?
 			-	Rinse and repeat for the original set number of times.
-			!!!!!! problem! now head is never changed!!!!!!!!!
 		-	Deal(Player[] players, int numberOfCards)
 			-	Parameters:
 				-	array of Player objects to deal cards to
