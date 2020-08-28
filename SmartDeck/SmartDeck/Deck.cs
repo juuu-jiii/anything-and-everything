@@ -109,30 +109,54 @@ namespace SmartDeck
 
             // Rearrange the nodes' pointers here.
 
-            // Check to see if insertion point is at the head.
+            // Case 1: insertion point is at the head.
             if (joinAt.Previous == null)
             {
                 splitAt.Previous.Next = null;
-                Contents.Tail.Next = joinAt.Next;
-                Contents.Tail.Next.Previous = Contents.Tail;
+                Contents.Tail.Next = joinAt;
+                joinAt.Previous = Contents.Tail;
 
-                joinAt.Next = splitAt;
                 Contents.Tail = splitAt.Previous;
-
-                splitAt.Previous = joinAt;
-
                 Contents.Head = splitAt;
+
+                Contents.Head.Previous = null;
+                //////////
+                //splitAt.Previous.Next = null;
+                //Contents.Tail.Next = joinAt.Next;
+                //Contents.Tail.Next.Previous = Contents.Tail;
+
+                //joinAt.Next = splitAt;
+                //Contents.Tail = splitAt.Previous;
+
+                //splitAt.Previous = joinAt;
+
+                //Contents.Head = splitAt;
             }
+            // Case 2: insertion point is not at the head.
             else
             {
+                Node<Card> joinAtPrevious = joinAt.Previous;
+                
                 splitAt.Previous.Next = null;
-                Contents.Tail.Next = joinAt.Next;
-                Contents.Tail.Next.Previous = Contents.Tail;
+                Contents.Tail.Next = joinAt;
 
-                joinAt.Next = splitAt;
+                joinAt.Previous = Contents.Tail;
+                joinAtPrevious.Next = splitAt;
                 Contents.Tail = splitAt.Previous;
 
-                splitAt.Previous = joinAt;
+                splitAt.Previous = joinAtPrevious;
+
+                //joinAt.Previous.Next = splitAt;
+                //splitAt.Previous = joinAt.Previous;
+                
+                //splitAt.Previous.Next = null;
+                //Contents.Tail.Next = joinAt.Next;
+                //Contents.Tail.Next.Previous = Contents.Tail;
+
+                //joinAt.Next = splitAt;
+                //Contents.Tail = splitAt.Previous;
+
+                //splitAt.Previous = joinAt;
             }
         }
 
