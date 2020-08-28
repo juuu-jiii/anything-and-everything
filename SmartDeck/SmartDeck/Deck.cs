@@ -120,17 +120,6 @@ namespace SmartDeck
                 Contents.Head = splitAt;
 
                 Contents.Head.Previous = null;
-                //////////
-                //splitAt.Previous.Next = null;
-                //Contents.Tail.Next = joinAt.Next;
-                //Contents.Tail.Next.Previous = Contents.Tail;
-
-                //joinAt.Next = splitAt;
-                //Contents.Tail = splitAt.Previous;
-
-                //splitAt.Previous = joinAt;
-
-                //Contents.Head = splitAt;
             }
             // Case 2: insertion point is not at the head.
             else
@@ -145,21 +134,15 @@ namespace SmartDeck
                 Contents.Tail = splitAt.Previous;
 
                 splitAt.Previous = joinAtPrevious;
-
-                //joinAt.Previous.Next = splitAt;
-                //splitAt.Previous = joinAt.Previous;
-                
-                //splitAt.Previous.Next = null;
-                //Contents.Tail.Next = joinAt.Next;
-                //Contents.Tail.Next.Previous = Contents.Tail;
-
-                //joinAt.Next = splitAt;
-                //Contents.Tail = splitAt.Previous;
-
-                //splitAt.Previous = joinAt;
             }
         }
 
+        /// <summary>
+        /// Calls Move() a random number of times to effectively shuffle the deck.
+        /// </summary>
+        /// <returns>
+        /// The number of Move() calls.
+        /// </returns>
         public int Shuffle()
         {
             int numberOfShuffles = rng.Next(50, 101);
