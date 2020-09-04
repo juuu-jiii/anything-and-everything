@@ -133,4 +133,23 @@ The following classes will be used:
 			User input loop that allows the player to manually sort their hand however they wish
 			
 4.	Program.cs
+
+IMPLEMENTING THE BOT
+	-	Begin by making a game "interface" i.e. one that supports legal plays and prohibits illegal ones. 
+	-	Both player and bot will be interacting with this interface
+	-	Craft the bot to follow this framework, and throw exceptions when it makes an illegal move.
+	
+PROBABLY START SMALL- WITH A SIMPLE CARD GAME, LIKE CUCUMBER. or PECH. Then Crazy Eights, then move up. 
+
+SO basically code a game engine that handles gameplay. Manages moves and actions, permits legal moves and prohibits illegal ones.
+The engine must know how to handle different stages of gameplay, and rules.
+
+CARD GAME ENGINE
+-	The engine will be in charge of the deck, dealing, etc. Give it access to the Deck class.
+-	The engine will also be in charge of turn order. Once a player's turn is complete, it will hand the turn over to another player object.
+-	The game engine will also monitor the overall match for win and lose conditions, returned by the state of each player's hands
+	Thus, player objects will need to flag whether the player in question has won, or lost. Whether this is to occur at the beginning or end 
+	of a turn is entirely dependent on the game in question. Typically this occurs at the beginning of a turn, but leave code customisability in mind 
+	when writing the code 
+	
 	
