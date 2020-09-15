@@ -1,0 +1,7 @@
+CARDENGINE solution template
+
+A solution template that acts as an engine for card games, managing actions such as deck shuffles, deals, legal/illegal plays
+The engine must handle game rules AND different stages of gameplay (e.g. skipping over players if they have been eliminated, etc.)
+
+Requirements:
+-	
