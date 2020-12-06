@@ -41,7 +41,7 @@
         @Html.TextBoxFor(x => x.Grade.Passed, new { @Class = "form-control", @Id = "resultInput", @Placeholder = "Pass/Fail", @Aria_Describedby = "resultInputDescr" })
         @*<input type="text" class="form-control" id="resultInput" placeholder="Pass/Fail" aria-describedby="resultInputDescr" />*@
 
-        <small id="resultInputDescr" class="form-text text-muted">Only Pass and Fail accepted as valid inputs.</small>
+        <small id="resultInputDescr" class="form-text text-muted">Only "Pass" and "Fail" accepted as valid inputs.</small>
 
         @Html.ValidationMessageFor(z => z.Grade.Passed)
     </div>
